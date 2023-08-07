@@ -1,0 +1,7 @@
+version: '3.9'
+services:
+  webserv:
+    build:
+      context: ./webserv
+    volumes:
+      - ./webserv:/usr/src/webserv
