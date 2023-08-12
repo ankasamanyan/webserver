@@ -5,6 +5,8 @@ run:
 
 build:
 	docker-compose up --build
+	@bash webserv/Pingwi.sh
+
 
 down:
 	docker-compose down
