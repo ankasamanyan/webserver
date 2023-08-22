@@ -11,37 +11,41 @@
 #include <arpa/inet.h>
 #include "Utils.hpp"
 #include <sys/select.h>
+#include <set>
 
 using std::string;
-//  struct pollfd {
-//                int   fd;         /* file descriptor */
-//                short events;     /* requested events */
-//                short revents;    /* returned events */
-//            };
-namespace WBSRV
+
+struct parsingStruct{
+	string	host;
+	int		port;
+	// string	rootDir;
+};
+
+class Server
 {
-	class simpleSocket
-	{
-		private:
-			int						_socket;
-			int						_connection;
+	private:
+		fd_set			_fdSet;
+		int				_serverSocket;
+		std::set<int>	_activeClients;
+		// map<hostname, config> ;
 
-		public:
-			simpleSocket(/* args */);
-			~simpleSocket();
-			simpleSocket(int domain, int service, int protocol, int port, u_long interface);
-			/*  */
-			virtual int 		connectToNetwork(int sock, struct sockaddr_in address) = 0;
-			void 				testConnection(int);
-			/* Getters */
-			struct sockaddr_in	getAddress();
-			int					getSocket();
-			int					getConnection();
-	};
-}
+	/* functions */
+		void	disconnectClient(int fd);
+		int		recieveRequest(int fd);
+		int		highestFd(std::set<int> activeClients);
+
+
+	public:
+		/* Server(parsingStruct init) */
+		Server(parsingStruct innit);
+		~Server();
+	/* functions */
+		int		getSocket();
+		void	serverLoop();
+
+};
+
+
+
+
 #endif
-
-// 127.0.0.1
-// 
-// 
-// 
