@@ -5,3 +5,5 @@ services:
       context: ./webserv
     volumes:
       - ./webserv:/usr/src/webserv
+    ports:
+     - 2000:2000

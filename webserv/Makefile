@@ -1,12 +1,12 @@
 NAME = webserv
 
-SRC =	main.cpp
+SRC =	src/main.cpp
 
 PURPLE	= "\033[0;34m"
 PINK	= "\033[0;35m"
 RESET	= "\033[0m"
 CC = c++
-FLAGS = -Wall -Wextra -Werror -std=c++98
+# FLAGS = -Wall -Wextra -Werror -std=c++98
 RM = rm -f
 
 all:$(NAME)
@@ -40,4 +40,3 @@ push:
 run: all
 	./$(NAME)
 
-	
