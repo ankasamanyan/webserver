@@ -72,11 +72,7 @@ void	Server::serverLoop()
 			{
 				PRINT << YELLOW "\t\t......Client wants to send a REQUEST......   ";
 				PRINT <<  "FD: "<< fd << RESET_LINE;
-				if (recieveRequest(fd) == -1)
-				{
-					// FD_CLR(fd, &responseSet);
-					// FD_CLR(fd, &requestSet);
-				}
+				recieveRequest(fd);
 			}
 		}
 		else if (FD_ISSET(fd, &responseSet))
@@ -86,11 +82,6 @@ void	Server::serverLoop()
 			PRINT << PINK "\t\t......Client wants to get a RESPONSE......";
 			PRINT <<  "FD: "<< fd << RESET_LINE;
 			disconnectClient(fd);
-			// close(fd);
-			// _activeClients.erase(fd);
-			// FD_CLR(fd, &_fdSet);
-			// FD_CLR(fd, &responseSet);
-			// FD_CLR(fd, &requestSet);
 		}
 		else
 		{
@@ -99,11 +90,6 @@ void	Server::serverLoop()
 			PRINT << RED "\t\t......SAMSING WEIRD IS HAPPENING......   "; 
 			PRINT <<  "FD: "<< fd << RESET_LINE;
 			disconnectClient(fd);
-			// close(fd);
-			// _activeClients.erase(fd);
-			// FD_CLR(fd, &_fdSet);
-			// FD_CLR(fd, &responseSet);
-			// FD_CLR(fd, &requestSet);
 		}
 	}
 }
