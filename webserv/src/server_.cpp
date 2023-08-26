@@ -3,12 +3,11 @@
 
 Server::Server(parsingStruct innit)
 {
+	struct sockaddr_in	_serverAddress;
 	_serverSocket = socket(AF_INET, SOCK_STREAM, 0);
-
 	int option = 1;
 
 	setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &option, sizeof(option));
-
 
 	_serverAddress.sin_family		= AF_INET;
 	_serverAddress.sin_port			= htons(innit.port);
@@ -19,16 +18,18 @@ Server::Server(parsingStruct innit)
 
 	bind(_serverSocket, (struct sockaddr *) &_serverAddress, sizeof(_serverAddress));
 	listen(_serverSocket, 1024);
-
+	FD_ZERO(&_fdSet);
+	FD_SET(_serverSocket, &_fdSet);
+	_activeClients.insert(_serverSocket);
 }
 
 Server::~Server(){}
 
 void	Server::disconnectClient(int fd)
 {
-	// close(fd);
-	// FD_CLR(fd, &_fdSet);
-	// _activeClients.erase(fd);
+	close(fd);
+	FD_CLR(fd, &_fdSet);
+	_activeClients.erase(fd);
 	PRINT << RED "Disconnecting client fd: " << fd << RESET_LINE;
 }
 
@@ -44,60 +45,51 @@ int		Server::highestFd(std::set<int> activeClients)
 
 void	Server::serverLoop()
 {
+	fd_set 	requestSet;
+	fd_set	responseSet;
+	FD_ZERO(&requestSet);
+	FD_ZERO(&responseSet);
+	// PRINT << ORANGE "_activeClients.rbegin():  " << highestFd(_activeClients) << RESET_LINE;
+	requestSet = responseSet = _fdSet;
+	int pollReturn = select(highestFd(_activeClients) + 1, &requestSet, &responseSet, NULL, 0);
 
-	int 	fdAmount = 2;
-	pollfd	*fds;
-	pollfd	listenPollFd;
-	pollfd	*fdStructs;
+	PRINT << PURPLE "\t\t......poll returned......" << RESET_LINE;
 
-	listenPollFd.fd = _serverSocket;
-	listenPollFd.events = POLL_IN;
-	fds[0] = listenPollFd;
-
-	int pollReturn = poll(_fdVector.data(), fdAmount ,-1);
-	// PRINT << PURPLE "\t\t......poll returned......" << RESET_LINE;
-
-	for (int i = 0; i < fdAmount; i++)
+	for (int fd = 3; fd <= highestFd(_activeClients); fd++)
 	{
-		if (fds[i].revents & POLL_IN)
+		if (FD_ISSET(fd, &requestSet))
 		{
-			if (fds[i].fd == _serverSocket)
+			if(fd == _serverSocket)
 			{
 				int newFd = accept(_serverSocket, (struct sockaddr *)NULL, NULL);
-				fds[1].fd = newFd;
-				fds[1].events = POLL_IN;
-				PRINT << GREEN "\t\t......Someone wants to connect......   ";
-				PRINT <<  "FD: "<< fds[1].fd << RESET_LINE;
-				fdAmount++;
-				break;
+				_activeClients.insert(newFd);
+				FD_SET(newFd, &_fdSet);
+				PRINT << GREEN "\t\t......Someone connected......   ";
+				PRINT <<  "FD: "<< newFd << RESET_LINE;
+				break ;
 			}
-			// else
-			// {
-				/* wants to send a REQUEST */
+			else
+			{
 				PRINT << YELLOW "\t\t......Client wants to send a REQUEST......   ";
-				PRINT <<  "FD: "<< fds[i].fd << RESET_LINE;
-				recieveRequest(fds[i].fd);
-			// }
+				PRINT <<  "FD: "<< fd << RESET_LINE;
+				recieveRequest(fd);
+			}
 		}
-		else if (fds[i].revents & POLL_OUT)
+		else if (FD_ISSET(fd, &responseSet))
 		{
 			string hello("HTTP/1.1 200 OK\r\n\r\nETA RABOTAET RANDOMNDA!");
-			send(fds[i].fd, hello.c_str(), hello.length(), 0);
-			PRINT << PINK "\t\t......Client wants to get a RESPONSE......   ";
-			PRINT <<  "FD: "<< fds[i].fd << RESET_LINE;
+			send(fd, hello.c_str(), hello.length(), 0);
+			PRINT << PINK "\t\t......Client wants to get a RESPONSE......";
+			PRINT <<  "FD: "<< fd << RESET_LINE;
+			disconnectClient(fd);
 		}
-		else if (fds[i].revents & POLL_HUP)
-		{
-			close(fds[i].fd);
-			// fdAmount--;
-			PRINT << ON_PURPLE "\t\t......Client disconnected......   " << RESET_LINE;
-		} 
 		else
 		{
-			if (fds[i].fd == _serverSocket)
-				continue;
-			// PRINT << RED "\t\t......SAMSING WEIRD IS HAPPENING......   "; 
-			// PRINT <<  "FD: "<< fds[i].fd << RESET_LINE;
+			if (fd == _serverSocket)
+				continue ;
+			PRINT << RED "\t\t......SAMSING WEIRD IS HAPPENING......   "; 
+			PRINT <<  "FD: "<< fd << RESET_LINE;
+			disconnectClient(fd);
 		}
 	}
 }

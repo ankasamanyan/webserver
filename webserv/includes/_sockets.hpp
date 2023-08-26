@@ -24,11 +24,9 @@ struct parsingStruct{
 class Server
 {
 	private:
-		// fd_set				_fdSet;
-		struct sockaddr_in		_serverAddress;
-		int						_serverSocket;
-		// std::set<int>			_activeClients;
-		std::vector<pollfd>		_fdVector;
+
+		int				_serverSocket;
+		std::set<int>	_activeClients;
 		// map<hostname, config> ;
 
 	/* functions */
@@ -41,7 +39,7 @@ class Server
 		/* Server(parsingStruct init) */
 		Server(parsingStruct innit);
 		~Server();
-	/* functions */
+		/* functions */
 		int		getSocket();
 		void	serverLoop();
 
