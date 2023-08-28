@@ -11,6 +11,7 @@
 #include <arpa/inet.h>
 #include "Utils.hpp"
 #include <sys/select.h>
+#include <vector>
 #include <set>
 
 using std::string;
@@ -27,14 +28,22 @@ class Server
 		// fd_set				_fdSet;
 		struct sockaddr_in		_serverAddress;
 		int						_serverSocket;
-		// std::set<int>			_activeClients;
 		std::vector<pollfd>		_fdVector;
+		// std::set<int>			_activeClients;
 		// map<hostname, config> ;
 
-	/* functions */
-		void	disconnectClient(int fd);
-		int		recieveRequest(int fd);
-		int		highestFd(std::set<int> activeClients);
+
+		/* defines */
+		typedef std::vector<pollfd>::iterator fdIter;
+		enum requestState
+		{
+			VALID,
+			DISCONNECTED
+		};
+		/* functions */
+		void				disconnectClient(fdIter iter);
+		requestState		recieveRequest(fdIter iter);
+		int					highestFd(std::set<int> activeClients);
 
 
 	public:
