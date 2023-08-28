@@ -12,6 +12,7 @@
 #include "Utils.hpp"
 #include <sys/select.h>
 #include <vector>
+#include <fcntl.h>
 #include <set>
 
 using std::string;
@@ -49,6 +50,8 @@ class Server
 	/* functions */
 		int		getSocket();
 		void	serverLoop();
+		void	configureSocket(int newSocket);
+
 
 };
 

@@ -19,11 +19,23 @@ Server::Server(parsingStruct innit)
 
 	bind(_serverSocket, (struct sockaddr *) &_serverAddress, sizeof(_serverAddress));
 	listen(_serverSocket, 1024);
+	configureSocket(_serverSocket);
 
 }
 
 
 Server::~Server(){}
+
+void	Server::configureSocket(int newSocket)
+{
+	int		flags;
+
+	flags = fcntl(newSocket, F_GETFL, 0);
+	if (flags == -1)
+		Utils::printMsg("Error configure socket", PINK);
+	if (fcntl(newSocket, F_SETFL, flags | O_NONBLOCK) == -1)
+		Utils::printMsg("Failed to set socket to non-blocking in fcntl().",PURPLE);
+}
 
 void	Server::disconnectClient(fdIter iter)
 {
@@ -43,12 +55,14 @@ Server::requestState	Server::recieveRequest(fdIter iter)
 	recAmount = recv(iter->fd, buffer, 8000, 0);
 	if (recAmount == 0)
 	{
+		// iter->events = POLLOUT;
 		disconnectClient(iter);
 		return DISCONNECTED;
 	}
 	request.append(buffer);
 	PRINT << SKY "The REQUEST" << RESET_LINE;
 	PRINT << request << RESET_LINE; 
+	iter->events = POLLOUT;
 	return VALID;
 }
 int		Server::getSocket()
@@ -68,7 +82,7 @@ void	Server::serverLoop()
 	fdIter	iter;
 
 	listenPollFd.fd = _serverSocket;
-	listenPollFd.events = POLL_IN;
+	listenPollFd.events = POLLIN;
 	_fdVector.push_back(listenPollFd);
 
 	int 	fdAmount = _fdVector.size();
@@ -77,17 +91,18 @@ void	Server::serverLoop()
 
 	for (iter = _fdVector.begin(); iter != _fdVector.end(); iter++)
 	{
-		if (iter->revents & POLL_IN)
+		if (iter->revents & POLLIN)
 		{
 			if (iter->fd == _serverSocket)
 			{
+				int newFd;
 				PRINT <<  "FD: "<< iter->fd << RESET_LINE;
-				int newFd = accept(_serverSocket, (struct sockaddr *)NULL, NULL);
+				newFd = accept(_serverSocket, (struct sockaddr *)NULL, NULL);
+				configureSocket(newFd);
 				temp.fd = newFd;
-				temp.events = POLL_IN;
+				temp.events = POLLIN | POLLHUP;
 				_fdVector.push_back(temp);
 				PRINT << GREEN "\t\t......Someone wants to connect......   ";
-				fdAmount++;
 				break;
 			}
 			/* wants to send a REQUEST */
@@ -95,19 +110,27 @@ void	Server::serverLoop()
 			PRINT <<  "FD: "<< iter->fd << RESET_LINE;
 			if (recieveRequest(iter) == DISCONNECTED)
 				break;
+			if (true /* request has ended */)
+				iter->events = POLLOUT | POLLHUP;
 		}
-		else if (iter->revents & POLL_OUT)
+		else if (iter->revents & POLLOUT)
 		{
-			string hello("HTTP/1.1 200 OK\r\n\r\nETA RABOTAET RANDOMNDA!");
+			string hello("HTTP/1.1 200 OK\r\n\r\nETA CIESCHAZ RABOTAET NORMALNA!");
 			send(iter->fd, hello.c_str(), hello.length(), 0);
 			PRINT << PINK "\t\t......Client wants to get a RESPONSE......   ";
 			PRINT <<  "FD: "<< iter->fd << RESET_LINE;
+			if (true/* if response ended */)
+			{
+				disconnectClient(iter);
+				break;
+			}
+
 		}
-		else if ( iter->revents & POLL_HUP)
+		else if ( iter->revents & POLLHUP)
 		{
-			close(iter->fd);
-			// fdAmount--;
+			disconnectClient(iter);
 			PRINT << ON_PURPLE "\t\t......Client disconnected......   " << RESET_LINE;
+			break;
 		} 
 		else
 		{

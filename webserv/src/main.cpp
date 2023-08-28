@@ -7,7 +7,7 @@ int main(int argc, char const *argv[])
 	innit.port = 2000;
 	/* vector parsing structs */
 	Server	server(innit);
-	while (true)
+	while (CPP_IS_PAIN)
 	{
 		server.serverLoop();
 	}
