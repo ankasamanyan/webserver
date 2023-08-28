@@ -124,7 +124,6 @@ void	Server::serverLoop()
 				disconnectClient(iter);
 				break;
 			}
-
 		}
 		else if ( iter->revents & POLLHUP)
 		{
