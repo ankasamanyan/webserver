@@ -63,13 +63,9 @@ int		Server::highestFd(std::set<int> activeClients)
 
 void	Server::serverLoop()
 {
-
-	// pollfd	*fds;
 	pollfd	listenPollFd;
-	// pollfd	temp;
+	pollfd	temp;
 	fdIter	iter;
-	// pollfd	*fdStructs;
-
 
 	listenPollFd.fd = _serverSocket;
 	listenPollFd.events = POLL_IN;
@@ -81,49 +77,44 @@ void	Server::serverLoop()
 
 	for (iter = _fdVector.begin(); iter != _fdVector.end(); iter++)
 	{
-		if ((*iter).revents & POLL_IN)
+		if (iter->revents & POLL_IN)
 		{
-			if ((*iter).fd == _serverSocket)
+			if (iter->fd == _serverSocket)
 			{
-				PRINT <<  "FD: "<< (*iter).fd << RESET_LINE;
+				PRINT <<  "FD: "<< iter->fd << RESET_LINE;
 				int newFd = accept(_serverSocket, (struct sockaddr *)NULL, NULL);
-				pollfd *temp = new pollfd;
-				temp->fd = newFd;
-				temp->events = POLL_IN;
-				_fdVector.push_back(*temp);
+				temp.fd = newFd;
+				temp.events = POLL_IN;
+				_fdVector.push_back(temp);
 				PRINT << GREEN "\t\t......Someone wants to connect......   ";
 				fdAmount++;
 				break;
 			}
-			// else
-			// {
-				/* wants to send a REQUEST */
-				PRINT << YELLOW "\t\t......Client wants to send a REQUEST......   ";
-				PRINT <<  "FD: "<< iter->fd << RESET_LINE;
-				if (recieveRequest(iter) == DISCONNECTED)
-					break;
-				
-			// }
+			/* wants to send a REQUEST */
+			PRINT << YELLOW "\t\t......Client wants to send a REQUEST......   ";
+			PRINT <<  "FD: "<< iter->fd << RESET_LINE;
+			if (recieveRequest(iter) == DISCONNECTED)
+				break;
 		}
-		else if ((*iter).revents & POLL_OUT)
+		else if (iter->revents & POLL_OUT)
 		{
 			string hello("HTTP/1.1 200 OK\r\n\r\nETA RABOTAET RANDOMNDA!");
-			send((*iter).fd, hello.c_str(), hello.length(), 0);
+			send(iter->fd, hello.c_str(), hello.length(), 0);
 			PRINT << PINK "\t\t......Client wants to get a RESPONSE......   ";
-			PRINT <<  "FD: "<< (*iter).fd << RESET_LINE;
+			PRINT <<  "FD: "<< iter->fd << RESET_LINE;
 		}
-		else if ( (*iter).revents & POLL_HUP)
+		else if ( iter->revents & POLL_HUP)
 		{
-			close((*iter).fd);
+			close(iter->fd);
 			// fdAmount--;
 			PRINT << ON_PURPLE "\t\t......Client disconnected......   " << RESET_LINE;
 		} 
 		else
 		{
-			if ((*iter).fd == _serverSocket)
+			if (iter->fd == _serverSocket)
 				continue;
 			PRINT << RED "\t\t......SAMSING WEIRD IS HAPPENING......   "; 
-			PRINT <<  "FD: "<< (*iter).fd << RESET_LINE;
+			PRINT <<  "FD: "<< iter->fd << RESET_LINE;
 		}
 	}
 }

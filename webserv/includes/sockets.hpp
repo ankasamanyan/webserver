@@ -25,13 +25,9 @@ struct parsingStruct{
 class Server
 {
 	private:
-		// fd_set				_fdSet;
 		struct sockaddr_in		_serverAddress;
 		int						_serverSocket;
 		std::vector<pollfd>		_fdVector;
-		// std::set<int>			_activeClients;
-		// map<hostname, config> ;
-
 
 		/* defines */
 		typedef std::vector<pollfd>::iterator fdIter;
