@@ -1,4 +1,5 @@
-#include "../includes/sockets.hpp"
+#include "../includes/Server.hpp"
+#include "../includes/Client.hpp"
 
 int main(int argc, char const *argv[])
 {

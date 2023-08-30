@@ -1,9 +1,11 @@
 #ifndef	UTILS_HPP
 	#define UTILS_HPP
+
 #include <iostream>
 #include <unistd.h>
 #include <ctype.h>
 #include <string>
+
 # define CPP_IS_PAIN	1
 # define RESET			"\033[0m"
 # define BLACK			"\033[0;30m"

@@ -1,7 +1,8 @@
 NAME = webserv
 
 SRC =	src/main.cpp \
-		src/server.cpp
+		src/Server.cpp\
+		src/Client.cpp
 
 PURPLE	= "\033[0;34m"
 PINK	= "\033[0;35m"
@@ -17,7 +18,7 @@ all:$(NAME)
 $(NAME): $(OBJ) $(SRC)
 	@$(CC) $(SRC) $(FLAGS) -o $(NAME)
 	@echo $(PURPLE)"•    ✨ COMPILED ✨    •"$(RESET)  #&& say -v Milena "Your stupid program is Compiled!"
-# @bash Pingwi.sh
+	@bash Pingwi.sh
 
 fclean:
 	@$(RM) $(NAME)

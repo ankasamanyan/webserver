@@ -1,5 +1,5 @@
-#ifndef SOCKETS
-	#define SOCKETS
+#ifndef SERVER_HPP
+	#define SERVER_HPP
 
 #include <poll.h>
 #include <string>
@@ -23,6 +23,12 @@ struct parsingStruct{
 	// string	rootDir;
 };
 
+enum requestState
+{
+	VALID,
+	DISCONNECTED
+};
+
 class Server
 {
 	private:
@@ -32,11 +38,6 @@ class Server
 
 		/* defines */
 		typedef std::vector<pollfd>::iterator fdIter;
-		enum requestState
-		{
-			VALID,
-			DISCONNECTED
-		};
 		/* functions */
 		void				disconnectClient(fdIter iter);
 		requestState		recieveRequest(fdIter iter);
