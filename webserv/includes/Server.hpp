@@ -23,11 +23,6 @@ struct parsingStruct{
 	// string	rootDir;
 };
 
-enum requestState
-{
-	VALID,
-	DISCONNECTED
-};
 
 class Server
 {
@@ -37,6 +32,11 @@ class Server
 		std::vector<pollfd>		_fdVector;
 
 		/* defines */
+		enum requestState
+		{
+			VALID,
+			DISCONNECTED
+		};
 		typedef std::vector<pollfd>::iterator fdIter;
 		/* functions */
 		void				disconnectClient(fdIter iter);
