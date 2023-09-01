@@ -30,6 +30,7 @@ class Server
 		struct sockaddr_in		_serverAddress;
 		int						_serverSocket;
 		std::vector<pollfd>		_fdVector;
+		std::map<int, Client>   _clients;
 
 		/* defines */
 		enum requestState
@@ -39,8 +40,9 @@ class Server
 		};
 		typedef std::vector<pollfd>::iterator fdIter;
 		/* functions */
+        void                acceptClient(fdIter iter);
 		void				disconnectClient(fdIter iter);
-		requestState		recieveRequest(fdIter iter);
+		requestState		receiveRequest(fdIter iter);
 		int					highestFd(std::set<int> activeClients);
 
 

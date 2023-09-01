@@ -41,7 +41,7 @@ void	Server::disconnectClient(fdIter iter)
 	PRINT << RED "Disconnecting client fd: " << iter->fd << RESET_LINE;
 }
 
-Server::requestState	Server::recieveRequest(fdIter iter)
+Server::requestState	Server::receiveRequest(fdIter iter)
 {
 	string	request;
 	char *buffer = (char *)calloc(sizeof(char), 8000);
@@ -89,14 +89,7 @@ void	Server::serverLoop()
 		{
 			if (iter->fd == _serverSocket)
 			{
-				int newFd;
-				PRINT <<  "FD: "<< iter->fd << RESET_LINE;
-				newFd = accept(_serverSocket, (struct sockaddr *)NULL, NULL);
-				configureSocket(newFd);
-				temp.fd = newFd;
-				temp.events = POLLIN | POLLHUP;
-				_fdVector.push_back(temp);
-				PRINT << GREEN "\t\t......Someone wants to connect......   ";
+                acceptClient(iter);
 				break;
 			}
 			/* wants to send a REQUEST */
@@ -133,4 +126,17 @@ void	Server::serverLoop()
 			PRINT <<  "FD: "<< iter->fd << RESET_LINE;
 		}
 	}
+}
+
+void Server::acceptClient(fdIter iter) {
+    PRINT <<  "FD: "<< iter->fd << RESET_LINE;
+    int clientFd = accept(_serverSocket, (struct sockaddr *)NULL, NULL);
+    configureSocket(clientFd);
+    _clients.insert(std::make_pair(clientFd, Client()));
+
+    pollfd	pollFdForThisClient;
+    pollFdForThisClient.fd = clientFd;
+    pollFdForThisClient.events = POLLIN | POLLHUP;
+    _fdVector.push_back(pollFdForThisClient);
+    PRINT << GREEN "\t\t......Someone wants to connect......   ";
 }
