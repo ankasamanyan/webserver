@@ -25,6 +25,9 @@ class Client
 		~Client();
 
         std::string     request;
+        std::string     method;
+        std::string     path;
+        std::string     HTTPVersion;
 
 };
 

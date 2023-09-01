@@ -41,6 +41,8 @@ class Server
 		enum requestState
 		{
 			VALID,
+            PARTLY_READ,
+            INVALID,
 			DISCONNECTED
 		};
 		typedef std::vector<pollfd>::iterator fdIter;
@@ -49,6 +51,8 @@ class Server
 		void				disconnectClient(fdIter iter);
 		requestState		receiveRequest(fdIter iter);
 		int					highestFd(std::set<int> activeClients);
+        bool                isRequestValid(fdIter iter);
+        bool                isRequestEmpty(fdIter iter);
 
 
 	public:

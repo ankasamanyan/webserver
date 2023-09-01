@@ -42,25 +42,6 @@ void	Server::disconnectClient(fdIter iter)
 	PRINT << RED "Disconnecting client fd: " << iter->fd << RESET_LINE;
 }
 
-Server::requestState	Server::receiveRequest(fdIter iter) {
-    char currentChunk[CHUNK_SIZE];
-
-    memset(currentChunk, 0, CHUNK_SIZE);
-    ssize_t numberOfBytesReceived = recv(iter->fd, currentChunk, CHUNK_SIZE, 0);
-    if (numberOfBytesReceived == 0) {
-        disconnectClient(iter);
-        return DISCONNECTED;
-    }
-    if (numberOfBytesReceived < 0) {
-        Utils::printMsg("Error receiving a message from a socket", PURPLE); //do we wanna save errno somewhere? do we wanna exit on error?
-    }
-    PRINT << SKY "The REQUEST" << RESET_LINE;
-    PRINT << currentChunk << RESET_LINE;
-    _clients.at(iter->fd).request.append(currentChunk, numberOfBytesReceived);
-    iter->events = POLLOUT;
-    return VALID;
-}
-
 int		Server::getSocket()
 {
 	return(_serverSocket);
@@ -140,4 +121,41 @@ void Server::acceptClient(fdIter iter) {
     pollFdForThisClient.events = POLLIN | POLLHUP;
     _fdVector.push_back(pollFdForThisClient);
     PRINT << GREEN "\t\t......Someone wants to connect......   ";
+}
+
+Server::requestState	Server::receiveRequest(fdIter iter) {
+    char currentChunk[CHUNK_SIZE];
+
+    memset(currentChunk, 0, CHUNK_SIZE);
+    ssize_t numberOfBytesReceived = recv(iter->fd, currentChunk, CHUNK_SIZE, 0);
+    if (numberOfBytesReceived == 0) {
+        disconnectClient(iter);
+        return DISCONNECTED;
+    }
+    if (numberOfBytesReceived < 0) {
+        Utils::printMsg("Error receiving a message from a socket", PURPLE); //do we wanna save errno somewhere? do we wanna exit on error?
+    }
+    PRINT << SKY "The REQUEST" << RESET_LINE;
+    PRINT << currentChunk << RESET_LINE;
+    _clients.at(iter->fd).request.append(currentChunk, numberOfBytesReceived);
+    if (numberOfBytesReceived < CHUNK_SIZE) {
+        if (isRequestValid(iter) = false) {
+          return INVALID;
+        }
+        //ifCGIhandleCGI
+        //prepareResponse
+        iter->events = POLLOUT;
+        return VALID;
+    }
+    return PARTLY_READ;
+}
+
+bool    Server::isRequestValid(fdIter iter) {
+    if (isRequestEmpty(iter) == true)
+        return false;
+    return true;
+}
+
+bool    Server::isRequestEmpty(fdIter iter) {
+    return _clients.at(iter->fd).request.empty();
 }
