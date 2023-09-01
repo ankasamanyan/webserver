@@ -14,6 +14,7 @@
 #include <vector>
 #include <fcntl.h>
 #include <set>
+#include "Client.hpp"
 
 using std::string;
 
@@ -23,6 +24,7 @@ struct parsingStruct{
 	// string	rootDir;
 };
 
+class Client;
 
 class Server
 {

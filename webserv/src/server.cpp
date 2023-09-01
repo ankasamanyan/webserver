@@ -95,7 +95,7 @@ void	Server::serverLoop()
 			/* wants to send a REQUEST */
 			PRINT << YELLOW "\t\t......Client wants to send a REQUEST......   ";
 			PRINT <<  "FD: "<< iter->fd << RESET_LINE;
-			if (recieveRequest(iter) == DISCONNECTED)
+			if (receiveRequest(iter) == DISCONNECTED)
 				break;
 			if (true /* request has ended */)
 			iter->events = POLLOUT | POLLHUP;
