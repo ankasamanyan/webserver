@@ -15,6 +15,7 @@
 #include <fcntl.h>
 #include <set>
 #include "Client.hpp"
+#include <map>
 
 using std::string;
 
