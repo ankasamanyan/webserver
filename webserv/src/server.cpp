@@ -37,27 +37,28 @@ void	Server::configureSocket(int newSocket)
 void	Server::disconnectClient(fdIter iter)
 {
 	close(iter->fd);
-	_fdVector.erase(iter);
+    _clients.erase(iter->fd);
+    _fdVector.erase(iter);
 	PRINT << RED "Disconnecting client fd: " << iter->fd << RESET_LINE;
 }
 
-Server::requestState	Server::receiveRequest(fdIter iter)
-{
-	string	request;
-	char *buffer = (char *)calloc(sizeof(char), 8000);
-	int	recAmount;
+Server::requestState	Server::receiveRequest(fdIter iter) {
+    char currentChunk[CHUNK_SIZE];
 
-	recAmount = recv(iter->fd, buffer, 8000, 0);
-	if (recAmount == 0)
-	{
-		disconnectClient(iter);
-		return DISCONNECTED;
-	}
-	request.append(buffer);
-	PRINT << SKY "The REQUEST" << RESET_LINE;
-	PRINT << request << RESET_LINE; 
-	iter->events = POLLOUT;
-	return VALID;
+    memset(currentChunk, 0, CHUNK_SIZE);
+    ssize_t numberOfBytesReceived = recv(iter->fd, currentChunk, CHUNK_SIZE, 0);
+    if (numberOfBytesReceived == 0) {
+        disconnectClient(iter);
+        return DISCONNECTED;
+    }
+    if (numberOfBytesReceived < 0) {
+        Utils::printMsg("Error receiving a message from a socket", PURPLE); //do we wanna save errno somewhere? do we wanna exit on error?
+    }
+    PRINT << SKY "The REQUEST" << RESET_LINE;
+    PRINT << currentChunk << RESET_LINE;
+    _clients.at(iter->fd).request.append(currentChunk, numberOfBytesReceived);
+    iter->events = POLLOUT;
+    return VALID;
 }
 
 int		Server::getSocket()

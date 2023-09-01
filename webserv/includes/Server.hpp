@@ -17,6 +17,8 @@
 #include "Client.hpp"
 #include <map>
 
+#define CHUNK_SIZE 8000;
+
 using std::string;
 
 struct parsingStruct{

@@ -24,6 +24,8 @@ class Client
 		Client();
 		~Client();
 
+        std::string     request;
+
 };
 
 #endif
