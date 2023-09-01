@@ -139,7 +139,7 @@ Server::requestState	Server::receiveRequest(fdIter iter) {
     PRINT << currentChunk << RESET_LINE;
     _clients.at(iter->fd).request.append(currentChunk, numberOfBytesReceived);
     if (numberOfBytesReceived < CHUNK_SIZE) {
-        if (isRequestValid(iter) = false) {
+        if (isRequestValid(iter) == false) {
           return INVALID;
         }
         //ifCGIhandleCGI
