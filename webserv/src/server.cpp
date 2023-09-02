@@ -189,7 +189,7 @@ void    Server::parseBody(fdIter iter) {
     Client currentClient = _clients.at(iter->fd);
     if (currentClient.method != "POST")
         return ;
-    size_t startBodyIndex = currentClient.request.find"\r\n\r\n") + 4;
+    size_t startBodyIndex = currentClient.request.find("\r\n\r\n") + 4;
     size_t bodySize;
     if (currentClient.headers.find("Content-Length") != currentClient.headers.end()) {
         bodySize = atoi(currentClient.headers.at("Content-Length").c_str());
