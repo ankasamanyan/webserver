@@ -3,6 +3,7 @@
 
 #include "Utils.hpp"
 #include "Server.hpp"
+#include <map>
 
 enum requestType
 {

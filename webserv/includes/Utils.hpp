@@ -96,7 +96,7 @@ class Utils
             return splitString;
         }
         static std::string trimLeft(std::string string, const char *sequenceToErase) {
-            string.erase(0, s.find_first_not_of(sequenceToErase));
+            string.erase(0, string.find_first_not_of(sequenceToErase));
             return string;
         }
 };
