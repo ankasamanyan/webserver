@@ -5,6 +5,8 @@
 #include <unistd.h>
 #include <ctype.h>
 #include <string>
+#include <sstream>
+#include <vector>
 
 # define CPP_IS_PAIN	1
 # define RESET			"\033[0m"
@@ -82,6 +84,17 @@ class Utils
 				return (true);
 			return (false);
 		}
+        std::vector<std::string> split(std::string string, const char separator) {
+            std::vector<std::string>	splitString;
+            std::stringstream			streamString(str);
+            std::string					partOfString;
+
+            while(std::getline(streamString, partOfString, separator)) {
+                if(partOfString.length() > 0)
+                    splitString.push_back(partOfString);
+            }
+            return splitString;
+        }
 };
 
 #endif

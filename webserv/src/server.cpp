@@ -163,7 +163,7 @@ bool    Server::isRequestEmpty(fdIter iter) {
 
 void    Server::parseRequestLine(fdIter iter) {
     std::string	requestLine = _clients.at(iter->fd).request.substr(0, _clients.at(iter->fd).request.find("\r\n"));
-    std::vector<string> splitRequestLine = split(requestLine, ' ');
+    std::vector<string> splitRequestLine = Utils::split(requestLine, ' ');
     _clients.at(iter->fd).method = splitRequestLine[0];
     _clients.at(iter->fd).path = splitRequestLine[1];
     _clients.at(iter->fd).HTTPVersion = splitRequestLine[2];
