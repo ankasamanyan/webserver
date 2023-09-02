@@ -153,9 +153,18 @@ Server::requestState	Server::receiveRequest(fdIter iter) {
 bool    Server::isRequestValid(fdIter iter) {
     if (isRequestEmpty(iter) == true)
         return false;
+    parseRequestLine(iter);
     return true;
 }
 
 bool    Server::isRequestEmpty(fdIter iter) {
     return _clients.at(iter->fd).request.empty();
+}
+
+void    parseRequestLine(fdIter iter) {
+    std::string	requestLine = _clients.at(iter->fd).request.substr(0, _clients.at(iter->fd).request.find("\r\n"));
+    std::vector<string> splitRequestLine = split(requestLine, ' ');
+    _clients.at(iter->fd).method = splitRequestLine[0];
+    _clients.at(iter->fd).path = splitRequestLine[1];
+    _clients.at(iter->fd).HTTPversion = splitRequestLine[2];
 }

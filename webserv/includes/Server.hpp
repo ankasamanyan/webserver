@@ -53,6 +53,7 @@ class Server
 		int					highestFd(std::set<int> activeClients);
         bool                isRequestValid(fdIter iter);
         bool                isRequestEmpty(fdIter iter);
+        void                parseRequestLine(fdIter iter);
 
 
 	public:
