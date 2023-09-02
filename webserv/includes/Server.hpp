@@ -16,6 +16,7 @@
 #include <set>
 #include "Client.hpp"
 #include <map>
+#include <cstdlib>
 
 #define CHUNK_SIZE 8000
 
@@ -55,9 +56,10 @@ class Server
         bool                isRequestEmpty(fdIter iter);
         void                parseRequestLine(fdIter iter);
         void                parseHeaders(fdIter iter);
+        void                parseBody(fdIter iter);
 
 
-	public:
+public:
 		/* Server(parsingStruct init) */
 		Server(parsingStruct innit);
 		~Server();

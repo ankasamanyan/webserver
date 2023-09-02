@@ -133,7 +133,7 @@ Server::requestState	Server::receiveRequest(fdIter iter) {
         return DISCONNECTED;
     }
     if (numberOfBytesReceived < 0) {
-        Utils::printMsg("Error receiving a message from a socket", PURPLE); //do we wanna save errno somewhere? do we wanna exit on error?
+        Utils::printMsg("Error receiving a message from a socket", PURPLE);
     }
     PRINT << SKY "The REQUEST" << RESET_LINE;
     PRINT << currentChunk << RESET_LINE;
@@ -155,6 +155,7 @@ bool    Server::isRequestValid(fdIter iter) {
         return false;
     parseRequestLine(iter);
     parseHeaders(iter);
+    parseBody(iter);
     return true;
 }
 
@@ -182,5 +183,20 @@ void    Server::parseHeaders(fdIter iter) {
         headerFieldValue[1] = Utils::trimLeft(headerFieldValue[1], " ");
         currentClient.headers.insert(std::make_pair(headerFieldValue[0], headerFieldValue[1]));
     }
+}
+
+void    Server::parseBody(fdIter iter) {
+    Client currentClient = _clients.at(iter->fd);
+    if (currentClient.method != "POST")
+        return ;
+    size_t startBodyIndex = currentClient.request.find"\r\n\r\n") + 4;
+    size_t bodySize;
+    if (currentClient.headers.find("Content-Length") != currentClient.headers.end()) {
+        bodySize = atoi(currentClient.headers.at("Content-Length").c_str());
+    }
+    else {
+        bodySize = string::npos;
+    }
+    currentClient.body = currentClient.request.substr(startBodyIndex, bodySize);
 }
 

@@ -30,6 +30,7 @@ class Client
         std::string                             path;
         std::string                             HTTPVersion;
         std::map<std::string, std::string>		headers;
+        std::string                             body;
 
 };
 
