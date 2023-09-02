@@ -84,9 +84,9 @@ class Utils
 				return (true);
 			return (false);
 		}
-        std::vector<std::string> split(std::string string, const char separator) {
+        static std::vector<std::string> split(std::string string, const char separator) {
             std::vector<std::string>	splitString;
-            std::stringstream			streamString(str);
+            std::stringstream			streamString(string);
             std::string					partOfString;
 
             while(std::getline(streamString, partOfString, separator)) {
