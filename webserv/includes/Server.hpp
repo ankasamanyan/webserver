@@ -64,6 +64,7 @@ class Server
         void                parseBody(fdIter iter);
         bool                areAllPartsOfRequestValid(fdIter iter);
         bool                isMethodAllowed(fdIter iter);
+        bool                isHTTPVersionValid(fdIter iter);
 
 
 public:

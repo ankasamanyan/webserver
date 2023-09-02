@@ -204,6 +204,8 @@ void    Server::parseBody(fdIter iter) {
 bool    Server::areAllPartsOfRequestValid(fdIter iter) {
     if (isMethodAllowed(iter) == false)
         return false;
+    if (isHTTPVersionValid(iter) == false)
+        return false;
     return true;
 }
 
@@ -214,6 +216,13 @@ bool    Server::isMethodAllowed(fdIter iter) {
     else if (currentClient.method == "DELETE" && _configuration.methodDelete)
         return true;
     else if (currentClient.method == "POST" && _configuration.methodPost)
+        return true;
+    return false;
+}
+
+bool    Server::isHTTPVersionValid(fdIter iter) {
+    Client currentClient = _clients.at(iter->fd);
+    if (currentClient.HTTPVersion == "HTTP/1.1")
         return true;
     return false;
 }
