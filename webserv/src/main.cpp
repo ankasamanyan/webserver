@@ -6,6 +6,9 @@ int main(int argc, char const *argv[])
 	parsingStruct	innit;
 	innit.host = "0.0.0.0";
 	innit.port = 2000;
+    innit.methodDelete = true;
+    innit.methodPost = true;
+    innit.methodGet = true;
 	/* vector parsing structs */
 	Server	server(innit);
 	while (CPP_IS_PAIN)

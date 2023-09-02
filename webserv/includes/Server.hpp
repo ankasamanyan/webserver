@@ -22,9 +22,12 @@
 
 using std::string;
 
-struct parsingStruct{
+struct parsingStruct {
 	string	host;
 	int		port;
+    bool    methodGet;
+    bool    methodPost;
+    bool    methodDelete;
 	// string	rootDir;
 };
 
@@ -37,6 +40,8 @@ class Server
 		int						_serverSocket;
 		std::vector<pollfd>		_fdVector;
 		std::map<int, Client>   _clients;
+        parsingStruct           _configuration;
+
 
 		/* defines */
 		enum requestState
@@ -57,6 +62,8 @@ class Server
         void                parseRequestLine(fdIter iter);
         void                parseHeaders(fdIter iter);
         void                parseBody(fdIter iter);
+        bool                areAllPartsOfRequestValid(fdIter iter);
+        bool                isMethodAllowed(fdIter iter);
 
 
 public:

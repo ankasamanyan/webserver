@@ -17,7 +17,7 @@ Server::Server(parsingStruct innit)
 	bind(_serverSocket, (struct sockaddr *) &_serverAddress, sizeof(_serverAddress));
 	listen(_serverSocket, 1024);
 	configureSocket(_serverSocket);
-
+    _configuration = parsingStruct;
 }
 
 
@@ -156,7 +156,7 @@ bool    Server::isRequestValid(fdIter iter) {
     parseRequestLine(iter);
     parseHeaders(iter);
     parseBody(iter);
-    return true;
+    return areAllPartsOfRequestValid(iter);
 }
 
 bool    Server::isRequestEmpty(fdIter iter) {
@@ -200,3 +200,19 @@ void    Server::parseBody(fdIter iter) {
     currentClient.body = currentClient.request.substr(startBodyIndex, bodySize);
 }
 
+bool    Server::areAllPartsOfRequestValid(fdIter iter) {
+    if (isMethodAllowed(iter) == false)
+        return false;
+    return true;
+}
+
+bool    Server::isMethodAllowed(fdIter iter) {
+    Client currentClient = _clients.at(iter->fd);
+    if (currentClient.method == "GET" && _configuration.methodGet)
+        return true;
+    else if (currentClient.method == "DELETE" && _configuration.methodDelete)
+        return true;
+    else if (currentClient.method == "POST" && _configuration.methodPost)
+        return true;
+    return false;
+}
