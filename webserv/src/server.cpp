@@ -231,8 +231,9 @@ bool    Server::isContentOfAllowedSize(fdIter iter) {
     Client currentClient = _clients.at(iter->fd);
     if (currentClient.headers.find("Content-Length") != currentClient.headers.end()) {
         int contentSize = atoi(currentClient.headers.at("Content-Length").c_str());
+        int actualBodySize = currentClient.body.length();
         int allowedSize = atoi(_configuration.maxBody.c_str());
-        if (contentSize <= allowedSize)
+        if (contentSize <= allowedSize && actualBodySize <= allowedSize)
             return true;
         return false;
     }
