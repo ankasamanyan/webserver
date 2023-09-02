@@ -99,6 +99,10 @@ class Utils
             string.erase(0, string.find_first_not_of(sequenceToErase));
             return string;
         }
+        static std::string trimRight(std::string string, const char *sequenceToErase) {
+            string.erase(string.find_last_not_of(sequenceToErase) + 1);
+            return string;
+        }
 };
 
 #endif
