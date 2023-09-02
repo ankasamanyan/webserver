@@ -17,7 +17,7 @@ Server::Server(parsingStruct innit)
 	bind(_serverSocket, (struct sockaddr *) &_serverAddress, sizeof(_serverAddress));
 	listen(_serverSocket, 1024);
 	configureSocket(_serverSocket);
-    _configuration = parsingStruct;
+    _configuration = innit;
 }
 
 
