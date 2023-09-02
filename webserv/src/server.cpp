@@ -179,7 +179,7 @@ void    Server::parseHeaders(fdIter iter) {
     std::string headers = currentClient.request.substr(startHeadersIndex, headersSize);
     std::vector<string> splitHeaders = Utils::split(headers, '\n');
     for (int i = 0; i < splitHeaders.size(); i++) {
-        std::string trimmedHeader = Utils::trimRight(splitHeaders[i], "\r\n")
+        std::string trimmedHeader = Utils::trimRight(splitHeaders[i], "\r\n");
         std::vector<string> headerFieldValue = Utils::split(trimmedHeader, ':');
         headerFieldValue[1] = Utils::trimLeft(headerFieldValue[1], " ");
         currentClient.headers.insert(std::make_pair(headerFieldValue[0], headerFieldValue[1]));
