@@ -154,6 +154,7 @@ bool    Server::isRequestValid(fdIter iter) {
     if (isRequestEmpty(iter) == true)
         return false;
     parseRequestLine(iter);
+    parseHeaders(iter);
     return true;
 }
 
@@ -162,9 +163,24 @@ bool    Server::isRequestEmpty(fdIter iter) {
 }
 
 void    Server::parseRequestLine(fdIter iter) {
-    std::string	requestLine = _clients.at(iter->fd).request.substr(0, _clients.at(iter->fd).request.find("\r\n"));
+    Client currentClient = _clients.at(iter->fd);
+    std::string	requestLine = currentClient.request.substr(0, currentClient.request.find("\r\n"));
     std::vector<string> splitRequestLine = Utils::split(requestLine, ' ');
-    _clients.at(iter->fd).method = splitRequestLine[0];
-    _clients.at(iter->fd).path = splitRequestLine[1];
-    _clients.at(iter->fd).HTTPVersion = splitRequestLine[2];
+    currentClient.method = splitRequestLine[0];
+    currentClient.path = splitRequestLine[1];
+    currentClient.HTTPVersion = splitRequestLine[2];
 }
+
+void    Server::parseHeaders(fdIter iter) {
+    Client currentClient = _clients.at(iter->fd);
+    int startHeadersIndex = currentClient.request.find('\n') + 1;
+    int headersSize = currentClient.request.find("\r\n\r\n") - startHeadersIndex;
+    std::string headers = currentClient.request.substr(startHeadersIndex, headersSize);
+    std::vector<string> splitHeaders = Utils::split(headers, '\n');
+    for (int i = 0; i < splitHeaders.size(); i++) {
+        std::vector<string> headerFieldValue = Utils::split(splitHeaders[i], ':');
+        headerFieldValue[1] = Utils::trimLeft(headerFieldValue[1], " ");
+        currentClient.headers.insert(std::make_pair(headerFieldValue[0], headerFieldValue[1]));
+    }
+}
+

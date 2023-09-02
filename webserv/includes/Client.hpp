@@ -24,10 +24,11 @@ class Client
 		Client();
 		~Client();
 
-        std::string     request;
-        std::string     method;
-        std::string     path;
-        std::string     HTTPVersion;
+        std::string                             request;
+        std::string                             method;
+        std::string                             path;
+        std::string                             HTTPVersion;
+        std::map<std::string, std::string>		headers;
 
 };
 

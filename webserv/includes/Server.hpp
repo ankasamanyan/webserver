@@ -54,6 +54,7 @@ class Server
         bool                isRequestValid(fdIter iter);
         bool                isRequestEmpty(fdIter iter);
         void                parseRequestLine(fdIter iter);
+        void                parseHeaders(fdIter iter);
 
 
 	public:
