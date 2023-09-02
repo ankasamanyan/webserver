@@ -192,12 +192,10 @@ void    Server::parseBody(fdIter iter) {
         return ;
     size_t startBodyIndex = currentClient.request.find("\r\n\r\n") + 4;
     size_t bodySize;
-    if (currentClient.headers.find("Content-Length") != currentClient.headers.end()) {
+    if (currentClient.headers.find("Content-Length") != currentClient.headers.end())
         bodySize = atoi(currentClient.headers.at("Content-Length").c_str());
-    }
-    else {
+    else
         bodySize = string::npos;
-    }
     currentClient.body = currentClient.request.substr(startBodyIndex, bodySize);
 }
 
@@ -205,6 +203,8 @@ bool    Server::areAllPartsOfRequestValid(fdIter iter) {
     if (isMethodAllowed(iter) == false)
         return false;
     if (isHTTPVersionValid(iter) == false)
+        return false;
+    if (isContentOfAllowedSize(iter) == false)
         return false;
     return true;
 }
@@ -225,4 +225,16 @@ bool    Server::isHTTPVersionValid(fdIter iter) {
     if (currentClient.HTTPVersion == "HTTP/1.1")
         return true;
     return false;
+}
+
+bool    Server::isContentOfAllowedSize(fdIter iter) {
+    Client currentClient = _clients.at(iter->fd);
+    if (currentClient.headers.find("Content-Length") != currentClient.headers.end()) {
+        int contentSize = atoi(currentClient.headers.at("Content-Length").c_str());
+        int allowedSize = atoi(_configuration.maxBody.c_str());
+        if (contentSize <= allowedSize)
+            return true;
+        return false;
+    }
+    return true;
 }

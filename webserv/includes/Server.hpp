@@ -28,6 +28,7 @@ struct parsingStruct {
     bool    methodGet;
     bool    methodPost;
     bool    methodDelete;
+    string  maxBody;
 	// string	rootDir;
 };
 
@@ -65,9 +66,10 @@ class Server
         bool                areAllPartsOfRequestValid(fdIter iter);
         bool                isMethodAllowed(fdIter iter);
         bool                isHTTPVersionValid(fdIter iter);
+        bool                isContentOfAllowedSize(fdIter iter);
 
 
-public:
+        public:
 		/* Server(parsingStruct init) */
 		Server(parsingStruct innit);
 		~Server();

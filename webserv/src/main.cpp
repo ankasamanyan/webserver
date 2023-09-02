@@ -9,6 +9,7 @@ int main(int argc, char const *argv[])
     innit.methodDelete = true;
     innit.methodPost = true;
     innit.methodGet = true;
+    innit.maxBody = "8000";
 	/* vector parsing structs */
 	Server	server(innit);
 	while (CPP_IS_PAIN)
