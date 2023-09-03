@@ -12,11 +12,20 @@ Server::Server(parsingStruct innit)
 	_serverAddress.sin_addr.s_addr	= inet_addr(innit.host.c_str());
 
 	if (_serverSocket == -1)
+	{
 		PRINT << RED "Failed Socket init" << RESET_LINE;
+		exit(1);
+	}
 	if (bind(_serverSocket, (struct sockaddr *) &_serverAddress, sizeof(_serverAddress)) == -1)
+	{
 		PRINT << RED "Failed Socket bind" << RESET_LINE;
+		exit(1);
+	}
 	if (listen(_serverSocket, 1024) == -1)
+	{
 		PRINT << RED "Failed Socket listen" << RESET_LINE;
+		exit(1);
+	}
 	configureSocket(_serverSocket);
     _configuration = innit;
 }
