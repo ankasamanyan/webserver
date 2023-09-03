@@ -13,9 +13,10 @@ Server::Server(parsingStruct innit)
 
 	if (_serverSocket == -1)
 		PRINT << RED "Failed Socket init" << RESET_LINE;
-
-	bind(_serverSocket, (struct sockaddr *) &_serverAddress, sizeof(_serverAddress));
-	listen(_serverSocket, 1024);
+	if (bind(_serverSocket, (struct sockaddr *) &_serverAddress, sizeof(_serverAddress)) == -1)
+		PRINT << RED "Failed Socket bind" << RESET_LINE;
+	if (listen(_serverSocket, 1024) == -1)
+		PRINT << RED "Failed Socket listen" << RESET_LINE;
 	configureSocket(_serverSocket);
     _configuration = innit;
 }
