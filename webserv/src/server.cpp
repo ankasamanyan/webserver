@@ -90,7 +90,7 @@ void	Server::serverLoop()
 			if (receiveRequest(iter) == DISCONNECTED)
 				break;
 			if (true /* request has ended */)
-			iter->events = POLLOUT | POLLHUP;
+				iter->events = POLLOUT | POLLHUP;
 		}
 		else if (iter->revents & POLLOUT)
 		{
@@ -133,7 +133,7 @@ void Server::acceptClient(fdIter iter) {
     PRINT << GREEN "\t\t......Someone wants to connect......   ";
 }
 
-Server::requestState	Server::receiveRequest(fdIter iter) {
+Server::requestState	Server::zreceiveRequest(fdIter iter) {
     char currentChunk[CHUNK_SIZE];
 
     memset(currentChunk, 0, CHUNK_SIZE);
