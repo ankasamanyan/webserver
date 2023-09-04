@@ -3,6 +3,7 @@
 
 #include <poll.h>
 #include <string>
+#include <string.h>
 #include <stdio.h>
 #include <iostream>
 #include <sys/socket.h>
@@ -19,6 +20,7 @@
 #include <sstream>
 #include <fstream>
 #include <cstdlib>
+#include <sys/errno.h>
 
 #define CHUNK_SIZE 	8000
 #define HTTP_V 		"HTTP/1.1"
