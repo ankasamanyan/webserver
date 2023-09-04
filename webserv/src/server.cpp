@@ -83,12 +83,19 @@ void	Server::serverLoop()
                 acceptClient(iter);
 				break;
 			}
+			Client	&currClient =_clients.at(iter->fd);
+			currClient.receiveRequest();
+			if(currClient.getState() == VALID_)
+       			 iter->events = POLLOUT;
+			if ( currClient.getState() == SHOULD_DISCONNECT_)
+			{
+				disconnectClient(iter);
+				break;
+			}
 			/* wants to send a REQUEST */
 			PRINT << YELLOW "\t\t......Client wants to send a REQUEST......   ";
 			PRINT <<  "FD: "<< iter->fd << RESET_LINE;
-			if (receiveRequest(iter) == DISCONNECTED)
-				break;
-			if (true /* request has ended */)
+			if (REQUEST_ENDED/* add the condition */)
 				iter->events = POLLOUT | POLLHUP;
 		}
 		else if (iter->revents & POLLOUT)
@@ -97,7 +104,7 @@ void	Server::serverLoop()
 			PRINT <<  "FD: "<< iter->fd << RESET_LINE;
 			if (true/* if response ended */)
 			{
-				sendResponse(iter);
+				sendResponse(iter, _clients);
 				disconnectClient(iter);
 				break;
 			}
@@ -122,7 +129,7 @@ void Server::acceptClient(fdIter iter) {
     PRINT <<  "FD: "<< iter->fd << RESET_LINE;
     int clientFd = accept(_serverSocket, (struct sockaddr *)NULL, NULL);
     configureSocket(clientFd);
-    _clients.insert(std::make_pair(clientFd, Client()));
+    _clients.insert(std::make_pair(clientFd, Client(clientFd, _configuration)));
 
     pollfd	pollFdForThisClient;
     pollFdForThisClient.fd = clientFd;
@@ -131,119 +138,3 @@ void Server::acceptClient(fdIter iter) {
     PRINT << GREEN "\t\t......Someone wants to connect......   ";
 }
 
-Server::requestState	Server::receiveRequest(fdIter iter) {
-    char currentChunk[CHUNK_SIZE];
-
-    memset(currentChunk, 0, CHUNK_SIZE);
-    ssize_t numberOfBytesReceived = recv(iter->fd, currentChunk, CHUNK_SIZE, 0);
-    if (numberOfBytesReceived == 0) {
-        disconnectClient(iter);
-        return DISCONNECTED;
-    }
-    if (numberOfBytesReceived < 0) {
-        Utils::printMsg("Error receiving a message from a socket", PURPLE);
-    }
-    PRINT << SKY "The REQUEST" << RESET_LINE;
-    PRINT << currentChunk << RESET_LINE;
-    _clients.at(iter->fd).request.append(currentChunk, numberOfBytesReceived);
-    if (numberOfBytesReceived < CHUNK_SIZE) {
-        if (isRequestValid(iter) == false) {
-          return INVALID;
-        }
-        //ifCGIhandleCGI
-        //prepareResponse
-        iter->events = POLLOUT;
-        return VALID;
-    }
-    return PARTLY_READ;
-}
-
-bool    Server::isRequestValid(fdIter iter) {
-    if (isRequestEmpty(iter) == true)
-        return false;
-    parseRequestLine(iter);
-    parseHeaders(iter);
-    parseBody(iter);
-    return areAllPartsOfRequestValid(iter);
-}
-
-bool    Server::isRequestEmpty(fdIter iter) {
-    return _clients.at(iter->fd).request.empty();
-}
-
-void    Server::parseRequestLine(fdIter iter) {
-    Client currentClient = _clients.at(iter->fd);
-    std::string	requestLine = currentClient.request.substr(0, currentClient.request.find("\r\n"));
-    std::vector<string> splitRequestLine = Utils::split(requestLine, ' ');
-    currentClient.method = splitRequestLine[0];
-    currentClient.path = splitRequestLine[1];
-    currentClient.HTTPVersion = splitRequestLine[2];
-}
-
-void    Server::parseHeaders(fdIter iter) {
-    Client currentClient = _clients.at(iter->fd);
-    int startHeadersIndex = currentClient.request.find('\n') + 1;
-    int headersSize = currentClient.request.find("\r\n\r\n") - startHeadersIndex;
-    std::string headers = currentClient.request.substr(startHeadersIndex, headersSize);
-    std::vector<string> splitHeaders = Utils::split(headers, '\n');
-    for (size_t i = 0; i < splitHeaders.size(); i++) {
-        std::string trimmedHeader = Utils::trimRight(splitHeaders[i], "\r\n");
-        std::vector<string> headerFieldValue = Utils::split(trimmedHeader, ':');
-        headerFieldValue[1] = Utils::trimLeft(headerFieldValue[1], " ");
-        currentClient.headers.insert(std::make_pair(headerFieldValue[0], headerFieldValue[1]));
-    }
-}
-
-void    Server::parseBody(fdIter iter) {
-    Client currentClient = _clients.at(iter->fd);
-    if (currentClient.method != "POST")
-        return ;
-    size_t startBodyIndex = currentClient.request.find("\r\n\r\n") + 4;
-    size_t bodySize;
-    if (currentClient.headers.find("Content-Length") != currentClient.headers.end())
-        bodySize = atoi(currentClient.headers.at("Content-Length").c_str());
-    else
-        bodySize = string::npos;
-    currentClient.body = currentClient.request.substr(startBodyIndex, bodySize);
-}
-
-bool    Server::areAllPartsOfRequestValid(fdIter iter) {
-    if (isMethodAllowed(iter) == false)
-        return false;
-    if (isHTTPVersionValid(iter) == false)
-        return false;
-    if (isContentOfAllowedSize(iter) == false)
-        return false;
-    return true;
-}
-
-bool    Server::isMethodAllowed(fdIter iter) {
-    Client currentClient = _clients.at(iter->fd);
-    if (currentClient.method == "GET" && _configuration.methodGet)
-        return true;
-    else if (currentClient.method == "DELETE" && _configuration.methodDelete)
-        return true;
-    else if (currentClient.method == "POST" && _configuration.methodPost)
-        return true;
-    return false;
-}
-
-bool    Server::isHTTPVersionValid(fdIter iter) {
-    Client currentClient = _clients.at(iter->fd);
-    if (currentClient.HTTPVersion == "HTTP/1.1")
-        return true;
-    return false;
-}
-
-bool    Server::isContentOfAllowedSize(fdIter iter) {
-    Client currentClient = _clients.at(iter->fd);
-    if (currentClient.headers.find("Content-Length") != currentClient.headers.end()) {
-        int contentSize = atoi(currentClient.headers.at("Content-Length").c_str());
-        int actualBodySize = currentClient.body.length();
-        int allowedSize = atoi(_configuration.maxBody.c_str());
-        if (contentSize <= allowedSize && actualBodySize <= allowedSize)
-            return true;
-        return false;
-    }
-    return true;
-}

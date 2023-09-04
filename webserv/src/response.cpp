@@ -1,10 +1,11 @@
 #include "../includes/Server.hpp"
 
-void	Server::sendResponse(fdIter iter)
+void	Server::sendResponse(fdIter iter, std::map<int,Client> client)
 {
+	// if(client.at(iter->fd)._exitState == ERROR_404);
 	char			body[CHUNK_SIZE];
 	string			response;
-	std::ifstream	inputFile("src/text.html", std::ios::binary); /* temp html file */
+	std::ifstream	inputFile("text.html", std::ios::binary); /* temp html file */
 
 	response.append(HTTP_V); /* HTTP version */
 	response.append(" 200 OK\r\n\r\n"); /* exit code */

@@ -56,25 +56,28 @@ class Server
 			VALID,
             PARTLY_READ,
             INVALID,
-			DISCONNECTED
+			DISCONNECTED,
+			SHOULD_DISCONNECT,
+			REQUEST_ENDED,
 		};
 		typedef std::vector<pollfd>::iterator fdIter;
 		/* functions */
         void                acceptClient(fdIter iter);
-		void				disconnectClient(fdIter iter);
 		requestState		receiveRequest(fdIter iter);
 		int					highestFd(std::set<int> activeClients);
-        bool                isRequestValid(fdIter iter);
-        bool                isRequestEmpty(fdIter iter);
-        void                parseRequestLine(fdIter iter);
-        void                parseHeaders(fdIter iter);
-        void                parseBody(fdIter iter);
-        bool                areAllPartsOfRequestValid(fdIter iter);
-        bool                isMethodAllowed(fdIter iter);
-        bool                isHTTPVersionValid(fdIter iter);
-        bool                isContentOfAllowedSize(fdIter iter);
+		void				disconnectClient(fdIter iter);
+
+        // bool                isRequestValid(fdIter iter);
+        // bool                isRequestEmpty(fdIter iter);
+        // void                parseRequestLine(fdIter iter);
+        // void                parseHeaders(fdIter iter);
+        // void                parseBody(fdIter iter);
+        // bool                areAllPartsOfRequestValid(fdIter iter);
+        // bool                isMethodAllowed(fdIter iter);
+        // bool                isHTTPVersionValid(fdIter iter);
+        // bool                isContentOfAllowedSize(fdIter iter);
 		/*	  */
-		void				sendResponse(fdIter iter);
+		void				sendResponse(fdIter iter, std::map<int,Client> client);
 
 
 
@@ -86,7 +89,8 @@ class Server
 		int		getSocket();
 		void	serverLoop();
 		void	configureSocket(int newSocket);
-
+		
+		friend class Client;
 
 };
 
