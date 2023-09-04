@@ -2,30 +2,25 @@
 
 void	Server::sendResponse(fdIter iter)
 {
-	// string			header;
-	string			body;
-	// char			body[CHUNK_SIZE];
-	string			line;
+	char			body[CHUNK_SIZE];
 	string			response;
-	std::ifstream	inputFile("text.html");
+	std::ifstream	inputFile("text.html", std::ios::binary);
 	std::streamsize	chunk(CHUNK_SIZE);
 
-	response.append(HTTP_V);
-	response.append(" 200 OK\r\n\r\n");
+	response.append(HTTP_V); /* HTTP version */
+	response.append(" 200 OK\r\n\r\n"); /* exit code */
+	send(iter->fd, response.c_str(), response.length(), 0);
 
 	if (inputFile.is_open())
 	{
-		// inputFile.read(body, sizeof(body));
-		
-		while (std::getline(inputFile, line) && body.length() < CHUNK_SIZE) 
-			body.append(line);
+		// inputFile.seekg(/* temp position */);
+		inputFile.read(body, sizeof(body));
+		/* change the temp position if the file was not read till the end */
 		inputFile.close();
 	}
 	else 
 	{
 		std::cout << PINK << "HALP, THERE IS PROBLEM WITH THE FILE " << RESET_LINE;
 	}
-	// PRINT << GRAY << body << RESET_LINE;
-	response.append(body);
-	send(iter->fd, response.c_str(), response.length(), 1);
+	send(iter->fd, body, inputFile.gcount(), 0);
 }
