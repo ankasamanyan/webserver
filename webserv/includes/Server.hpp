@@ -16,9 +16,14 @@
 #include <set>
 #include "Client.hpp"
 #include <map>
+#include <sstream>
+#include <fstream>
 #include <cstdlib>
 
-#define CHUNK_SIZE 8000
+#define CHUNK_SIZE 	8000
+#define HTTP_V 		"HTTP/1.1"
+#define EXIT_STATUS	200
+
 
 using std::string;
 
@@ -29,7 +34,6 @@ struct parsingStruct {
     bool    methodPost;
     bool    methodDelete;
     string  maxBody;
-	// string	rootDir;
 };
 
 class Client;
@@ -67,13 +71,16 @@ class Server
         bool                isMethodAllowed(fdIter iter);
         bool                isHTTPVersionValid(fdIter iter);
         bool                isContentOfAllowedSize(fdIter iter);
+		/*	  */
+		void				sendResponse(fdIter iter);
+
 
 
         public:
 		/* Server(parsingStruct init) */
 		Server(parsingStruct innit);
 		~Server();
-	/* functions */
+		/* functions */
 		int		getSocket();
 		void	serverLoop();
 		void	configureSocket(int newSocket);

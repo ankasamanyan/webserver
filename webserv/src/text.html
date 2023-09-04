@@ -1,0 +1,117 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Response Page</title>
+    <style>
+        body {
+            background-color: #7747c9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        p {
+            color: white;
+            font-size: 45px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <p>Your request has been processed! Here is your response!</p>
+</body>
+</html> -->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Response Page with Animation</title>
+    <style>
+        /* Define the background color and initial text styling */
+        body {
+            background-color: #6c55be;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+	        /* ... (existing styles) ... */
+	        animation: backgroundColorChange 5s linear infinite; /* Background color change animation */
+        }
+
+        p {
+            color: white;
+            font-size: 45px;
+            text-align: center;
+            opacity: 0; /* Initially, set opacity to 0 to make it invisible */
+            animation: fadeIn 2s ease-in-out forwards; /* Define the animation */
+        }
+
+        /* Define the fade-in animation */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+
+
+    /* Background color change animation */
+	    @keyframes backgroundColorChange {
+	        0% {
+	            background-color: #6c55be; /* Start with one color */
+	        }
+	        25% {
+	            background-color: #9f53b0; /* Transition to another color at 50% */
+	        }
+	        50% {
+	            background-color: #c87b40; /* Transition to another color at 50% */
+	        }
+	        75% {
+	            background-color: #b05374; /* Transition to another color at 50% */
+	        }
+	        100% {
+	            background-color: #6c55be; /* Return to the original color */
+	        }
+	    }
+    </style>
+</head>
+<body>
+    <p>Your request has been processed! Here is your response!</p>
+</body>
+</html>
+<!-- 
+<style>
+    /* ... (existing styles) ... */
+
+    body {
+        background-color: #6c55be;
+        /* ... (existing styles) ... */
+        animation: backgroundColorChange 5s linear infinite; /* Background color change animation */
+    }
+
+    /* Background color change animation */
+    @keyframes backgroundColorChange {
+        0% {
+            background-color: #6c55be; /* Start with one color */
+        }
+        50% {
+            background-color: #ff5733; /* Transition to another color at 50% */
+        }
+        100% {
+            background-color: #6c55be; /* Return to the original color */
+        }
+    }
+</style> -->

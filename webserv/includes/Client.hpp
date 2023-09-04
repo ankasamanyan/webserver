@@ -19,7 +19,6 @@ class Client
 	private:
 		requestType		_reqType;
 		pollfd			_pollFd;/* int	_fd; */
-		// configStruct	_config;
 
 	public:
 		Client();
@@ -31,6 +30,8 @@ class Client
         std::string                             HTTPVersion;
         std::map<std::string, std::string>		headers;
         std::string                             body;
+		/*  */
+		int										exitStatus;
 };
 
 #endif

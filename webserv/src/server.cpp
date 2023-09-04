@@ -94,12 +94,11 @@ void	Server::serverLoop()
 		}
 		else if (iter->revents & POLLOUT)
 		{
-			string hello("HTTP/1.1 200 OK\r\n\r\nETA CIESCHAZ RABOTAET NORMALNA!");
-			send(iter->fd, hello.c_str(), hello.length(), 0);
 			PRINT << PINK "\t\t......Client wants to get a RESPONSE......   ";
 			PRINT <<  "FD: "<< iter->fd << RESET_LINE;
 			if (true/* if response ended */)
 			{
+				sendResponse(iter);
 				disconnectClient(iter);
 				break;
 			}
@@ -133,7 +132,7 @@ void Server::acceptClient(fdIter iter) {
     PRINT << GREEN "\t\t......Someone wants to connect......   ";
 }
 
-Server::requestState	Server::zreceiveRequest(fdIter iter) {
+Server::requestState	Server::receiveRequest(fdIter iter) {
     char currentChunk[CHUNK_SIZE];
 
     memset(currentChunk, 0, CHUNK_SIZE);
