@@ -14,11 +14,19 @@ enum requestType
 	INVALID
 };
 
+enum error_state
+{
+	POST_PATH_NOT_ALLOWED,
+	NO_ERROR,
+	ERROR_404 = 404,
+};
+
 class Client
 {
 	private:
 		requestType		_reqType;
 		pollfd			_pollFd;/* int	_fd; */
+		// error_state		_err;
 
 	public:
 		Client();
@@ -32,6 +40,7 @@ class Client
         std::string                             body;
 		/*  */
 		int										exitStatus;
+		// std::ifstream							inputFile;
 };
 
 #endif

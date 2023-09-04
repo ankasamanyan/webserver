@@ -3,6 +3,8 @@
 
 int main(int argc, char const *argv[])
 {
+	(void)argv;
+	(void)argc;
 	PRINT << RESET_LINE << PURPLE "\t\t... STARTING THE SERVER ..." << RESET_LINE;
 	parsingStruct	innit;
 	innit.host = "0.0.0.0";

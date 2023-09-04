@@ -65,14 +65,13 @@ int		Server::highestFd(std::set<int> activeClients)
 void	Server::serverLoop()
 {
 	pollfd	listenPollFd;
-	pollfd	temp;
 	fdIter	iter;
 
 	listenPollFd.fd = _serverSocket;
 	listenPollFd.events = POLLIN;
 	_fdVector.push_back(listenPollFd);
 
-	int pollReturn = poll(_fdVector.data(), _fdVector.size() , -1);
+	poll(_fdVector.data(), _fdVector.size() , -1);
 	PRINT << PURPLE "\t\t......poll returned......" << RESET_LINE;
 
 	for (iter = _fdVector.begin(); iter != _fdVector.end(); iter++)
@@ -187,7 +186,7 @@ void    Server::parseHeaders(fdIter iter) {
     int headersSize = currentClient.request.find("\r\n\r\n") - startHeadersIndex;
     std::string headers = currentClient.request.substr(startHeadersIndex, headersSize);
     std::vector<string> splitHeaders = Utils::split(headers, '\n');
-    for (int i = 0; i < splitHeaders.size(); i++) {
+    for (size_t i = 0; i < splitHeaders.size(); i++) {
         std::string trimmedHeader = Utils::trimRight(splitHeaders[i], "\r\n");
         std::vector<string> headerFieldValue = Utils::split(trimmedHeader, ':');
         headerFieldValue[1] = Utils::trimLeft(headerFieldValue[1], " ");
