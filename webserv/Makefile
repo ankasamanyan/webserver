@@ -3,7 +3,8 @@ NAME = webserv
 SRC =	src/main.cpp \
 		src/Server.cpp \
 		src/Client.cpp \
-		src/response.cpp
+		src/response.cpp \
+		src/request.cpp
 
 PURPLE	= "\033[0;34m"
 PINK	= "\033[0;35m"

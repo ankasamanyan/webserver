@@ -3,6 +3,9 @@
 
 #include "Utils.hpp"
 #include "Server.hpp"
+#include <fstream>
+#include <iostream>
+#include <string>
 #include <map>
 
 enum requestType
@@ -27,8 +30,10 @@ enum exitState
 {
 	POST_PATH_NOT_ALLOWED,
 	NO_ERROR,
-	ERROR_404 = 404,
 	EXIT_OK = 200,
+	ERROR_404 = 404,
+	METHOD_NOT_ALLOWED = 405,
+	INVALID_HHTPV = 505,
 };
 
 struct	parsingStruct;
@@ -50,6 +55,7 @@ class Client
 		clientState								_clientState;
 		parsingStruct							&_configuration;
 
+
 		bool                isRequestValid();
         bool                isRequestEmpty();
         void                parseRequestLine();
@@ -60,14 +66,14 @@ class Client
         bool                isHTTPVersionValid();
         bool                isContentOfAllowedSize();
 		void				configureSocket(int newSocket);
+		void				checkHeaders(std::string &headres);
 
 	public:
-		// Client();
 		Client(int clientFd, parsingStruct &config);
 		const Client	&operator=(const Client &copy);
 		Client(const Client &copy);
 		~Client();
-        // void         	setState(clientState state);
+		/*  */
         clientState         getState();
 		/*  */
 		void	receiveRequest();

@@ -6,7 +6,7 @@ Server::Server(parsingStruct innit)
 	int option = 1;
 	_serverSocket = socket(AF_INET, SOCK_STREAM, 0);
 
-	setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &option, sizeof(option));
+	setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, &option, sizeof(option));
 	_serverAddress.sin_family		= AF_INET;
 	_serverAddress.sin_port			= htons(innit.port);
 	_serverAddress.sin_addr.s_addr	= inet_addr(innit.host.c_str());

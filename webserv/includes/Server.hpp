@@ -18,7 +18,6 @@
 #include "Client.hpp"
 #include <map>
 #include <sstream>
-#include <fstream>
 #include <cstdlib>
 #include <sys/errno.h>
 
@@ -26,8 +25,8 @@
 #define HTTP_V 		"HTTP/1.1"
 #define EXIT_STATUS	200
 
-
 using std::string;
+class Client;
 
 struct parsingStruct {
 	string	host;
@@ -38,17 +37,16 @@ struct parsingStruct {
     string  maxBody;
 };
 
-class Client;
-
 class Server
 {
+	friend class Client;
+
 	private:
 		struct sockaddr_in		_serverAddress;
 		int						_serverSocket;
 		std::vector<pollfd>		_fdVector;
 		std::map<int, Client>   _clients;
         parsingStruct           _configuration;
-
 
 		/* defines */
 		enum requestState
@@ -67,30 +65,13 @@ class Server
 		int					highestFd(std::set<int> activeClients);
 		void				disconnectClient(fdIter iter);
 
-        // bool                isRequestValid(fdIter iter);
-        // bool                isRequestEmpty(fdIter iter);
-        // void                parseRequestLine(fdIter iter);
-        // void                parseHeaders(fdIter iter);
-        // void                parseBody(fdIter iter);
-        // bool                areAllPartsOfRequestValid(fdIter iter);
-        // bool                isMethodAllowed(fdIter iter);
-        // bool                isHTTPVersionValid(fdIter iter);
-        // bool                isContentOfAllowedSize(fdIter iter);
-		/*	  */
-		// void				sendResponse(fdIter iter, std::map<int,Client> client);
-
-
-
-        public:
-		/* Server(parsingStruct init) */
+    public:
 		Server(parsingStruct innit);
 		~Server();
 		/* functions */
 		int		getSocket();
 		void	serverLoop();
 		void	configureSocket(int newSocket);
-		
-		friend class Client;
 
 };
 
