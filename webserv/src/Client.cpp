@@ -1,13 +1,16 @@
 #include "../includes/Client.hpp"
 
-Client::Client(int clientFd, parsingStruct &config):_configuration(config) 
+Client::Client(int _serverSocket, parsingStruct &config):_configuration(config) 
 {
-	_clientFd = clientFd;
+	int newFd = accept(_serverSocket, (struct sockaddr *)NULL, NULL);
+    configureSocket(newFd);
+	_clientFd = newFd;
 	_exitState = EXIT_OK;
 }
 
 const Client	&Client::operator=(const Client &copy)
 {
+	_clientFd = copy._clientFd;
 	_exitState = copy._exitState;
 	_reqType = copy._reqType;
 	_pollFd = copy._pollFd;
@@ -27,4 +30,15 @@ Client::Client(const Client &copy):_configuration(copy._configuration)
 
 Client::~Client()
 {
+}
+
+void	Client::configureSocket(int newSocket)
+{
+	int		flags;
+
+	flags = fcntl(newSocket, F_GETFL, 0);
+	if (flags == -1)
+		Utils::printMsg("Error configure socket", PINK);
+	if (fcntl(newSocket, F_SETFL, flags | O_NONBLOCK) == -1)
+		Utils::printMsg("Failed to set socket to non-blocking in fcntl().",PURPLE);
 }

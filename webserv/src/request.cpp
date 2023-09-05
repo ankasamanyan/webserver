@@ -11,11 +11,6 @@ void	Client::receiveRequest()
 		_clientState = SHOULD_DISCONNECT_;
 		return ; 
 	}
-	
-    // if (numberOfBytesReceived == 0) {
-    //     disconnectClient(iter);
-    //     return DISCONNECTED;
-    // }
     if (numberOfBytesReceived < 0) {
         Utils::printMsg("Error receiving a message from a socket", PURPLE);
     }
@@ -28,9 +23,7 @@ void	Client::receiveRequest()
         if (isRequestValid() == false) {
 			_clientState = INVALID_;
 			return ;
-        //   return Server::INVALID;
         }
-		// _clientState = 
         //ifCGIhandleCGI
         //prepareResponse
 		

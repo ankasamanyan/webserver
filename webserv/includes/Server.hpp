@@ -77,7 +77,7 @@ class Server
         // bool                isHTTPVersionValid(fdIter iter);
         // bool                isContentOfAllowedSize(fdIter iter);
 		/*	  */
-		void				sendResponse(fdIter iter, std::map<int,Client> client);
+		// void				sendResponse(fdIter iter, std::map<int,Client> client);
 
 
 

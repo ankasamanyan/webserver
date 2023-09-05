@@ -59,6 +59,7 @@ class Client
         bool                isMethodAllowed();
         bool                isHTTPVersionValid();
         bool                isContentOfAllowedSize();
+		void				configureSocket(int newSocket);
 
 	public:
 		// Client();
@@ -70,6 +71,7 @@ class Client
         clientState         getState();
 		/*  */
 		void	receiveRequest();
+		void	sendResponse();
 
 };
 

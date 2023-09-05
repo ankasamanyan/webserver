@@ -102,9 +102,10 @@ void	Server::serverLoop()
 		{
 			PRINT << PINK "\t\t......Client wants to get a RESPONSE......   ";
 			PRINT <<  "FD: "<< iter->fd << RESET_LINE;
+			Client	&currClient =_clients.at(iter->fd);
 			if (true/* if response ended */)
 			{
-				sendResponse(iter, _clients);
+				currClient.sendResponse();
 				disconnectClient(iter);
 				break;
 			}
@@ -126,13 +127,11 @@ void	Server::serverLoop()
 }
 
 void Server::acceptClient(fdIter iter) {
-    PRINT <<  "FD: "<< iter->fd << RESET_LINE;
-    int clientFd = accept(_serverSocket, (struct sockaddr *)NULL, NULL);
-    configureSocket(clientFd);
-    _clients.insert(std::make_pair(clientFd, Client(clientFd, _configuration)));
+	Client newClient(iter->fd, _configuration);
+    _clients.insert(std::make_pair(newClient._clientFd, newClient));
 
     pollfd	pollFdForThisClient;
-    pollFdForThisClient.fd = clientFd;
+    pollFdForThisClient.fd = newClient._clientFd;
     pollFdForThisClient.events = POLLIN | POLLHUP;
     _fdVector.push_back(pollFdForThisClient);
     PRINT << GREEN "\t\t......Someone wants to connect......   ";

@@ -1,6 +1,6 @@
 #include "../includes/Server.hpp"
 
-void	Server::sendResponse(fdIter iter, std::map<int,Client> client)
+void	Client::sendResponse()
 {
 	// if(client.at(iter->fd)._exitState == ERROR_404);
 	char			body[CHUNK_SIZE];
@@ -10,7 +10,7 @@ void	Server::sendResponse(fdIter iter, std::map<int,Client> client)
 	response.append(HTTP_V); /* HTTP version */
 	response.append(" 200 OK\r\n\r\n"); /* exit code */
 	/* headres if needed */
-	send(iter->fd, response.c_str(), response.length(), 0);
+	send(_clientFd, response.c_str(), response.length(), 0);
 
 	if (inputFile.is_open())
 	{
@@ -27,6 +27,6 @@ void	Server::sendResponse(fdIter iter, std::map<int,Client> client)
 		std::cout << PINK << strerror(errno) << RESET_LINE;
 	}
 	if (inputFile.gcount() < CHUNK_SIZE)
-		send(iter->fd, body, inputFile.gcount(), 0);
+		send(_clientFd, body, inputFile.gcount(), 0);
 }
 
