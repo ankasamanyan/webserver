@@ -28,12 +28,23 @@
             color: #dadada; /* Slightly lighter text color */
         }
 
-        /* Style for the back to home link */
-        a {
+            /* Style for the back to home button */
+		a {
+            display: inline-block;
+            padding: 20px 30px;
+            background-color: rgba(130, 74, 175, 0.7); /* Custom button color with transparency */
+            color: rgba(255, 255, 255, 0.8); /* Lighter text color with transparency */
             text-decoration: none;
-            color: #4a1477; /* Link color */
             font-weight: bold;
-        }
+            border-radius: 10px;
+            margin-top: 20px;
+            transition: background-color 0.3s ease; /* Add a smooth transition effect */
+	    }
+
+        /* Change button color on hover */
+	    a:hover {
+	        background-color: rgba(51, 11, 78, 0.7); /* Custom button color on hover with transparency */
+	    }
     </style>
 </head>
 <body>

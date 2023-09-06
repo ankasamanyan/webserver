@@ -76,8 +76,8 @@ class Client
 		/*  */
         clientState         getState();
 		/*  */
-		void	receiveRequest();
-		void	sendResponse();
+		void				receiveRequest();
+		void				sendResponse();
 
 };
 

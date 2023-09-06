@@ -72,7 +72,6 @@ class Server
 		int		getSocket();
 		void	serverLoop();
 		void	configureSocket(int newSocket);
-
 };
 
 
