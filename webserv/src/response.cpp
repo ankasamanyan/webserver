@@ -3,8 +3,6 @@
 void	Client::sendResponse()
 {
 	char			body[CHUNK_SIZE];
-	string			headers;
-	string			response;
 	string			fileName;
 
 	/* <--------------- path -------------------> */
@@ -12,6 +10,7 @@ void	Client::sendResponse()
 	 * @brief access path checks
 	 * @return correct _exitstate
 	 */
+
 
 	if (_path.compare("/") == 0)
 		fileName = "./html/index.html";
@@ -25,23 +24,27 @@ void	Client::sendResponse()
 	PRINT << GREEN "You are trying to access '" << _path << "'" << RESET_LINE<< RESET_LINE;
 	std::ifstream	inputFile(fileName.c_str(), std::ios::binary); /* temp html file */
 
-	response.append(HTTP_V); /* HTTP version */
-	response.append(" 200 OK\r\n"); /* exit code */
-	/*  */
-	checkHeaders(headers);
-	headers.append("\r\n");
-	response.append(headers);
-	PRINT << PURPLE << "The headers are:\t" << headers << RESET_LINE;
-	/* headres if needed */
-	send(_clientFd, response.c_str(), response.length(), 0);
+	/* check the _exitcide and the accessability beffore sending headers */
+	if (_responseState == INITIALIZED)
+		sendHeaders();
+
 	if (inputFile.is_open())
 	{
 		// inputFile.seekg(/* temp position */);
+		inputFile.seekg(_responsePos);
+		inputFile.read(body, CHUNK_SIZE);
+		send(_clientFd, body, inputFile.gcount(), 0);
 
-		inputFile.read(body, sizeof(body));
 		/* change the temp position if the file was not read till the end */
 		if (inputFile.eof())
+		{
+			PRINT << YELLOW "\t END OF FOLE" << RESET_LINE; 
+			_responseState = FULLY_SENT;
 			inputFile.close();
+			return ;
+		}
+		_responsePos = inputFile.tellg();
+		inputFile.close();
 	}
 	else 
 	{
@@ -55,9 +58,25 @@ void	Client::sendResponse()
 		std::cout << PINK << "HALP, THERE IS PROBLEM WITH THE FILE " << RESET_LINE;
 		std::cout << PINK << strerror(errno) << RESET_LINE;
 	}
+}
 
-	if (inputFile.gcount() < CHUNK_SIZE)
-		send(_clientFd, body, inputFile.gcount(), 0);
+void	Client::sendHeaders()
+{
+	string			headers;
+	string			response;
+
+	response.append(HTTP_V); /* HTTP version */
+	response.append(" 200 OK\r\n"); /* exit code */
+
+	checkHeaders(headers);
+
+	headers.append("\r\n");
+	response.append(headers);
+
+	PRINT << PURPLE << "The headers are:\t" << headers << RESET_LINE;
+
+	send(_clientFd, response.c_str(), response.length(), 0);
+	_responseState = PARTIALLY_SENT;
 }
 
 void	Client::checkHeaders(std::string &headers)

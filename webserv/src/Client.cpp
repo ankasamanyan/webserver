@@ -5,6 +5,7 @@ Client::Client(int _serverSocket, parsingStruct &config):_configuration(config)
 	int newFd = accept(_serverSocket, (struct sockaddr *)NULL, NULL);
     configureSocket(newFd);
 	_clientFd = newFd;
+	_responseState = INITIALIZED;
 	_exitState = EXIT_OK;
 }
 

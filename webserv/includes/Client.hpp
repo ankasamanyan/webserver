@@ -23,7 +23,13 @@ enum clientState
 	VALID_,
 	SHOULD_DISCONNECT_,
 	PARTLY_READ_,
+};
 
+enum responseState
+{
+	INITIALIZED,
+	PARTIALLY_SENT,
+	FULLY_SENT,
 };
 
 enum exitState
@@ -54,6 +60,8 @@ class Client
         std::string                             _body;
 		clientState								_clientState;
 		parsingStruct							&_configuration;
+		size_t									_responsePos;
+		responseState							_responseState;
 
 
 		bool                isRequestValid();
@@ -67,6 +75,7 @@ class Client
         bool                isContentOfAllowedSize();
 		void				configureSocket(int newSocket);
 		void				checkHeaders(std::string &headres);
+		void				sendHeaders();
 
 	public:
 		Client(int clientFd, parsingStruct &config);

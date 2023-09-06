@@ -106,7 +106,8 @@ void	Server::serverLoop()
 			if (true/* if response ended */)
 			{
 				currClient.sendResponse();
-				disconnectClient(iter);
+				if (currClient._responseState == FULLY_SENT)
+					disconnectClient(iter);
 				break;
 			}
 		}
