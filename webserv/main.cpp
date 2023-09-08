@@ -10,37 +10,32 @@
 #include <fstream>
 
 #include "./includes/Configuration.hpp"
-#include "./includes/ConfigurationFileReader.hpp"
-
+// #include "./includes/ConfigurationFileReader.hpp"
+#include "./includes/Server.hpp"
+#include "./includes/ServersRepository.hpp"
 
 int main(int argc, char** argv){
     Configuration *conf = new Configuration();
-    // ConfigurationFileReader *reader = new ConfigurationFileReader();
+    Server *server = new Server();
+    ServersRepository *serversRepository = new ServersRepository(*server);
+    
     std::ifstream configFile(argv[1]);
     std::string line = "default";
     
     if(argc == 1)
     {
         conf->getDefaultConfiguration();
-        // std::cout << conf->config.port << std::endl;
     }
     
-    else if(argc == 2)
-    {   
-
-        if (configFile.is_open())
+    else     if (argc == 2)
     {
-        while ( std::getline (configFile,line) )
-        // while ( &ConfigurationFileReader::readLineByLine)
-        {
-            std::cout << line << '\n';
+        try {
+            std::cout << serversRepository->servers[0].configuration.getConfigurationFromConfigFile().port << std::endl;
         }
-        configFile.close();
+        catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
+        }
     }
-        // ConfigurationFileReader::readLineByLine(argv[1]);
-        // TO IMPLEMENT use input file as config file
-    }
-    else{
-        std::cout<<"Too many arguments!" << std::endl; 
-    }
+    else
+        std::cout << "Wrong number of arguments" << std::endl;
 }

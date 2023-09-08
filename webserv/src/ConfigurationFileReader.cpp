@@ -1,14 +1,23 @@
 #include "../includes/ConfigurationFileReader.hpp"
 
-ConfigurationFileReader::ConfigurationFileReader(){}
+#include <string>
+#include <iostream>
+
+ConfigurationFileReader::ConfigurationFileReader(){};
+ConfigurationFileReader::ConfigurationFileReader(std::string configFile, Configuration config){
+    (void)config;
+    ConfigurationFileParser parser(Configuration config);
+    std::fstream file(configFile);
+    std::string line = "default";
+    if (file.fail())
+        throw std::out_of_range("failed to open a file");
+        while (std::getline (file,line) )
+        {
+            
+            std::cout << line << '\n';
+        }
+        file.close();
+}
 
 ConfigurationFileReader::~ConfigurationFileReader(){}
 
-bool ConfigurationFileReader::readLineByLine(std::string configFileName, std::string line){
-    std::ifstream configFile(configFileName);
-    // std::cout <<std::getline (configFile,line)<<std::endl;
-    while (std::getline (configFile,line))
-        return true;
-    return false;
-
-}

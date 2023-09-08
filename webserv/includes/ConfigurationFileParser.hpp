@@ -7,18 +7,12 @@
 class ConfigurationFileParser {
     public:
 
-	Configuration config;
-
-    ConfigurationFileParser();
+	ConfigurationFileParser();
+    ConfigurationFileParser(Configuration config);
 	~ConfigurationFileParser();
 
-	// void ConfigurationFileParser::parseHost(){
-
-	// }
-
-	// void ConfigurationFileParser::parse(){
-	// 	parseHost();
-	// }
+	// void ConfigurationFileParser::parseHost();
+	void parse();
 
 	/* TO IMPLEMENT
 			
@@ -36,7 +30,6 @@ class ConfigurationFileParser {
 			parseGetAvailability
 			parsePostAvailability
 			parseDeletAvailability
-
 			
 */
 

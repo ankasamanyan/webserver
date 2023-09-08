@@ -29,8 +29,23 @@ typedef struct configuration{
 class Configuration
 {
 private:
-public:
+
 	configuration config;
+	std::string serverName;
+	std::string host;
+	std::string port;
+	std::string maxBody;
+	std::string error404;
+	std::string root;
+	std::string CGIDir;
+	std::string dir;
+	std::string uploadDir;
+	std::string HTTPversion;
+	std::string dirListing;
+	bool methodGet;
+	bool methodPost;
+	bool methodDelete;
+public:	
 	Configuration();
 	~Configuration();
 	configuration getConfigurationFromConfigFile();

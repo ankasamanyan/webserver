@@ -1,5 +1,5 @@
-#ifndef CONFIGURATION_HPP
-#define CONFIGURATION_HPP
+#ifndef SERVER_HPP
+#define SERVER_HPP
 
 #include <stdlib.h>
 
@@ -8,11 +8,16 @@
 #include <string.h>
 #include <stdbool.h>
 #include "Configuration.hpp"
+#include "ConfigurationFileReader.hpp"
 
     class Server {
 
         public:
 			Configuration configuration;
+
+            Server();
+            Server(Configuration configuration);
+            ~Server();
 			
     };
 
