@@ -8,7 +8,7 @@ ServersRepository::ServersRepository(){};
 
 ServersRepository::~ServersRepository(){}
 
-std::deque<Server> ServersRepository::getServers(){
+std::deque<Configuration> ServersRepository::getServers(){
     return servers;
 }
 
@@ -16,6 +16,6 @@ std::deque<Server> ServersRepository::getServers(){
 //     servers.push_back(server);
 // }
 
-ServersRepository::ServersRepository(Server server) {
+ServersRepository::ServersRepository(Configuration server) {
     servers.push_back(server);
 }

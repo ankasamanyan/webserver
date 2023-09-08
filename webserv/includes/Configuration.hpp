@@ -2,11 +2,13 @@
 #define CONFIGURATIONFILE_HPP
 
 #include <stdlib.h>
-
-#include <iostream>
 #include <time.h>
 #include <string.h>
 #include <stdbool.h>
+#include <iostream>
+#include <iomanip>
+#include <fstream>
+#include <istream>
 
 typedef struct configuration{
     std::string serverName;
@@ -48,6 +50,7 @@ private:
 public:	
 	Configuration();
 	~Configuration();
+	void reader(std::string configFile, configuration config);
 	configuration getConfigurationFromConfigFile();
 	configuration getDefaultConfiguration();
 	configuration getConfiguration();

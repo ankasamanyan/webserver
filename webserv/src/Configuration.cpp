@@ -9,6 +9,20 @@ configuration Configuration::getConfigurationFromConfigFile(){
 	return Configuration::config;
 }
 
+void Configuration::reader(std::string configFile, configuration config){
+    (void)config;
+    std::fstream file(configFile);
+    std::string line = "default";
+    if (file.fail())
+        throw std::out_of_range("failed to open a file");
+        while (std::getline (file,line) )
+        {
+            std::cout << line << '\n';
+        }
+        file.close();
+        
+}
+
 configuration Configuration::getDefaultConfiguration(){
 	Configuration::config.serverName = "defaultName";
 	Configuration::config.host = "0.0.0.0";
@@ -31,3 +45,4 @@ configuration Configuration::getDefaultConfiguration(){
 	methodDelete = true;
 	return Configuration::config;
 }
+
