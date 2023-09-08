@@ -45,6 +45,7 @@ bool    Client::isRequestValid() {
 }
 
 bool    Client::isRequestEmpty() {
+    _exitState = BAD_REQUEST;
     return _request.empty();
 }
 
@@ -98,12 +99,14 @@ bool    Client::isMethodAllowed() {
         return true;
     else if (_method == "POST" && _configuration.methodPost)
         return true;
+    _exitState = METHOD_NOT_ALLOWED;
     return false;
 }
 
 bool    Client::isHTTPVersionValid() {
     if (_HTTPVersion == "HTTP/1.1")
         return true;
+    _exitState = INVALID_HHTPV;
     return false;
 }
 
@@ -114,6 +117,7 @@ bool    Client::isContentOfAllowedSize() {
         int allowedSize = atoi(_configuration.maxBody.c_str());
         if (contentSize <= allowedSize && actualBodySize <= allowedSize)
             return true;
+        _exitState = CONTENT_TOO_LARGE;
         return false;
     }
     return true;
