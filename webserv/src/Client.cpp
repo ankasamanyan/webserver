@@ -7,6 +7,7 @@ Client::Client(int _serverSocket, parsingStruct &config):_configuration(config)
 	_clientFd = newFd;
 	_responseState = INITIALIZED;
 	_exitState = EXIT_OK;
+	_errorPagePath = "./html/";
 }
 
 const Client	&Client::operator=(const Client &copy)

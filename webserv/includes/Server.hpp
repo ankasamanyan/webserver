@@ -66,6 +66,7 @@ class Server
 		int					highestFd(std::set<int> activeClients);
 		void				disconnectClient(fdIter iter);
 
+
     public:
 		Server(parsingStruct innit);
 		~Server();

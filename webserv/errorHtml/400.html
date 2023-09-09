@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>400 - Bad Request</title>
+    <style>
+        /* Define the background color and styling for the page */
+        body {
+            background-color: white; /* White background color */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Style for the top navigation bar */
+        .topbar {
+            background-color: white; /* White top bar background */
+            color: #6c55be; /* Lily text color */
+            padding: 20px 0; /* Increased padding */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 999; /* Ensure it's above other content */
+        }
+
+        .topbar a {
+            color: #6c55be; /* Lily link color */
+            text-decoration: none;
+            margin: 0 20px; /* Increased margins */
+        }
+
+        /* Style for the company name */
+        .company-name {
+            color: #6c55be; /* Lily text color */
+            margin: 0 20px; /* Increased margins */
+        }
+
+        /* Style for the main content area */
+        .content {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            padding: 100px;
+        }
+
+        .text {
+            text-align: center; /* Center-align the text */
+            flex: 50%; /* Set the text to occupy 50% of the width */
+        }
+
+        h1 {
+            font-size: 48px;
+            color: #333333;
+        }
+
+        p {
+            font-size: 24px;
+            color: #666;
+        }
+
+        /* Style for the right side image */
+        .image {
+            flex: 50%; /* Set the image to occupy 50% of the width */
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Style for the button with lily color outline */
+        .button {
+            display: inline-block;
+            padding: 20px 30px;
+            background-color: transparent; /* Transparent background */
+            color: #6c55be; /* Lily text color */
+            text-decoration: none;
+            font-weight: bold;
+            border: 2px solid #6c55be; /* Lily-colored outline */
+            border-radius: 10px;
+            margin-top: 20px;
+            transition: background-color 0.3s ease, color 0.3s ease; /* Add transition effect */
+        }
+
+        /* Change button color and background on hover */
+        .button:hover {
+            background-color: #6c55be; /* Lily background on hover */
+            color: white; /* White text on hover */
+            animation: backgroundColorChange 5s linear infinite; /* Background color change animation on hover */
+            border: 2px solid transparent; /* Transparent outline on hover */
+        }
+
+        /* Background color change animation on hover */
+        @keyframes backgroundColorChange {
+            0% {
+                background-color: #6c55be; /* Start with transparent background */
+            }
+            25% {
+                background-color: #9f53b0; /* Transition to Lily color at 25% */
+            }
+            50% {
+                background-color: #c87b40; /* Transition back to transparent at 50% */
+            }
+            75% {
+                background-color: #b05374; /* Transition to Lily color at 75% */
+            }
+            100% {
+                background-color: #6c55be; /* Return to transparent background */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <div class="topbar">
+        <div class="company-name">42 Capybaras</div>
+        <div class="links">
+            <a href="#">News</a>
+            <a href="#">About us</a>
+            <a href="#">Contact us</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <div class="text">
+            <h1>400 - Bad Request</h1>
+            <p>The request sent to the server is invalid.</p>
+            
+            <!-- Style the link as a button -->
+            <a class="button" href="../html/index.html">Back to Home</a>
+        </div>
+
+        <!-- Right Side Image -->
+        <div class="image">
+            <img src="../html/5.JPG" alt="Image">
+        </div>
+    </div>
+</body>
+</html>

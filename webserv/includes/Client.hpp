@@ -65,16 +65,17 @@ class Client
 		parsingStruct							&_configuration;
 		size_t									_responsePos;
 		responseState							_responseState;
+		std::string								_errorPagePath;
 
 
 		bool                isRequestValid();
         bool                isRequestEmpty();
-        void                parseRequest();
+		void                parseRequest();
         void                parseRequestLine();
         void                parseHeaders();
         void                parseBody();
-        void                defineRequestTarget();
         bool                areAllPartsOfRequestValid();
+        void                defineRequestTarget();
         bool                isMethodAllowed();
         bool                isHTTPVersionValid();
         bool                isContentOfAllowedSize();
@@ -87,11 +88,10 @@ class Client
 		const Client	&operator=(const Client &copy);
 		Client(const Client &copy);
 		~Client();
-		/*  */
-        clientState         getState();
-		/*  */
-		void				receiveRequest();
-		void				sendResponse();
+
+        clientState         					getState();
+		void									receiveRequest();
+		void									sendResponse();
 
 };
 

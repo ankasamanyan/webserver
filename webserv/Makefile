@@ -4,7 +4,8 @@ SRC =	src/main.cpp \
 		src/Server.cpp \
 		src/Client.cpp \
 		src/response.cpp \
-		src/request.cpp
+		src/request.cpp \
+		src/not_pretty.cpp
 
 PURPLE	= "\033[0;34m"
 PINK	= "\033[0;35m"
