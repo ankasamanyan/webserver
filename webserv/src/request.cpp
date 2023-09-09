@@ -23,7 +23,9 @@ void	Client::receiveRequest()
 			_clientState = INVALID_;
 			return ;
         }
-        //ifCGIhandleCGI
+        if (_CGICase == true) {
+        //Юля, твой выход😎
+        }
         //prepareResponse
 		
 		_clientState = VALID_;
