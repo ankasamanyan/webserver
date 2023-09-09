@@ -7,7 +7,8 @@ Client::Client(int _serverSocket, parsingStruct &config):_configuration(config)
 	_clientFd = newFd;
 	_responseState = INITIALIZED;
 	_exitState = EXIT_OK;
-	_errorPagePath = "./html/";
+	_errorPagePath = "/errorHtml/";
+	/* webserv/html/errorHtml/405.html */
 }
 
 const Client	&Client::operator=(const Client &copy)
@@ -22,6 +23,11 @@ const Client	&Client::operator=(const Client &copy)
 	_HTTPVersion = copy._HTTPVersion;
 	_headers = copy._headers;
 	_body = copy._body;
+	_requestTarget = copy._requestTarget;
+	_clientState = copy._clientState;
+	_configuration = copy._configuration;
+	_responseState = copy._responseState;
+	_errorPagePath = copy._errorPagePath;
 	return (*this);
 }
 

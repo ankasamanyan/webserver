@@ -9,7 +9,7 @@
 #include <map>
 #include <sys/stat.h>
 #include <cstdio>
-
+#define STANDARD_404 "./html/errorHtml/404.html"
 enum requestType
 {
 	UNDEFINED,
@@ -100,6 +100,8 @@ class Client
 		void				checkHeaders(std::string &headres);
 		void				sendHeaders();
 		std::string		    getHttpMsg(int code);
+		void				putCorrectPath(std::string);
+
 
 	public:
 		Client(int clientFd, parsingStruct &config);
