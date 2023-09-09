@@ -40,6 +40,8 @@ enum exitState
 	ERROR_404 = 404,
 	METHOD_NOT_ALLOWED = 405,
 	INVALID_HHTPV = 505,
+	BAD_REQUEST = 400,
+	CONTENT_TOO_LARGE = 413
 };
 
 struct	parsingStruct;
