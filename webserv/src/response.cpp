@@ -25,14 +25,14 @@ void	Client::sendResponse()
 	std::ifstream	inputFile(fileName.c_str(), std::ios::binary); /* temp html file */
 
 	/* check the _exitcide and the accessability beffore sending headers */
+
 	if (_responseState == INITIALIZED)
 		sendHeaders();
-
 	if (inputFile.is_open())
 	{
-		// inputFile.seekg(/* temp position */);
+		// if(_responseState != FULLY_SENT)
 		inputFile.seekg(_responsePos);
-		inputFile.read(body, CHUNK_SIZE);
+		inputFile.read(body, sizeof(body));
 		send(_clientFd, body, inputFile.gcount(), 0);
 
 		/* change the temp position if the file was not read till the end */
@@ -49,10 +49,13 @@ void	Client::sendResponse()
 	else 
 	{
 		/* if the file doesn't exist && _exitstate == 404 */
+		_exitState = ERROR_404;
 		fileName = "./html/404.html";
 		std::ifstream errorPage(fileName.c_str(), std::ios::binary);
 		errorPage.read(body, sizeof(body));
 		send(_clientFd, body, errorPage.gcount(), 0);
+		errorPage.close();
+		_responseState = FULLY_SENT;
 		return ;
 		/*  */
 		std::cout << PINK << "HALP, THERE IS PROBLEM WITH THE FILE " << RESET_LINE;
@@ -66,6 +69,7 @@ void	Client::sendHeaders()
 	string			response;
 
 	response.append(HTTP_V); /* HTTP version */
+	
 	response.append(" 200 OK\r\n"); /* exit code */
 
 	checkHeaders(headers);

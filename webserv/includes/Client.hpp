@@ -51,7 +51,7 @@ class Client
 		int										_clientFd;
 		exitState								_exitState;
 		requestType								_reqType;
-		pollfd									_pollFd;/* int	_fd; */
+		pollfd									_pollFd;
         std::string                             _request;
         std::string                             _method;
         std::string                             _path;
