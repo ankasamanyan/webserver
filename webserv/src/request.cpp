@@ -89,21 +89,21 @@ void    Client::parseBody() {
 
 void    Client::defineRequestTarget() {
     _requestTarget = _configuration.root + _path;
-//    if (isRequestTargetDirectory())
-//        assignContent();
+    if (isRequestTargetDirectory())
+            assignContent();
 }
 
-//bool    Client::isRequestTargetDirectory() {
-//    stat buffer;
-//
-//    if (stat(_requestTarget.c_str(), &buffer) == 0)
-//        return S_ISDIR(buffer.st_mode);
-//    return false;
-//}
-//
-//void    Client::assignContent() {
-//    _requestTarget = _configuration.root + "html/"
-//}
+bool    Client::isRequestTargetDirectory() {
+    struct stat buffer;
+    std::string filePath = "." + _requestTarget;
+    if (stat(filePath.c_str(), &buffer) == 0)
+        return S_ISDIR(buffer.st_mode);
+    return false;
+}
+
+void    Client::assignContent() {
+    _requestTarget = "/html/errorHtml/404.html";
+}
 
 bool    Client::areAllPartsOfRequestValid() {
     if (isMethodAllowed() == false)
