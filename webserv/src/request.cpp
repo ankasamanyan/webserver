@@ -26,8 +26,7 @@ void	Client::receiveRequest()
         if (_CGICase == true) {
         //Юля, твой выход😎
         }
-        //prepareResponse
-		
+        prepareResponse();
 		_clientState = VALID_;
         return ;
     }
@@ -94,13 +93,13 @@ void    Client::parseBody() {
 
 void    Client::defineRequestTarget() {
     _requestTarget = _configuration.root + _path;
-    if (isRequestTargetDirectory())
+    if (isDirectory(_requestTarget))
         assignContent();
 }
 
-bool    Client::isRequestTargetDirectory() {
+bool    Client::isDirectory(std::string path) {
     struct stat buffer;
-    std::string filePath = "." + _requestTarget;
+    std::string filePath = "." + path;
     if (stat(filePath.c_str(), &buffer) == 0)
         return S_ISDIR(buffer.st_mode);
     return false;
@@ -168,4 +167,54 @@ bool    Client::isContentOfAllowedSize() {
 clientState         Client::getState()
 {
 	return (_clientState);
+}
+
+void    Client::prepareResponse() {
+    if (_method == "GET")
+        handleGet();
+    else if (_method == "POST")
+        handlePost();
+    else if (_method == "DELETE")
+        handleDelete();
+}
+
+void    Client::handleGet() {
+
+}
+
+void    Client::handlePost() {
+
+}
+
+void    Client::handleDelete() {
+    std::string fileToDelete = "." + _configuration.root + _path;
+
+    if (isAllowedToDelete() == false)
+        _exitState = FORBIDDEN;
+    else if (exists(fileToDelete) == false)
+        _exitState = ERROR_404;
+    int removeReturnCode = remove(fileToDelete.c_str());
+    if (removeReturnCode == 0)
+        _exitState = NO_CONTENT;
+    if (removeReturnCode != 0)
+        _exitState = INTERNAL_SERVER_ERROR;
+}
+
+bool    Client::isAllowedToDelete() {
+    return !(isDirectory(_configuration.root + _path) || isInsideUploads() == false);
+}
+
+bool    Client::isInsideUploads() {
+    if (_path.substr(0, 8) == "/uploads")
+        return true;
+    return false;
+}
+
+bool    Client::exists(std::string filePath) {
+	if (_path.empty())
+		return false;
+	std::ifstream fileStream(filePath.c_str());
+	bool exists = fileStream.good();
+	fileStream.close();
+	return exists;
 }

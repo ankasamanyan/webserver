@@ -8,6 +8,7 @@
 #include <string>
 #include <map>
 #include <sys/stat.h>
+#include <cstdio>
 
 enum requestType
 {
@@ -42,7 +43,10 @@ enum exitState
 	METHOD_NOT_ALLOWED = 405,
 	INVALID_HHTPV = 505,
 	BAD_REQUEST = 400,
-	CONTENT_TOO_LARGE = 413
+	CONTENT_TOO_LARGE = 413,
+	FORBIDDEN = 403,
+	NO_CONTENT = 204,
+	INTERNAL_SERVER_ERROR = 500
 };
 
 struct	parsingStruct;
@@ -79,12 +83,19 @@ class Client
         void                parseBody();
         bool                areAllPartsOfRequestValid();
         void                defineRequestTarget();
-        bool                isRequestTargetDirectory();
+        bool                isDirectory(std::string path);
         void                assignContent();
         void                assignCGIFlag();
         bool                isMethodAllowed();
         bool                isHTTPVersionValid();
         bool                isContentOfAllowedSize();
+        void                prepareResponse();
+        void                handleGet();
+        void                handlePost();
+        void                handleDelete();
+        bool                isAllowedToDelete();
+        bool                isInsideUploads();
+        bool                exists(std::string filePath);
 		void				configureSocket(int newSocket);
 		void				checkHeaders(std::string &headres);
 		void				sendHeaders();
