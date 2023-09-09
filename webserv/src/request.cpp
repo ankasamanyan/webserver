@@ -89,7 +89,21 @@ void    Client::parseBody() {
 
 void    Client::defineRequestTarget() {
     _requestTarget = _configuration.root + _path;
+//    if (isRequestTargetDirectory())
+//        assignContent();
 }
+
+//bool    Client::isRequestTargetDirectory() {
+//    stat buffer;
+//
+//    if (stat(_requestTarget.c_str(), &buffer) == 0)
+//        return S_ISDIR(buffer.st_mode);
+//    return false;
+//}
+//
+//void    Client::assignContent() {
+//    _requestTarget = _configuration.root + "html/"
+//}
 
 bool    Client::areAllPartsOfRequestValid() {
     if (isMethodAllowed() == false)

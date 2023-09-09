@@ -7,6 +7,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <sys/stat.h>
 
 enum requestType
 {
@@ -76,12 +77,15 @@ class Client
         void                parseBody();
         bool                areAllPartsOfRequestValid();
         void                defineRequestTarget();
+        bool                isRequestTargetDirectory();
+        void                assignContent();
         bool                isMethodAllowed();
         bool                isHTTPVersionValid();
         bool                isContentOfAllowedSize();
 		void				configureSocket(int newSocket);
 		void				checkHeaders(std::string &headres);
 		void				sendHeaders();
+		std::string		    getHttpMsg(int code);
 
 	public:
 		Client(int clientFd, parsingStruct &config);

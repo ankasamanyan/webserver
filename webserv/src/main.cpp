@@ -14,6 +14,7 @@ int main(int argc, char const *argv[])
     innit.methodGet = true;
     innit.maxBody = "8000";
     innit.root = "/html";
+    innit.dirListing = "on";
 	/* vector parsing structs */
 	Server	server(innit);
 	while (CPP_IS_PAIN)
