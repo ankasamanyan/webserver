@@ -15,6 +15,7 @@ int main(int argc, char const *argv[])
     innit.maxBody = "8000";
     innit.root = "/html";
     innit.dirListing = false;
+    innit.CGIDir = "";
 	/* vector parsing structs */
 	Server	server(innit);
 	while (CPP_IS_PAIN)

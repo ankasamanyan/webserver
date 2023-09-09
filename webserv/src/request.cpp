@@ -19,7 +19,6 @@ void	Client::receiveRequest()
   	_request.append(currentChunk, numberOfBytesReceived);
     if (numberOfBytesReceived < CHUNK_SIZE) 
 	{
-
         if (isRequestValid() == false) {
 			_clientState = INVALID_;
 			return ;
@@ -40,12 +39,16 @@ bool    Client::isRequestValid() {
         return false;
     parseRequest();
     defineRequestTarget();
+    assignCGIFlag();
     return areAllPartsOfRequestValid();
 }
 
 bool    Client::isRequestEmpty() {
-    _exitState = BAD_REQUEST;
-    return _request.empty();
+    if (_request.empty()) {
+        _exitState = BAD_REQUEST;
+        return true;
+    }
+    return false;
 }
 
 void    Client::parseRequest() {
@@ -108,6 +111,15 @@ void    Client::assignContent() {
     }
     else
         _directoryListingCase = true;
+}
+
+void    Client::assignCGIFlag() {
+    int CGIDirectoryLength = _configuration.CGIDir.length();
+    std::string partOfPath = _path.substr(0, CGIDirectoryLength);
+    if (_configuration.CGIDir == partOfPath)
+        _CGICase = true;
+    else
+        _CGICase = false;
 }
 
 bool    Client::areAllPartsOfRequestValid() {

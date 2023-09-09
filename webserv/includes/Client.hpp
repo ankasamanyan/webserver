@@ -63,6 +63,7 @@ class Client
         std::string                             _body;
         std::string                             _requestTarget;
         bool                                    _directoryListingCase;
+        bool                                    _CGICase;
 		clientState								_clientState;
 		parsingStruct							&_configuration;
 		size_t									_responsePos;
@@ -80,6 +81,7 @@ class Client
         void                defineRequestTarget();
         bool                isRequestTargetDirectory();
         void                assignContent();
+        void                assignCGIFlag();
         bool                isMethodAllowed();
         bool                isHTTPVersionValid();
         bool                isContentOfAllowedSize();
