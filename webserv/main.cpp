@@ -8,26 +8,9 @@
 #include "./includes/ServersRepository.hpp"
 
 int main(int argc, char** argv){
-    Configuration *conf = new Configuration();
+    Configuration *conf = new Configuration(argc, argv);
     ServersRepository *serversRepository = new ServersRepository(*conf);
     
-    std::ifstream configFile(argv[1]);
-    std::string line = "default";
+    std::cout << serversRepository->servers[0].getConfigurationFromConfigFile().port << std::endl;
     
-    if(argc == 1)
-    {
-        conf->getDefaultConfiguration();
-    }
-    
-    else     if (argc == 2)
-    {
-        try {
-            std::cout << serversRepository->servers[0].getConfigurationFromConfigFile().port << std::endl;
-        }
-        catch (std::exception& e) {
-            std::cout << e.what() << std::endl;
-        }
-    }
-    else
-        std::cout << "Wrong number of arguments" << std::endl;
 }

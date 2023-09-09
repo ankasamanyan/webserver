@@ -49,6 +49,7 @@ private:
 	bool methodDelete;
 public:	
 	Configuration();
+	Configuration(int argc, char **argv);
 	~Configuration();
 	void reader(std::string configFile, configuration config);
 	configuration getConfigurationFromConfigFile();
