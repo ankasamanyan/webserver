@@ -62,6 +62,7 @@ class Client
         std::map<std::string, std::string>		_headers;
         std::string                             _body;
         std::string                             _requestTarget;
+        bool                                    _directoryListingCase;
 		clientState								_clientState;
 		parsingStruct							&_configuration;
 		size_t									_responsePos;

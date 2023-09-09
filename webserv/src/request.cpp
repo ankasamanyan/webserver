@@ -90,7 +90,7 @@ void    Client::parseBody() {
 void    Client::defineRequestTarget() {
     _requestTarget = _configuration.root + _path;
     if (isRequestTargetDirectory())
-            assignContent();
+        assignContent();
 }
 
 bool    Client::isRequestTargetDirectory() {
@@ -102,7 +102,12 @@ bool    Client::isRequestTargetDirectory() {
 }
 
 void    Client::assignContent() {
-    _requestTarget = "/html/errorHtml/404.html";
+    if (_configuration.dirListing == false) {
+        _requestTarget = "/html/errorHtml/404.html";
+        _directoryListingCase = false;
+    }
+    else
+        _directoryListingCase = true;
 }
 
 bool    Client::areAllPartsOfRequestValid() {

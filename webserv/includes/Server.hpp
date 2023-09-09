@@ -35,7 +35,7 @@ struct parsingStruct {
     bool    methodPost;
     bool    methodDelete;
     string  maxBody;
-    string  dirListing;
+    bool    dirListing;
     string root;
 };
 
