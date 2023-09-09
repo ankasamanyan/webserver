@@ -19,7 +19,8 @@ void	Client::sendResponse()
 	else if(_exitState == ERROR_404)
 		fileName = "./html/404.html";
 	else
-		fileName = "." + _path;
+//		fileName = "." + _path;
+		fileName = "." + _requestTarget;
 		/* with '.' for the docker */
 	PRINT << GREEN "You are trying to access '" << _path << "'" << RESET_LINE<< RESET_LINE;
 	std::ifstream	inputFile(fileName.c_str(), std::ios::binary); /* temp html file */

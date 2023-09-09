@@ -60,6 +60,7 @@ class Client
         std::string                             _HTTPVersion;
         std::map<std::string, std::string>		_headers;
         std::string                             _body;
+        std::string                             _requestTarget;
 		clientState								_clientState;
 		parsingStruct							&_configuration;
 		size_t									_responsePos;
@@ -68,9 +69,11 @@ class Client
 
 		bool                isRequestValid();
         bool                isRequestEmpty();
+        void                parseRequest();
         void                parseRequestLine();
         void                parseHeaders();
         void                parseBody();
+        void                defineRequestTarget();
         bool                areAllPartsOfRequestValid();
         bool                isMethodAllowed();
         bool                isHTTPVersionValid();

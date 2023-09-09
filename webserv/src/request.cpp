@@ -38,15 +38,20 @@ void	Client::receiveRequest()
 bool    Client::isRequestValid() {
     if (isRequestEmpty() == true)
         return false;
-    parseRequestLine();
-    parseHeaders();
-    parseBody();
+    parseRequest();
+    defineRequestTarget();
     return areAllPartsOfRequestValid();
 }
 
 bool    Client::isRequestEmpty() {
     _exitState = BAD_REQUEST;
     return _request.empty();
+}
+
+void    Client::parseRequest() {
+    parseRequestLine();
+    parseHeaders();
+    parseBody();
 }
 
 void    Client::parseRequestLine() {
@@ -80,6 +85,10 @@ void    Client::parseBody() {
     else
         bodySize = string::npos;
     _body = _request.substr(startBodyIndex, bodySize);
+}
+
+void    Client::defineRequestTarget() {
+    _requestTarget = _configuration.root + _path;
 }
 
 bool    Client::areAllPartsOfRequestValid() {
