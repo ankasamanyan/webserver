@@ -1,37 +1,6 @@
 #include "../includes/Server.hpp"
 
-void	Client::handlePOSTResponse()
-{
-	if (_responseState == INITIALIZED)
-		sendHeaders();
-	_responseState = FULLY_SENT;
-}
-
-void	Client::handleDELETEResponse()
-{
-	string			headers;
-	string			response;
-	string			errorCode;
-
-	if (_responseState == INITIALIZED)
-	{
-		response.append(HTTP_V);
-		errorCode.append(" ").append(std::to_string((int)_exitState)).append(" ").append(getHttpMsg((int)_exitState));
-		response.append(errorCode).append("\r\n");
-		PRINT << PURPLE << "ERROR CODES:\t" << errorCode << RESET_LINE;
-		if (_exitState != NO_CONTENT)
-		{
-			checkHeaders(headers);
-		}
-			headers.append("\r\n");
-			response.append(headers);
-		PRINT << PURPLE << "Response:\n" << response << RESET_LINE;
-		send(_clientFd, response.c_str(), response.length(), 0);
-	}
-	_responseState = FULLY_SENT;
-}
-
-void	Client::handleGetResponse()
+void	Client::sendResponse()
 {
 	char			body[CHUNK_SIZE];
 	string			fileName;
@@ -102,21 +71,12 @@ void	Client::sendHeaders()
 	errorCode.append(" ").append(std::to_string((int)_exitState)).append(" ").append(getHttpMsg((int)_exitState));
 	response.append(errorCode).append("\r\n");
 	PRINT << PURPLE << "ERROR CODES:\t" << errorCode << RESET_LINE;
-	checkHeaders(headers);
+	if (_exitState != ERROR_404)
+		checkHeaders(headers);
 	headers.append("\r\n");
 	response.append(headers);
 	PRINT << PURPLE << "Response:\n" << response << RESET_LINE;
 	send(_clientFd, response.c_str(), response.length(), 0);
 	_responseState = PARTIALLY_SENT;
-}
 
-void	Client::sendResponse()
-{
-	if(_method.compare("POST") == 0)
-		handlePOSTResponse();
-	if(_method.compare("DELETE") == 0)
-		handleDELETEResponse();
-	else
-		handleGetResponse();
 }
-
