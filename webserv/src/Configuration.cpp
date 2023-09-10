@@ -45,13 +45,24 @@ void Configuration::parseConfiguration(std::string configFile){
 					getline(file, line);
 					if(getToken(line, 1) == "<LOC>")
 						env = LOC;
-					 if(env == LOC){
+					if(env == LOC){
 						clearLocation();
 						while(getToken(line, 1) != "</LOC>"){
 							getline(file, line);
-							parseLocation(line);
+							if(getToken(line, 1) != "</LOC>")
+								parseLocation(line);
 						}
 						addLocation();
+						env = SERVER;
+					}
+					if(getToken(line, 1) == "<errorPages>")
+						env = ERRORS;
+					if(env == ERRORS){
+						while(getToken(line,1) != "</errorPages>"){
+							getline(file, line);
+							if(getToken(line, 1 )!= "</errorPages>")
+								config.errorPages.insert(std::pair<std::string, std::string>(getToken(line, 1), getToken(line, 2)));	
+						}
 						env = SERVER;
 					}
 					parseWhateverButNotLocation(line);
@@ -66,6 +77,7 @@ void Configuration::parseConfiguration(std::string configFile){
 void Configuration::addServerToServerRepo(){
 	serverRepo.push_back(config);
 	config.locations.clear();
+	config.errorPages.clear();
 	clearConfiguration();
 }
 

@@ -16,7 +16,8 @@
 enum environment {
 	SERVER,
 	OUT_OF_SERVER,
-	LOC
+	LOC,
+	ERRORS
 };
 
 typedef struct location{
@@ -37,6 +38,7 @@ typedef struct configuration{
 	bool dirListing;
 	std::string CGIDir;
 	std::map<std::string, location> locations;
+	std::map<std::string, std::string> errorPages;
 }configuration;
 
 
