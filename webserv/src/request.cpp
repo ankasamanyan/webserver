@@ -152,16 +152,20 @@ bool    Client::isHTTPVersionValid() {
 }
 
 bool    Client::isContentOfAllowedSize() {
+    int allowedSize = atoi(_configuration.maxBody.c_str());
+
     if (_headers.find("Content-Length") != _headers.end()) {
         int contentSize = atoi(_headers.at("Content-Length").c_str());
-        int actualBodySize = _body.length();
-        int allowedSize = atoi(_configuration.maxBody.c_str());
-        if (contentSize <= allowedSize && actualBodySize <= allowedSize)
+        if (contentSize <= allowedSize)
             return true;
-        _exitState = CONTENT_TOO_LARGE;
-        return false;
     }
-    return true;
+    else {
+        int actualBodySize = _body.length();
+        if (actualBodySize <= allowedSize)
+            return true;
+    }
+    _exitState = CONTENT_TOO_LARGE;
+    return false;
 }
 
 clientState         Client::getState()
