@@ -201,13 +201,8 @@ void    Client::handleDelete() {
         _exitState = FORBIDDEN;
     else if (exists(fileToDelete) == false)
         _exitState = ERROR_404;
-    else {
-        int removeReturnCode = remove(fileToDelete.c_str());
-        if (removeReturnCode == 0)
-            _exitState = NO_CONTENT;
-        if (removeReturnCode != 0)
-            _exitState = INTERNAL_SERVER_ERROR;
-    }
+    else
+        attemptToRemove(fileToDelete);
 }
 
 bool    Client::isAllowedToDelete() {
@@ -227,4 +222,12 @@ bool    Client::exists(std::string filePath) {
 	bool exists = fileStream.good();
 	fileStream.close();
 	return exists;
+}
+
+void    Client::attemptToRemove(std::string filePath) {
+    int removeReturnCode = remove(filePath.c_str());
+    if (removeReturnCode == 0)
+        _exitState = NO_CONTENT;
+    if (removeReturnCode != 0)
+        _exitState = INTERNAL_SERVER_ERROR;
 }

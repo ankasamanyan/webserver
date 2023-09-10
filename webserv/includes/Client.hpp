@@ -98,6 +98,7 @@ class Client
         bool                isAllowedToDelete();
         bool                isInsideUploads();
         bool                exists(std::string filePath);
+        void                attemptToRemove(std::string filePath);
 		void				configureSocket(int newSocket);
 		void				checkHeaders(std::string &headres);
 		void				sendHeaders();
