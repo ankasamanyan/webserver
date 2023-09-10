@@ -74,6 +74,7 @@ class Client
 		size_t									_responsePos;
 		responseState							_responseState;
 		std::string								_errorPagePath;
+		FILE                                    *_fileToPost;
 
 
 		bool                isRequestValid();

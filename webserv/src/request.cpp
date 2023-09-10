@@ -183,7 +183,15 @@ void    Client::handleGet() {
 }
 
 void    Client::handlePost() {
-
+    if (isInsideUploads() == false)
+        _exitState = FORBIDDEN;
+    else {
+        std::string pathToPost = "." + _configuration.root + _path;
+        std::ofstream outputFileStream;
+        outputFileStream.open((pathToPost).c_str(), std::ios::binary | std::ios::app);
+        outputFileStream.write(_body.c_str(), atoi(_headers.at("Content-Length").c_str()));
+        outputFileStream.close();
+    }
 }
 
 void    Client::handleDelete() {
@@ -193,11 +201,13 @@ void    Client::handleDelete() {
         _exitState = FORBIDDEN;
     else if (exists(fileToDelete) == false)
         _exitState = ERROR_404;
-    int removeReturnCode = remove(fileToDelete.c_str());
-    if (removeReturnCode == 0)
-        _exitState = NO_CONTENT;
-    if (removeReturnCode != 0)
-        _exitState = INTERNAL_SERVER_ERROR;
+    else {
+        int removeReturnCode = remove(fileToDelete.c_str());
+        if (removeReturnCode == 0)
+            _exitState = NO_CONTENT;
+        if (removeReturnCode != 0)
+            _exitState = INTERNAL_SERVER_ERROR;
+    }
 }
 
 bool    Client::isAllowedToDelete() {
