@@ -189,7 +189,7 @@ void    Client::handlePost() {
         std::string pathToPost = "." + _configuration.root + _path;
         std::ofstream outputFileStream;
         outputFileStream.open((pathToPost).c_str(), std::ios::binary | std::ios::app);
-        outputFileStream.write(_body.c_str(), atoi(_headers.at("Content-Length").c_str()));
+        outputFileStream.write(_body.c_str(), _body.length());
         outputFileStream.close();
     }
 }
