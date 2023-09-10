@@ -11,6 +11,7 @@
 #include <cstdio>
 #define STANDARD_404 "./html/errorHtml/404.html"
 #define STANDARD_HTML "./html/index.html"
+
 enum requestType
 {
 	UNDEFINED,
@@ -103,7 +104,9 @@ class Client
 		void				checkHeaders(std::string &headres);
 		void				sendHeaders();
 		std::string		    getHttpMsg(int code);
-		void				putCorrectPath(std::string);
+		void				handleGetResponse();
+		void				handleDELETEResponse();
+		void				handlePOSTResponse();
 
 
 	public:
