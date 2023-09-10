@@ -10,6 +10,7 @@
 #include <sys/stat.h>
 #include <cstdio>
 #define STANDARD_404 "./html/errorHtml/404.html"
+#define STANDARD_HTML "./html/index.html"
 enum requestType
 {
 	UNDEFINED,

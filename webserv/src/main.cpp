@@ -14,7 +14,7 @@ int main(int argc, char const *argv[])
     innit.methodGet = true;
     innit.maxBody = "8000";
     innit.root = "/html";
-    innit.dirListing = false;
+    innit.dirListing = true;
     innit.CGIDir = "";
 	/* vector parsing structs */
 	Server	server(innit);
