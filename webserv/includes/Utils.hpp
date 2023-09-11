@@ -129,7 +129,7 @@ class Utils
 
 			if (n < 0)
 			{
-				printMsg("Your itoa is unfortunately not working for negative numbers you STUPID MOOOOOROOOOON!!!!", RED);
+				printMsg("Your itoa is unfortunately not working ", RED);
 				return ;
 			}
 			while (i < len--)
