@@ -122,10 +122,11 @@ class Utils
 			}
 			return (i);
 		}
-		static void	ft_itoa(int n, char *stringy)
+		static void	ft_itoa(int n, std::string &stringy)
 		{
 			int		i = 0;
 			int		len = ft_intlen(n);;
+			stringy.reserve(len);
 
 			if (n < 0)
 			{
@@ -134,7 +135,7 @@ class Utils
 			}
 			while (i < len--)
 			{
-				stringy[len] = n % 10 + '0';
+				stringy.insert(0, 1, (n%10+'0'));
 				n /= 10;
 			}
 		}

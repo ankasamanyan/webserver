@@ -4,7 +4,7 @@ void	Client::sendResponse()
 {
 	char			body[CHUNK_SIZE];
 	string			fileName;
-	char			str[42];
+	string			str;
 
 	Utils::ft_itoa(((int)_exitState), str);
 	if (_exitState == EXIT_OK)
@@ -30,7 +30,7 @@ void	Client::sendResponse()
 	{
 		inputFile.seekg(_responsePos);
 		inputFile.read(body, sizeof(body));
-		if (_responseState == INITIALIZED && exists(fileName))
+		if (_responseState == INITIALIZED)
 			sendHeaders();
 		send(_clientFd, body, inputFile.gcount(), 0);
 
@@ -67,7 +67,7 @@ void	Client::sendHeaders()
 	string			headers;
 	string			response;
 	string			errorCode;
-	char			str[42];
+	string			str;
 
 	Utils::ft_itoa((int)_exitState, str);
 	response.append(HTTP_V);
@@ -81,5 +81,4 @@ void	Client::sendHeaders()
 	PRINT << PURPLE << "Response:\n" << response << RESET_LINE;
 	send(_clientFd, response.c_str(), response.length(), 0);
 	_responseState = PARTIALLY_SENT;
-
 }
