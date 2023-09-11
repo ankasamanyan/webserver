@@ -4,7 +4,9 @@ void	Client::sendResponse()
 {
 	char			body[CHUNK_SIZE];
 	string			fileName;
+	char			str[42];
 
+	Utils::ft_itoa(((int)_exitState), str);
 	if (_exitState == EXIT_OK)
 	{
 		if (_path.compare("/") == 0)
@@ -15,10 +17,9 @@ void	Client::sendResponse()
 	else
 	{
 		fileName.append(".").append(_configuration.root).append(_errorPagePath);
-		fileName.append(std::to_string((int)_exitState)).append(".html");
+		fileName.append(str).append(".html");
 	}
-
-	PRINT << PINK "The code: x"<< "\t" << YELLOW "The state: "<< _exitState << RESET_LINE;
+	PRINT << PINK "The code: "<< "\t" << str << YELLOW "The state: "<< _exitState << RESET_LINE;
 	PRINT << YELLOW "File Name: "<< fileName <<"\t"<< PINK "Request tartrget: "<< _requestTarget << RESET_LINE;
 
 	PRINT << GREEN "You are trying to access '" << fileName << "'" << RESET_LINE<< RESET_LINE;
@@ -66,11 +67,13 @@ void	Client::sendHeaders()
 	string			headers;
 	string			response;
 	string			errorCode;
+	char			str[42];
 
+	Utils::ft_itoa((int)_exitState, str);
 	response.append(HTTP_V);
-	errorCode.append(" ").append(std::to_string((int)_exitState)).append(" ").append(getHttpMsg((int)_exitState));
+	errorCode.append(" ").append(str).append(" ").append(getHttpMsg((int)_exitState));
 	response.append(errorCode).append("\r\n");
-	PRINT << PURPLE << "ERROR CODES:\t" << errorCode << RESET_LINE;
+	PRINT << PURPLE << "ERROR CODES:\t" << str << RESET_LINE;
 	if (_exitState != ERROR_404)
 		checkHeaders(headers);
 	headers.append("\r\n");

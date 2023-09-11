@@ -103,6 +103,41 @@ class Utils
             string.erase(string.find_last_not_of(sequenceToErase) + 1);
             return string;
         }
+		static int	ft_intlen(int n)
+		{
+			int	i;
+
+			i = 0;
+			if (n == 0)
+				i++;
+			if (n < 0)
+			{
+				n *= -1;
+				i++;
+			}
+			while (n > 0)
+			{
+				i++;
+				n /= 10;
+			}
+			return (i);
+		}
+		static void	ft_itoa(int n, char *stringy)
+		{
+			int		i = 0;
+			int		len = ft_intlen(n);;
+
+			if (n < 0)
+			{
+				printMsg("Your itoa is unfortunately not working for negative numbers you STUPID MOOOOOROOOOON!!!!", RED);
+				return ;
+			}
+			while (i < len--)
+			{
+				stringy[len] = n % 10 + '0';
+				n /= 10;
+			}
+		}
 };
 
 #endif
