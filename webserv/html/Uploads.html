@@ -3,11 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>500 - Internal Server Error</title>
+	
+    <title>42 Capybaras</title>
     <style>
-        /* Define the background color and styling for the page */
+        /* Define the background image and styling for the page */
         body {
-            background-color: white; /* White background color */
+            background-image: url('../19.png');
+            background-repeat: repeat; /* Repeat the background image */
+            background-size: 205px;
+            background-position: 0 50px; /* Adjusted background position to start below the top bar */
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
@@ -18,11 +22,12 @@
             min-height: 100vh;
         }
 
-        /* Style for the top navigation bar */
-        .topbar {
+		/* Style for the top navigation bar */
+		.topbar {
             background-color: white; /* White top bar background */
             color: #6c55be; /* Lily text color */
             padding: 30px 0; /* Increased padding */
+			box-shadow: 0 0 100px rgba(0, 0, 0, 0.2); 
 			font-size: 23px;
             display: flex;
             justify-content: space-between;
@@ -45,38 +50,26 @@
             margin: 0 30px; /* Increased margins */
         }
 
+
         /* Style for the main content area */
         .content {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-            padding: 100px;
-        }
-
-        .text {
-            text-align: center; /* Center-align the text */
-            flex: 50%; /* Set the text to occupy 50% of the width */
+            background-color: white; /* White background for the content area */
+            padding: 80px; /* Increased padding to make the box two times bigger */
+            border-radius: 15px ; /* Rounded corners */
+            /* border: 2px solid #6c55be; */
+            box-shadow: 0 0 100px rgba(0, 0, 0, 0.2); /* Box shadow for the content area */
+            text-align: center;
         }
 
         h1 {
-            font-size: 48px;
+            font-size: 48px; /* Font size remains the same */
             color: #333333;
         }
 
         p {
-            font-size: 24px;
+            font-size: 24px; /* Font size remains the same */
             color: #666;
-        }
-
-        /* Style for the right side image */
-        .image {
-            flex: 50%; /* Set the image to occupy 50% of the width */
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
+            margin-top: 20px; /* Spacing between text and button */
         }
 
         /* Style for the button with lily color outline */
@@ -91,7 +84,6 @@
             border-radius: 10px;
             margin-top: 20px;
             transition: background-color 0.3s ease, color 0.3s ease; /* Add transition effect */
-            /* Add transition effect */
         }
 
         /* Change button color and background on hover */
@@ -105,48 +97,74 @@
         /* Background color change animation on hover */
         @keyframes backgroundColorChange {
             0% {
-                background-color: #6c55be; /* Start with transparent background */
+                background-color: #6c55be;
             }
             25% {
-                background-color: #9f53b0; /* Transition to Lily color at 25% */
+                background-color: #9f53b0;
             }
             50% {
-                background-color: #c87b40; /* Transition back to transparent at 50% */
+                background-color: #c87b40;
             }
             75% {
-                background-color: #b05374; /* Transition to Lily color at 75% */
+                background-color: #b05374;
             }
             100% {
-                background-color: #6c55be; /* Return to transparent background */
+                background-color: #6c55be;
             }
+        }
+		  /* Style for the form */
+		  form {
+            text-align: center;
+            margin-top: 20px; /* Adjust margin as needed */
+        }
+
+        /* Style for the form inputs */
+        input[type="text"] {
+            padding: 10px;
+            border: 1px solid #6c55be; /* Lily-colored border */
+            border-radius: 5px;
+            margin-right: 10px; /* Adjust margin as needed */
+        }
+
+        /* Style for the form submit button */
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #6c55be; /* Lily background color */
+            color: white; /* White text color */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Style the form submit button on hover */
+        input[type="submit"]:hover {
+            background-color: #9f53b0; /* Change background color on hover */
         }
     </style>
 </head>
 <body>
     <!-- Top Navigation Bar -->
     <div class="topbar">
-        <div class="company-name">42 Capybaras</div>
+        <div class="company-name" href="/"><a href="/">42 Capybaras</a></div>
         <div class="links">
             <a href="../Uploads.html">Upload</a> <!-- Navigation link for the Uploads page -->
-            <a href="#">About us</a>
-            <a href="#">Contact us</a>
+            <a href="/">About us</a>
+            <a href="/">Contact us</a>
         </div>
     </div>
 
     <!-- Main Content -->
     <div class="content">
-        <div class="text">
-            <h1>500 - Internal Server Error</h1>
-            <p>Sorry, something went wrong on our server. We're working to fix it.</p>
-            
-            <!-- Style the link as a button -->
-            <a class="button" href="/">Back to Home</a>
-        </div>
-
-        <!-- Right Side Image -->
-        <div class="image">
-            <img src="../14.JPG" alt="Image">
-        </div>
+        <h1>Upload your files</h1>
+        <p>Click below to download your files.</p>
+		<form action="../uploads/text" method="post" enctype="text/plain" accept-charset="utf-8">
+			<input type="text" id="myFile" name="myFile">
+			<input type="submit" value="Submit">
+		</form>
+		<!-- <form action="../uploads/image.png" method="post" enctype="multipart/form-data">
+			<input type="file" id="file" name="file" accept="image/*">
+			<input type="submit" value="Upload Image">
+		</form> -->
     </div>
 </body>
 </html>

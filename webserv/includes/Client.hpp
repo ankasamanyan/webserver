@@ -9,7 +9,11 @@
 #include <map>
 #include <sys/stat.h>
 #include <cstdio>
+#include <dirent.h>
+
 #define STANDARD_404 "./html/errorHtml/404.html"
+#define SUCCESS_HTML "./html/Success.html"
+#define DELETED_HTML "./html/Deleted.html"
 #define STANDARD_HTML "./html/index.html"
 
 enum requestType
@@ -107,6 +111,8 @@ class Client
 		void				handleGetResponse();
 		void				handleDELETEResponse();
 		void				handlePOSTResponse();
+		void				directoryListing();
+
 
 
 	public:
