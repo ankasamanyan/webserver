@@ -15,7 +15,7 @@ void	Client::receiveRequest()
         Utils::printMsg("Error receiving a message from a socket", PURPLE);
     }
     PRINT << SKY "The REQUEST" << RESET_LINE;
-    PRINT << currentChunk << RESET_LINE;
+    // PRINT << currentChunk << RESET_LINE;
   	_request.append(currentChunk, numberOfBytesReceived);
     if (numberOfBytesReceived < CHUNK_SIZE) 
 	{

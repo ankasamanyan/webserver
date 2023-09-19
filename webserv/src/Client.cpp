@@ -6,6 +6,7 @@ Client::Client(int _serverSocket, parsingStruct &config):_configuration(config)
     configureSocket(newFd);
 	_clientFd = newFd;
 	_responseState = INITIALIZED;
+	_responsePos = 0;
 	_exitState = EXIT_OK;
 	_errorPagePath = "/errorHtml/";
 }
@@ -25,8 +26,10 @@ const Client	&Client::operator=(const Client &copy)
 	_requestTarget = copy._requestTarget;
 	_clientState = copy._clientState;
 	_configuration = copy._configuration;
+	_responsePos = copy._responsePos;
 	_responseState = copy._responseState;
 	_errorPagePath = copy._errorPagePath;
+	// _responseLength = copy._responseLength;
 	return (*this);
 }
 
@@ -37,6 +40,7 @@ Client::Client(const Client &copy):_configuration(copy._configuration)
 
 Client::~Client()
 {
+
 }
 
 void	Client::configureSocket(int newSocket)

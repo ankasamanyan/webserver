@@ -46,10 +46,10 @@ void	Server::configureSocket(int newSocket)
 
 void	Server::disconnectClient(fdIter iter)
 {
+	PRINT << RED "Disconnecting client fd: " << iter->fd << RESET_LINE;
 	close(iter->fd);
     _clients.erase(iter->fd);
     _fdVector.erase(iter);
-	PRINT << RED "Disconnecting client fd: " << iter->fd << RESET_LINE;
 }
 
 int		Server::getSocket()

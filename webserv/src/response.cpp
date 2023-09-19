@@ -1,55 +1,61 @@
 #include "../includes/Server.hpp"
 
-void	Client::sendResponse()
+void	Client::configureResponseFile(std::stringstream &fileName)
 {
-	char			body[CHUNK_SIZE];
-	string			fileName;
-	string			str;
-
-	Utils::ft_itoa(((int)_exitState), str);
-	if (_exitState == EXIT_OK)
+		if (_exitState == EXIT_OK)
 	{
 		if (_path.compare("/") == 0)
-			fileName = STANDARD_HTML;
+			fileName << STANDARD_HTML;
 		else if (isDirectory(_requestTarget) && _directoryListingCase && _method.compare("GET") == 0)
 		{
 			directoryListing();
+			_responseState = FULLY_SENT;
 			return ;
 		}
 		else if (_method.compare("POST") == 0)
-			fileName = SUCCESS_HTML;
+			fileName << SUCCESS_HTML;
 		else
-			fileName = "." + _requestTarget;
+			fileName << "." << _requestTarget;
 	}
 	else if (_method.compare("DELETE") == 0 && _exitState == NO_CONTENT)
 	{
-		fileName = DELETED_HTML;	/* Can we delete directories ?? */
+		fileName << DELETED_HTML;	/* Can we delete directories ?? */
 		_exitState = EXIT_OK;
 	}
 	else
+		fileName << "." << _configuration.root << _errorPagePath << _exitState << ".html";
+
+	/* debuggig thingies */
+	if(DEBUG)
 	{
-		fileName.append(".").append(_configuration.root).append(_errorPagePath);
-		fileName.append(str).append(".html");
+		PRINT << SKY << " REQUEST TYPE: " << _method << RESET_LINE;
+		PRINT << YELLOW "\tThe state: "<< _exitState << RESET_LINE;
+		PRINT << YELLOW "File Name: "<< fileName.str() <<"\t"<< PINK "Request tartrget: "<< _requestTarget << RESET_LINE;
+		PRINT << GREEN "You are trying to access '" << fileName.str() << "'" << RESET_LINE<< RESET_LINE;
 	}
-	PRINT << SKY << " REQUEST TYPE: " << _method << RESET_LINE;
-	PRINT << PINK "The code: "<< "\t" << str << YELLOW "\tThe state: "<< _exitState << RESET_LINE;
-	PRINT << YELLOW "File Name: "<< fileName <<"\t"<< PINK "Request tartrget: "<< _requestTarget << RESET_LINE;
+}
 
-	PRINT << GREEN "You are trying to access '" << fileName << "'" << RESET_LINE<< RESET_LINE;
+void	Client::sendResponse()
+{
+	char						body[CHUNK_SIZE];
+	std::stringstream			fileName;
 
-	std::ifstream	inputFile(fileName.c_str(), std::ios::binary); /* temp html file */
+	configureResponseFile(fileName);
+
+	std::ifstream	inputFile((fileName.str()).c_str(), std::ios::binary);
 	
 	if (inputFile.is_open())
 	{
 		inputFile.seekg(_responsePos);
 		inputFile.read(body, sizeof(body));
+		// _responseLength = inputFile.gcount();
 		if (_responseState == INITIALIZED)
 			sendHeaders();
 		send(_clientFd, body, inputFile.gcount(), 0);
 
 		if (inputFile.eof())
 		{
-			PRINT << YELLOW "\t END OF FOLE" << RESET_LINE; 
+			PRINT << YELLOW "\t END OF FILE BTW" << RESET_LINE; 
 			_responseState = FULLY_SENT;
 			inputFile.close();
 			return ;
@@ -59,40 +65,35 @@ void	Client::sendResponse()
 	}
 	else if (!inputFile) 
 	{
+		std::stringstream	file;
+
 		_exitState = ERROR_404;
+		file << STANDARD_404;
+		std::ifstream errorPage((file.str()).c_str(), std::ios::binary); /* add protection */
+		errorPage.read(body, sizeof(body));
+		// _responseLength = errorPage.gcount();
 		if (_responseState == INITIALIZED)
 			sendHeaders();
-		fileName = STANDARD_404;
-		std::ifstream errorPage(fileName.c_str(), std::ios::binary);
-		errorPage.read(body, sizeof(body));
 		send(_clientFd, body, errorPage.gcount(), 0);
 		errorPage.close();
 		_responseState = FULLY_SENT;
 		return ;
-		/*  */
-		std::cout << PINK << "HALP, THERE IS PROBLEM WITH THE FILE " << RESET_LINE;
-		std::cout << PINK << strerror(errno) << RESET_LINE;
 	}
 }
 
 void	Client::sendHeaders()
 {
-	string			headers;
-	string			response;
-	string			errorCode;
-	string			str;
+	std::stringstream		headers;
 
-	Utils::ft_itoa((int)_exitState, str);
-	response.append(HTTP_V);
-	errorCode.append(" ").append(str).append(" ").append(getHttpMsg((int)_exitState));
-	response.append(errorCode).append("\r\n");
-	PRINT << PURPLE << "ERROR CODES:\t" << str << RESET_LINE;
+	headers << HTTP_V;
+	headers << " " << _exitState << " " << getHttpMsg((int)_exitState) << "\r\n";
 	if (_exitState != ERROR_404)
 		checkHeaders(headers);
-	headers.append("\r\n");
-	response.append(headers);
-	PRINT << PURPLE << "Response:\n" << response << RESET_LINE;
-	send(_clientFd, response.c_str(), response.length(), 0);
+	headers << "connection: keep-alive\r\n";
+	// headers << "content-length: " << _responseLength << "\r\n";
+	headers << "\r\n";
+	PRINT << PURPLE << "Response:\n" << headers.str() << RESET_LINE;
+	send(_clientFd, (headers.str()).c_str(), (headers.str()).length(), 0);
 	_responseState = PARTIALLY_SENT;
 }
 
@@ -123,6 +124,6 @@ void	Client::directoryListing()
 	}
 	streamy << "</ul></body></html>";
 	std::string str = streamy.str();
-	send(_clientFd, str.c_str() ,str.size(), 0);
+	send(_clientFd, str.c_str(), str.size(), 0);
 	_responseState = FULLY_SENT;
 }

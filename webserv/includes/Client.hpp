@@ -15,6 +15,7 @@
 #define SUCCESS_HTML "./html/Success.html"
 #define DELETED_HTML "./html/Deleted.html"
 #define STANDARD_HTML "./html/index.html"
+#define DEBUG 1
 
 enum requestType
 {
@@ -80,6 +81,7 @@ class Client
 		responseState							_responseState;
 		std::string								_errorPagePath;
 		FILE                                    *_fileToPost;
+		size_t									_responseLength;
 
 
 		bool                isRequestValid();
@@ -105,13 +107,15 @@ class Client
         bool                exists(std::string filePath);
         void                attemptToRemove(std::string filePath);
 		void				configureSocket(int newSocket);
-		void				checkHeaders(std::string &headres);
+		void				checkHeaders(std::stringstream &headres);
 		void				sendHeaders();
 		std::string		    getHttpMsg(int code);
 		void				handleGetResponse();
 		void				handleDELETEResponse();
 		void				handlePOSTResponse();
 		void				directoryListing();
+		void				configureResponseFile(std::stringstream &fileName);
+
 
 
 
