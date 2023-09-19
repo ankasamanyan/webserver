@@ -92,7 +92,7 @@ void    Client::parseBody() {
 }
 
 void    Client::defineRequestTarget() {
-    _requestTarget = _configuration.root + _path;
+    _requestTarget = _configuration.locations["root"].locationDir + _path;
     if (isDirectory(_requestTarget))
         assignContent();
 }
@@ -190,7 +190,7 @@ void    Client::handlePost() {
     if (isInsideUploads() == false)
         _exitState = FORBIDDEN;
     else {
-        std::string pathToPost = "." + _configuration.root + _path;
+        std::string pathToPost = "." + _configuration.locations["root"].locationDir + _path;
         std::ofstream outputFileStream;
         outputFileStream.open((pathToPost).c_str(), std::ios::binary | std::ios::app);
         outputFileStream.write(_body.c_str(), _body.length());

@@ -1,6 +1,6 @@
 #include "../includes/Client.hpp"
 
-Client::Client(int _serverSocket, parsingStruct &config):_configuration(config) 
+Client::Client(int _serverSocket, configuration &config):_configuration(config) 
 {
 	int newFd = accept(_serverSocket, (struct sockaddr *)NULL, NULL);
     configureSocket(newFd);

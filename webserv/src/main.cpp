@@ -1,23 +1,22 @@
 #include "../includes/Server.hpp"
-#include "../includes/Client.hpp"
 
-int main(int argc, char const *argv[])
+int main(int argc, char **argv)
 {
-	(void)argv;
-	(void)argc;
+	Configuration *conf = new Configuration(argc, argv);
+
 	PRINT << RESET_LINE << PURPLE "\t\t... STARTING THE SERVER ..." << RESET_LINE;
-	parsingStruct	innit;
-	innit.host = "0.0.0.0";
-	innit.port = 2000;
-    innit.methodDelete = true;
-    innit.methodPost = true;
-    innit.methodGet = true;
-    innit.maxBody = "8000";
-    innit.root = "/html";
-    innit.dirListing = true;
-    innit.CGIDir = "";
+	// parsingStruct	innit;
+	// innit.host = "0.0.0.0";
+	// innit.port = 2000;
+    // innit.methodDelete = true;
+    // innit.methodPost = true;
+    // innit.methodGet = true;
+    // innit.maxBody = "8000";
+    // innit.root = "/html";
+    // innit.dirListing = true;
+    // innit.CGIDir = "";
 	/* vector parsing structs */
-	Server	server(innit);
+	Server	server(conf->config);
 	while (CPP_IS_PAIN)
 	{
 		server.serverLoop();

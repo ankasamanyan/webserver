@@ -56,7 +56,7 @@ enum exitState
 	INTERNAL_SERVER_ERROR = 500
 };
 
-struct	parsingStruct;
+struct	configuration;
 class Client
 {
 	friend class Server;
@@ -76,7 +76,7 @@ class Client
         bool                                    _directoryListingCase;
         bool                                    _CGICase;
 		clientState								_clientState;
-		parsingStruct							&_configuration;
+		configuration							&_configuration;
 		size_t									_responsePos;
 		responseState							_responseState;
 		std::string								_errorPagePath;
@@ -120,7 +120,7 @@ class Client
 
 
 	public:
-		Client(int clientFd, parsingStruct &config);
+		Client(int clientFd, configuration &config);
 		const Client	&operator=(const Client &copy);
 		Client(const Client &copy);
 		~Client();

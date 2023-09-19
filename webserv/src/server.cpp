@@ -1,7 +1,7 @@
 #include "../includes/Server.hpp"
 
 
-Server::Server(parsingStruct innit)
+Server::Server(configuration innit)
 {
 	int option = 1;
 	_serverSocket = socket(AF_INET, SOCK_STREAM, 0);

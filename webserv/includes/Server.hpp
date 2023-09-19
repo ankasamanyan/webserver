@@ -16,6 +16,7 @@
 #include <fcntl.h>
 #include <set>
 #include "Client.hpp"
+#include "Configuration.hpp"
 #include <map>
 #include <sstream>
 #include <cstdlib>
@@ -28,17 +29,17 @@
 using std::string;
 class Client;
 
-struct parsingStruct {
-	string	host;
-	int		port;
-    bool    methodGet;
-    bool    methodPost;
-    bool    methodDelete;
-    string  maxBody;
-    bool    dirListing;
-    string  CGIDir;
-    string root;
-};
+// struct configuration {
+// 	string	host;
+// 	int		port;
+//     bool    methodGet;
+//     bool    methodPost;
+//     bool    methodDelete;
+//     string  maxBody;
+//     bool    dirListing;
+//     string  CGIDir;
+//     string root;
+// };
 
 class Server
 {
@@ -49,7 +50,7 @@ class Server
 		int						_serverSocket;
 		std::vector<pollfd>		_fdVector;
 		std::map<int, Client>   _clients;
-        parsingStruct           _configuration;
+        configuration           _configuration;
 
 		/* defines */
 		enum requestState
@@ -70,7 +71,7 @@ class Server
 
 
     public:
-		Server(parsingStruct innit);
+		Server(configuration innit);
 		~Server();
 		/* functions */
 		int		getSocket();

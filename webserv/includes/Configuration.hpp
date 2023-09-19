@@ -6,12 +6,14 @@
 #include <string.h>
 #include <stdbool.h>
 #include <iostream>
-#include <iomanip>
 #include <fstream>
 #include <istream>
 #include <sstream>
 #include <map>
 #include <deque>
+#include <unordered_map>
+#include <memory>
+#include <iomanip>
 
 enum environment {
 	SERVER,
@@ -21,8 +23,10 @@ enum environment {
 };
 
 typedef struct location{
-	std::string locationName;
-	std::string locationDir; //root, dir, upload
+	std::string locationName; // do need anymore
+	std::string locationDir; //should be key for map
+	// add dirListing right here
+	// add redirection (std::string)
 	bool methodGet;
 	bool methodPost;
 	bool methodDelete;
@@ -34,8 +38,8 @@ typedef struct configuration{
 	std::string host;
 	std::string port;
 	std::string maxBody;
-	std::string error404;
-	bool dirListing;
+	std::string error404; //remove
+	bool dirListing; //should be moved to location
 	std::string CGIDir;
 	std::map<std::string, location> locations;
 	std::map<std::string, std::string> errorPages;
