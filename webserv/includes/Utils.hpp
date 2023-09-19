@@ -1,9 +1,13 @@
 #ifndef	UTILS_HPP
 	#define UTILS_HPP
+
 #include <iostream>
 #include <unistd.h>
 #include <ctype.h>
 #include <string>
+#include <sstream>
+#include <vector>
+
 # define CPP_IS_PAIN	1
 # define RESET			"\033[0m"
 # define BLACK			"\033[0;30m"
@@ -79,6 +83,61 @@ class Utils
 			if (strCheck(input, isdigit))
 				return (true);
 			return (false);
+		}
+        static std::vector<std::string> split(std::string string, const char separator) {
+            std::vector<std::string>	splitString;
+            std::stringstream			streamString(string);
+            std::string					partOfString;
+
+            while(std::getline(streamString, partOfString, separator)) {
+                if(partOfString.length() > 0)
+                    splitString.push_back(partOfString);
+            }
+            return splitString;
+        }
+        static std::string trimLeft(std::string string, const char *sequenceToErase) {
+            string.erase(0, string.find_first_not_of(sequenceToErase));
+            return string;
+        }
+        static std::string trimRight(std::string string, const char *sequenceToErase) {
+            string.erase(string.find_last_not_of(sequenceToErase) + 1);
+            return string;
+        }
+		static int	ft_intlen(int n)
+		{
+			int	i;
+
+			i = 0;
+			if (n == 0)
+				i++;
+			if (n < 0)
+			{
+				n *= -1;
+				i++;
+			}
+			while (n > 0)
+			{
+				i++;
+				n /= 10;
+			}
+			return (i);
+		}
+		static void	ft_itoa(int n, std::string &stringy)
+		{
+			int		i = 0;
+			int		len = ft_intlen(n);;
+			stringy.reserve(len);
+
+			if (n < 0)
+			{
+				printMsg("Your itoa is unfortunately not working ", RED);
+				return ;
+			}
+			while (i < len--)
+			{
+				stringy.insert(0, 1, (n%10+'0'));
+				n /= 10;
+			}
 		}
 };
 

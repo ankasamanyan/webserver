@@ -17,7 +17,7 @@ all:$(NAME)
 $(NAME): $(OBJ) $(SRC)
 	@$(CC) $(SRC) $(FLAGS) -o $(NAME)
 	@echo $(PURPLE)"•    ✨ COMPILED ✨    •"$(RESET)  #&& say -v Milena "Your stupid program is Compiled!"
-# @bash Pingwi.sh
+	@bash Pingwi.sh
 
 fclean:
 	@$(RM) $(NAME)
@@ -38,7 +38,6 @@ push:
 	git push
 	@echo $(PURPLE) ✨All added, commited and pushed✨ $(RESET)
 
-run: all
+run: re
 	./$(NAME)
 
-	
