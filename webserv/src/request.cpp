@@ -159,11 +159,14 @@ void    Client::assignErrorForInvalidPath() {
 }
 
 bool    Client::isMethodAllowed() {
-    if (_method == "GET" && _configuration.methodGet)
+    std::map<std::string, location>::const_iterator it = _configuration.locations.find(_directory);
+	_location = it->second;
+
+    if (_method == "GET" && _location.methodGet)
         return true;
-    else if (_method == "DELETE" && _configuration.methodDelete)
+    else if (_method == "DELETE" && _location.methodDelete)
         return true;
-    else if (_method == "POST" && _configuration.methodPost)
+    else if (_method == "POST" && _location.methodPost)
         return true;
     _exitState = METHOD_NOT_ALLOWED;
     return false;

@@ -56,6 +56,7 @@ enum exitState
 	INTERNAL_SERVER_ERROR = 500
 };
 
+struct  location;
 struct	configuration;
 class Client
 {
@@ -73,6 +74,7 @@ class Client
         std::string                             _HTTPVersion;
         std::map<std::string, std::string>		_headers;
         std::string                             _body;
+        location                                _location
         std::string                             _requestTarget;
         bool                                    _directoryListingCase;
         bool                                    _CGICase;
