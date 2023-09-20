@@ -69,6 +69,7 @@ class Client
         std::string                             _request;
         std::string                             _method;
         std::string                             _path;
+        std::string                             _directory;
         std::string                             _HTTPVersion;
         std::map<std::string, std::string>		_headers;
         std::string                             _body;
@@ -88,6 +89,7 @@ class Client
         bool                isRequestEmpty();
 		void                parseRequest();
         void                parseRequestLine();
+        std::string         getDirectory();
         void                parseHeaders();
         void                parseBody();
         bool                areAllPartsOfRequestValid();
@@ -95,6 +97,8 @@ class Client
         bool                isDirectory(std::string path);
         void                assignContent();
         void                assignCGIFlag();
+        bool                isPathAllowed();
+        void                assignErrorForInvalidPath();
         bool                isMethodAllowed();
         bool                isHTTPVersionValid();
         bool                isContentOfAllowedSize();

@@ -64,6 +64,14 @@ void    Client::parseRequestLine() {
     _method = splitRequestLine[0];
     _path = splitRequestLine[1];
     _HTTPVersion = splitRequestLine[2];
+    _directory = getDirectory();
+}
+
+std::string Client::getDirectory() {
+    std:::string pathWithRoot = configuration.root + _path;
+    if (isDirectory(pathWithRoot) && _path[_path.size() - 1] != '/')
+        _path.append("/");
+    return _path.substr(0, _path.find_last_of("/") + 1);
 }
 
 void    Client::parseHeaders() {
@@ -92,7 +100,7 @@ void    Client::parseBody() {
 }
 
 void    Client::defineRequestTarget() {
-    _requestTarget = _configuration.locations["root"].locationDir + _path;
+    _requestTarget = configuration.root + _path;
     if (isDirectory(_requestTarget))
         assignContent();
 }
@@ -124,13 +132,30 @@ void    Client::assignCGIFlag() {
 }
 
 bool    Client::areAllPartsOfRequestValid() {
-    if (isMethodAllowed() == false)
-        return false;
-    if (isHTTPVersionValid() == false)
-        return false;
-    if (isContentOfAllowedSize() == false)
+    if (isPathAllowed() == false ||
+        isMethodAllowed() == false ||
+        isHTTPVersionValid() == false ||
+        isContentOfAllowedSize() == false)
         return false;
     return true;
+}
+
+bool Client::isPathAllowed {
+    std::map<std::string, location>::const_iterator it = _configuration.locations.find(_directory);
+
+    if (it == _configuration.locations.end()) {
+        assignErrorForInvalidPath();
+        return false;
+    }
+    return true;
+}
+
+void    Client::assignErrorForInvalidPath() {
+    std::string fileToCheck = "." + _configuration.root + _directory;
+    if (exists(fileToCheck))
+        _exitState = FORBIDDEN;
+    else
+        _exitState = ERROR_404;
 }
 
 bool    Client::isMethodAllowed() {
