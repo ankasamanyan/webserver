@@ -24,7 +24,7 @@ enum environment {
 
 typedef struct location{
 	std::string locationName; // do need anymore
-	std::string locationDir; //should be key for map
+	std::string locationDir; //should be key for map // can we make sure it always has "/" at the end?
 	// add dirListing right here
 	// add redirection (std::string)
 	bool methodGet;
@@ -33,7 +33,7 @@ typedef struct location{
 	std::string defaultFile;
 }location;
 
-typedef struct configuration{
+typedef struct configuration{ //can we have a root here?
     std::string serverName;
 	std::string host;
 	std::string port;
