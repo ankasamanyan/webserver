@@ -97,6 +97,7 @@ class Client
         std::string         getFile();
         void                parseHeaders();
         void                parseBody();
+        void                updateDirectoryIfUploading();
         void                setDefaultFile();
         bool                areAllPartsOfRequestValid();
         void                defineRequestTarget();

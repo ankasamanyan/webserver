@@ -39,6 +39,8 @@ bool    Client::isRequestValid() {
     if (isRequestEmpty() == true)
         return false;
     parseRequest();
+    updateDirectoryIfUploading();
+    setDefaultFile();
     defineRequestTarget();
     assignCGIFlag();
     return areAllPartsOfRequestValid();
@@ -56,7 +58,6 @@ void    Client::parseRequest() {
     parseRequestLine();
     parseHeaders();
     parseBody();
-    setDefaultFile();
 }
 
 void    Client::parseRequestLine() {
@@ -110,10 +111,17 @@ void    Client::parseBody() {
     _body = _request.substr(startBodyIndex, bodySize);
 }
 
+void    Client::updateDirectoryIfUploading() {
+    std::map<std::string, location>::const_iterator it = _configuration.locations.find(_directory);
+
+	if (it != _configuration.locations.end() && _method == POST && !it->second.uploadDirectory.empty())
+		_directory = it->second.uploadDirectory;
+}
+
 void    Client::setDefaultFile() {
     std::map<std::string, location>::const_iterator it = _configuration.locations.find(_directory);
 
-    if (it != _configuration.locations.end() && it->second.defaultFile)
+    if (it != _configuration.locations.end() && !it->second.defaultFile.empty())
         _defaultFile = _configuration.root + it->second.defaultFile;
     else
         _defaultFile = "/html/errorHtml/404.html";
@@ -121,7 +129,7 @@ void    Client::setDefaultFile() {
 
 void    Client::defineRequestTarget() {
     _directoryListingCase = false;
-    _requestTarget = _configuration.root + _path;
+    _requestTarget = _configuration.root + _directory + _file;
     redirectIfNeeded();
     if (isDirectory(_requestTarget))
         assignContent();
@@ -130,7 +138,7 @@ void    Client::defineRequestTarget() {
 void    Client::redirectIfNeeded() {
     std::map<std::string, location>::const_iterator it = _configuration.locations.find(_directory);
 
-    if (it != _configuration.locations.end() && it->second.redirectionDirectory) {
+    if (it != _configuration.locations.end() && !it->second.redirectionDirectory.empty()) {
         _requestTarget = _configuration.root + it->second.redirectionDirectory + _file;
     }
 }
