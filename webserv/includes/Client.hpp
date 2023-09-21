@@ -94,6 +94,7 @@ class Client
 		void                parseRequest();
         void                parseRequestLine();
         std::string         getDirectory();
+        std::string         getFile();
         void                parseHeaders();
         void                parseBody();
         void                setDefaultFile();

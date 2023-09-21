@@ -66,7 +66,7 @@ void    Client::parseRequestLine() {
     _path = splitRequestLine[1];
     _HTTPVersion = splitRequestLine[2];
     _directory = getDirectory();
-    _file = _path.substr(path.find_last_of("/") + 1);
+    _file = getFile();
 }
 
 std::string Client::getDirectory() {
@@ -74,6 +74,15 @@ std::string Client::getDirectory() {
     if (isDirectory(pathWithRoot) && _path[_path.size() - 1] != '/')
         _path.append("/");
     return _path.substr(0, _path.find_last_of("/") + 1);
+}
+
+std::string Client::getFile() {
+    std::string file;
+    if (_path.find_last_of("/") != string::npos)
+        file = _path.substr(_path.find_last_of("/") + 1);
+    else
+        file = "";
+    return file;
 }
 
 void    Client::parseHeaders() {
