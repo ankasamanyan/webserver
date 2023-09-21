@@ -131,7 +131,7 @@ void    Client::defineRequestTarget() {
     _directoryListingCase = false;
     _requestTarget = _configuration.root + _directory + _file;
     redirectIfNeeded();
-    if (isDirectory(_requestTarget))
+    if (isDirectory(_requestTarget) && _method == "GET")
         assignContent();
 }
 
@@ -251,7 +251,7 @@ void    Client::handlePost() {
     if (isInsideUploads() == false)
         _exitState = FORBIDDEN;
     else {
-        std::string pathToPost = "." + _configuration.locations["root"].locationDir + _path;
+        std::string pathToPost = "." + _requestTarget;
         std::ofstream outputFileStream;
         outputFileStream.open((pathToPost).c_str(), std::ios::binary | std::ios::app);
         outputFileStream.write(_body.c_str(), _body.length());
@@ -260,7 +260,7 @@ void    Client::handlePost() {
 }
 
 void    Client::handleDelete() {
-    std::string fileToDelete = "." + _configuration.root + _path;
+    std::string fileToDelete = "." + _requestTarget;
 
     if (isAllowedToDelete() == false)
         _exitState = FORBIDDEN;
@@ -271,11 +271,11 @@ void    Client::handleDelete() {
 }
 
 bool    Client::isAllowedToDelete() {
-    return !(isDirectory(_configuration.root + _path) || isInsideUploads() == false);
+    return !(isDirectory(_requestTarget) || isInsideUploads() == false);
 }
 
 bool    Client::isInsideUploads() {
-    if (_path.substr(0, 8) == "/uploads")
+    if (_requestTarget.find("/uploads") != std::string::npos)
         return true;
     return false;
 }
