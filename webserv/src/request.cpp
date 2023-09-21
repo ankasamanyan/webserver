@@ -66,6 +66,7 @@ void    Client::parseRequestLine() {
     _path = splitRequestLine[1];
     _HTTPVersion = splitRequestLine[2];
     _directory = getDirectory();
+    _file = _path.substr(path.find_last_of("/") + 1);
 }
 
 std::string Client::getDirectory() {
@@ -203,9 +204,8 @@ bool    Client::isContentOfAllowedSize() {
     return false;
 }
 
-clientState         Client::getState()
-{
-	return (_clientState);
+clientState Client::getState() {
+	return _clientState;
 }
 
 void    Client::prepareResponse() {
