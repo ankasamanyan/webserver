@@ -22,7 +22,7 @@ enum environment {
 	ERRORS
 };
 
-typedef struct location{//can we add a directory for uploads here?
+typedef struct location{//can we add a directory for uploads here? //can we also check that <LOC>locationDir: /uploads</LOC> does not have a redirection link inside? since we should only allow our users to post into /uploads directory, we shouldn't allow redirection for this specific location
 	std::string locationName; // dont need anymore
 	std::string locationDir; //should be key for map // can we make sure it always has "/" at the end?
 	// add dirListing right here
