@@ -110,6 +110,7 @@ void    Client::setDefaultFile() {
 }
 
 void    Client::defineRequestTarget() {
+    _directoryListingCase = false;
     _requestTarget = _configuration.root + _path;
     if (isDirectory(_requestTarget))
         assignContent();
@@ -124,10 +125,8 @@ bool    Client::isDirectory(std::string path) {
 }
 
 void    Client::assignContent() {
-    if (_configuration.dirListing == false) {
+    if (_configuration.dirListing == false)
         _requestTarget = _defaultFile;
-        _directoryListingCase = false;
-    }
     else
         _directoryListingCase = true;
 }
