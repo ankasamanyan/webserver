@@ -22,7 +22,7 @@ enum environment {
 	ERRORS
 };
 
-typedef struct location{
+typedef struct location{//can we add a directory for uploads here?
 	std::string locationName; // do need anymore
 	std::string locationDir; //should be key for map // can we make sure it always has "/" at the end?
 	// add dirListing right here
