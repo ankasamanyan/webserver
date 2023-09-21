@@ -113,8 +113,17 @@ void    Client::setDefaultFile() {
 void    Client::defineRequestTarget() {
     _directoryListingCase = false;
     _requestTarget = _configuration.root + _path;
+    redirectIfNeeded();
     if (isDirectory(_requestTarget))
         assignContent();
+}
+
+void    Client::redirectIfNeeded() {
+    std::map<std::string, location>::const_iterator it = _configuration.locations.find(_directory);
+
+    if (it != _configuration.locations.end() && it->second.redirectionDirectory) {
+        _requestTarget = _configuration.root + it->second.redirectionDirectory + _file;
+    }
 }
 
 bool    Client::isDirectory(std::string path) {

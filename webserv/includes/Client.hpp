@@ -99,6 +99,7 @@ class Client
         void                setDefaultFile();
         bool                areAllPartsOfRequestValid();
         void                defineRequestTarget();
+        void                redirectIfNeeded();
         bool                isDirectory(std::string path);
         void                assignContent();
         void                assignCGIFlag();
