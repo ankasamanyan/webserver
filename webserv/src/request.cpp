@@ -56,6 +56,7 @@ void    Client::parseRequest() {
     parseRequestLine();
     parseHeaders();
     parseBody();
+    setDefaultFile();
 }
 
 void    Client::parseRequestLine() {
@@ -99,8 +100,17 @@ void    Client::parseBody() {
     _body = _request.substr(startBodyIndex, bodySize);
 }
 
+void    Client::setDefaultFile() {
+    std::map<std::string, location>::const_iterator it = _configuration.locations.find(_directory);
+
+    if (it != _configuration.locations.end() && it->second.defaultFile)
+        _defaultFile = _configuration.root + it->second.defaultFile;
+    else
+        _defaultFile = "/html/errorHtml/404.html";
+}
+
 void    Client::defineRequestTarget() {
-    _requestTarget = configuration.root + _path;
+    _requestTarget = _configuration.root + _path;
     if (isDirectory(_requestTarget))
         assignContent();
 }
@@ -115,7 +125,7 @@ bool    Client::isDirectory(std::string path) {
 
 void    Client::assignContent() {
     if (_configuration.dirListing == false) {
-        _requestTarget = "/html/errorHtml/404.html";
+        _requestTarget = _defaultFile;
         _directoryListingCase = false;
     }
     else
