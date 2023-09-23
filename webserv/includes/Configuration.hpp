@@ -22,24 +22,26 @@ enum environment {
 	ERRORS
 };
 
-typedef struct location{//can we add a directory for uploads here? //can we also check that <LOC>locationDir: /uploads</LOC> does not have a redirection link inside? since we should only allow our users to post into /uploads directory, we shouldn't allow redirection for this specific location
-	std::string locationName; // dont need anymore
-	std::string locationDir; //should be key for map // can we make sure it always has "/" at the end?
-	// add dirListing right here
-	// add redirection (std::string)
+typedef struct location{
+//can we also check that <LOC>locationDir: /uploads</LOC> does not have a redirection link inside? 
+//since we should only allow our users to post into /uploads directory, 
+//we shouldn't allow redirection for this specific location
+	std::string locationDir;
+	std::string redirection;
+	bool dirListing;
 	bool methodGet;
 	bool methodPost;
 	bool methodDelete;
 	std::string defaultFile;
+	std::string uploadsDir;
 }location;
 
-typedef struct configuration{ //can we have a root here?
+typedef struct configuration{
+	std::string root;
     std::string serverName;
 	std::string host;
 	std::string port;
 	std::string maxBody;
-	std::string error404; //remove
-	bool dirListing; //should be moved to location
 	std::string CGIDir;
 	std::map<std::string, location> locations;
 	std::map<std::string, std::string> errorPages;
@@ -65,21 +67,21 @@ public:
 	void clearLocation();
 
 	void parseConfiguration(std::string configFile);
-	// void getDefaultConfiguration();
 
 	void parseServerName(std::string line);
+	void parseRoot(std::string line);
 	void parseHost(std::string line);
 	void parsePort(std::string line);
 	void parseMaxBody(std::string line);
 	void parseLocationGet(std::string line);
 	void parseLocationPost(std::string line);
 	void parseLocationDelete(std::string line);
-	void parseErroePage404(std::string line);
-	void parseDirectoryListing(std::string line);
+	void parseLocationDirectoryListing(std::string line);
+	void parseLocationRedirection(std::string line);
 	void parseCGIdir(std::string line);
-	void parseLocationName(std::string line);
 	void parseLocationDir(std::string line);
 	void parseLocationDefaultFile(std::string line);
+	void parseLocationUploadsDir(std::string line);
 	void parseLocation(std::string line);
 	void parseWhateverButNotLocation(std::string line);
 	void checkIfInsideOfServer(std::string line);

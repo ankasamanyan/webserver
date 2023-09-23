@@ -13,6 +13,17 @@ std::string getToken(std::string str, int n)
     return token;
 }
 
+void addBackSlashInTheEnd(std::string path){
+	path = path + "/";
+}
+
+void checkIsThereBackSlashInTheEnd(std::string path){
+	if(path[path.length()] != '/'){
+		addBackSlashInTheEnd(path);
+	}
+}
+
+
 Configuration::Configuration(){}
 
 Configuration::Configuration(int argc, char **argv){
@@ -82,7 +93,7 @@ void Configuration::addServerToServerRepo(){
 }
 
 void Configuration::addLocation(){
-	config.locations.insert(std::pair<std::string, location>(loc.locationName, loc));
+	config.locations.insert(std::pair<std::string, location>(loc.locationDir, loc));
 }
 
 void Configuration::parseWhateverButNotLocation(std::string line){
@@ -90,9 +101,14 @@ void Configuration::parseWhateverButNotLocation(std::string line){
 	parseHost(line);
 	parsePort(line);
 	parseMaxBody(line);
-	parseErroePage404(line);
-	parseDirectoryListing(line);
 	parseCGIdir(line);
+	parseRoot(line);
+}
+
+void Configuration::parseRoot(std::string line){
+	if(getToken(line, 1) == "root:")
+		config.root = getToken(line, 2);
+	checkIsThereBackSlashInTheEnd(config.root);
 }
 
 void Configuration::parseServerName(std::string line){
@@ -115,50 +131,57 @@ void Configuration::parseMaxBody(std::string line){
 		config.maxBody = getToken(line, 2);
 }
 
-void Configuration::parseErroePage404(std::string line){
-	if(getToken(line, 1) == "errorPage404:")
-		config.error404 = getToken(line, 2);
-}
-
-void Configuration::parseDirectoryListing(std::string line){
-	if(getToken(line, 1) == "directoryListing:"){
-		if(getToken(line, 2) == "yes")
-			config.dirListing = true;
-		else
-			config.dirListing = false;
-	}
-}
-
 void Configuration::parseCGIdir(std::string line){
 	if(getToken(line, 1) == "CGIDIR:")
 		config.CGIDir = getToken(line, 2);
+	checkIsThereBackSlashInTheEnd(config.CGIDir);
 }
 
 void Configuration::parseLocation(std::string line){
-	parseLocationName(line);
+	parseLocationRedirection(line);
 	parseLocationDir(line);
+	parseLocationDirectoryListing(line);
 	parseLocationGet(line);
 	parseLocationPost(line);
 	parseLocationDelete(line);
 	parseLocationDefaultFile(line);
+	parseLocationUploadsDir(line);
 }
 
-void Configuration::parseLocationName(std::string line){
-	if(getToken(line, 1) == "locationName:"){
-		loc.locationName = getToken(line, 2);
+void Configuration::parseLocationDirectoryListing(std::string line){
+	if(getToken(line, 1) == "directoryListing:"){
+		if(getToken(line, 2) == "yes")
+			loc.dirListing = true;
+		else
+			loc.dirListing = false;
 	}
+}
+
+void Configuration::parseLocationRedirection(std::string line){
+	if(getToken(line, 1) == "redirection:"){
+		loc.redirection = getToken(line, 2);
+	}
+	checkIsThereBackSlashInTheEnd(loc.redirection);
 }
 
 void Configuration::parseLocationDir(std::string line){
 	if(getToken(line, 1) == "locationDir:"){
 		loc.locationDir = getToken(line, 2);
 	}
+	checkIsThereBackSlashInTheEnd(loc.locationDir);
 }
 
 void Configuration::parseLocationDefaultFile(std::string line){
 	if(getToken(line, 1) == "defaultFile:"){
 		loc.defaultFile = getToken(line, 2);
 	}
+}
+
+void Configuration::parseLocationUploadsDir(std::string line){
+	if(getToken(line, 1) == "uploadsDir:"){
+		loc.uploadsDir = getToken(line, 2);
+	}
+	checkIsThereBackSlashInTheEnd(loc.uploadsDir);
 }
 
 void Configuration::parseLocationGet(std::string line){
@@ -195,20 +218,21 @@ void Configuration::checkIfInsideOfServer(std::string line){
 }
 
 void Configuration::clearConfiguration(){
+	config.root = "";
 	config.serverName = "";
 	config.host = "";
 	config.port = "";
 	config.maxBody = "";
-	config.error404 = "";
-	config.dirListing = false;
 	config.CGIDir = "";
 }
 
 void Configuration::clearLocation(){
-	loc.locationName = "";
+	loc.redirection = "";
+	loc.dirListing = false;
 	loc.locationDir = "";
 	loc.methodGet = false;
 	loc.methodPost = false;
 	loc.methodDelete = false;
 	loc.defaultFile = "";
+	loc.uploadsDir = "";
 }
