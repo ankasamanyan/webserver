@@ -141,7 +141,33 @@ class Utils
 		}
 };
 
+#define HTML_HEADERS "HTTP/1.1 200 OK\r\n\r\n<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>Directory Listing</title>"
 
+#define STYLES "<style> body { background-image: #6c55bea9;background-repeat: repeat;background-size: 205px;background-position: 0 50px; \
+font-family: Arial, sans-serif;margin: 0;padding: 0;display: flex;flex-direction: column;justify-content: center; \
+align-items: center;min-height: 100vh;animation: backgroundColorChange 5s linear infinite;} \
+.topbar {color: #6c55be;padding: 30px 0;font-size: 23px;display: flex;justify-content: space-between;align-items: center; \
+position: fixed;top: 0;width: 100%;z-index: 999;} \
+.topbar a {color: #ffffff;text-decoration: none;margin: 0 30px;} \
+.company-name {color: #ffffff;margin: 0 30px;} \
+.content {padding: 80px;border-radius: 15px;text-align: center;display: flex;flex-wrap: wrap;justify-content: center;} \
+.item {background-color: #f4f4f438;padding: 20px;margin: 10px; border-radius: 10px;text-align: center;width: 188px; \
+min-height: 180px;display: flex;flex-direction: column;justify-content: center;align-items: center;} \
+.folder {color: #ffffff;font-size: 24px;}.folder a {text-decoration: none}.file {color: #ffffff;font-size: 24px;}.file a {text-decoration: none}.icon {font-size: 72px;margin-bottom: 20px;} \
+@keyframes backgroundColorChange {0% {background-color: #6c55bea9;}25% {background-color: #9f53b0a9;} \
+50% {background-color: #c87b40a9;}75% {background-color: #b05374a9;}100% {background-color: #6c55bea9;}}</style>"
+
+#define BODY "<body><div class=\"topbar\"><div class=\"company-name\"><a href=\"/\">✨42Capybaras✨</a></div> \
+<div class=\"links\"><a href=\"../Uploads.html\">Upload</a><a href=\"#\">About us</a><a href=\"#\">Contact us</a> \
+</div></div><div class=\"content\">"
+
+#define CLOSING_TAGS "</div></body></html>"
+
+#define FOLDER_FORM_OPEN "<div class=\"item folder\"><div class=\"icon\">📁</div><div class=\"folder\">"
+
+#define FILE_FORM_OPEN "<div class=\"item file\"><div class=\"icon\">📄</div> <div class=\"file\">"
+
+#define CLOSING_DIVS "</div></div>"
 
 #endif
 

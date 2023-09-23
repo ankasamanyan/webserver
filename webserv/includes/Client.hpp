@@ -75,7 +75,7 @@ class Client
         std::string                             _HTTPVersion;
         std::map<std::string, std::string>		_headers;
         std::string                             _body;
-        location                                _location
+        location                                _location;
         std::string                             _defaultFile;
         std::string                             _requestTarget;
         bool                                    _directoryListingCase;
