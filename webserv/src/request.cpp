@@ -39,8 +39,8 @@ bool    Client::isRequestValid() {
     if (isRequestEmpty() == true)
         return false;
     parseRequest();
-    updateDirectoryIfUploading();
     setDefaultFile();
+    updateDirectoryIfUploading();
     defineRequestTarget();
     assignCGIFlag();
     return areAllPartsOfRequestValid();
@@ -71,7 +71,7 @@ void    Client::parseRequestLine() {
 }
 
 std::string Client::getDirectory() {
-    std:::string pathWithRoot = configuration.root + _path;
+    std:::string pathWithRoot = _configuration.root + _path;
     if (isDirectory(pathWithRoot) && _path[_path.size() - 1] != '/')
         _path.append("/");
     return _path.substr(0, _path.find_last_of("/") + 1);
@@ -114,8 +114,8 @@ void    Client::parseBody() {
 void    Client::updateDirectoryIfUploading() {
     std::map<std::string, location>::const_iterator it = _configuration.locations.find(_directory);
 
-	if (it != _configuration.locations.end() && _method == POST && !it->second.uploadDirectory.empty())
-		_directory = it->second.uploadDirectory;
+	if (it != _configuration.locations.end() && _method == POST && !it->second.uploadsDir.empty())
+		_directory = it->second.uploadsDir;
 }
 
 void    Client::setDefaultFile() {
@@ -138,8 +138,8 @@ void    Client::defineRequestTarget() {
 void    Client::redirectIfNeeded() {
     std::map<std::string, location>::const_iterator it = _configuration.locations.find(_directory);
 
-    if (it != _configuration.locations.end() && !it->second.redirectionDirectory.empty()) {
-        _requestTarget = _configuration.root + it->second.redirectionDirectory + _file;
+    if (it != _configuration.locations.end() && !it->second.redirection.empty()) {
+        _requestTarget = _configuration.root + it->second.redirection + _file;
     }
 }
 
