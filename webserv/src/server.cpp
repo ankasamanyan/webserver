@@ -28,14 +28,6 @@ Server::Server(configuration innit)
 	}
 	configureSocket(_serverSocket);
     _configuration = innit;
-
-	_serverAmount = 0;
-	/* put the loop */
-	pollfd	listenPollFd;
-	listenPollFd.fd = _serverSocket;
-	listenPollFd.events = POLLIN;
-	_fdVector.push_back(listenPollFd);
-	_serverAmount++;
 }
 
 
@@ -72,51 +64,52 @@ int		Server::highestFd(std::set<int> activeClients)
 
 void	Server::serverLoop()
 {
-	fdIter	iter = _fdVector.begin();
+	pollfd	listenPollFd;
+	fdIter	iter;
+
+	listenPollFd.fd = _serverSocket;
+	listenPollFd.events = POLLIN;
+	_fdVector.push_back(listenPollFd);
 
 	poll(_fdVector.data(), _fdVector.size() , -1);
 	PRINT << PURPLE "\t\t......poll returned......" << RESET_LINE;
-	for (size_t i = 0; i < _serverAmount; i++, iter++)
+
+	for (iter = _fdVector.begin(); iter != _fdVector.end(); iter++)
 	{
 		if (iter->revents & POLLIN)
 		{
-			acceptClient(iter);
-			break;
-		}
-	}
-	for (_fdVector.begin() + _serverAmount; iter != _fdVector.end(); iter++)
-	{
-		if (_clients.find(iter->fd) == _clients.end())
-			continue ;
-		if (iter->revents & POLLIN)
-		{
+			if (iter->fd == _serverSocket)
+			{
+                acceptClient(iter);
+				break;
+			}
 			Client	&currClient =_clients.at(iter->fd);
 			currClient.receiveRequest();
-			if (currClient.getState() == VALID_)
-				iter->events = POLLOUT | POLLHUP;
+			if(currClient.getState() == VALID_)
+       			 iter->events = POLLOUT;
 			if ( currClient.getState() == SHOULD_DISCONNECT_)
 			{
 				disconnectClient(iter);
 				break;
 			}
-			if (DEBUG)
-			{
-				PRINT << YELLOW "\t\t......Client wants to send a REQUEST......   ";
-				PRINT <<  "FD: "<< iter->fd << RESET_LINE;
-			}
+			/* wants to send a REQUEST */
+			PRINT << YELLOW "\t\t......Client wants to send a REQUEST......   ";
+			PRINT <<  "FD: "<< iter->fd << RESET_LINE;
+			if (REQUEST_ENDED/* add the condition */)
+				iter->events = POLLOUT | POLLHUP;
 		}
 		else if (iter->revents & POLLOUT)
 		{
-			if (DEBUG)
-			{
-				PRINT << YELLOW "\t\t......Client wants to send a RESPONSE......   ";
-				PRINT <<  "FD: "<< iter->fd << RESET_LINE;
-			}
+			PRINT << PINK "\t\t......Client wants to get a RESPONSE......   ";
+			PRINT <<  "FD: "<< iter->fd << RESET_LINE;
 			Client	&currClient =_clients.at(iter->fd);
-			currClient.sendResponse();
-			if (currClient._responseState == FULLY_SENT)
-				disconnectClient(iter);
-			break;
+			if (true/* if response ended */)
+			{
+				currClient.sendResponse();
+				if (currClient._responseState == FULLY_SENT)
+					disconnectClient(iter);
+				break;
+			}
 		}
 		else if ( iter->revents & POLLHUP)
 		{

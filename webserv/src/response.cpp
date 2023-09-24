@@ -4,40 +4,40 @@ void Client::configureResponseFile(std::stringstream &fileName)
 {
 	if (DEBUG)
 		PRINT << SKY << "REQUEST TARGET: " << _requestTarget << RESET_LINE;
- if (_exitState == EXIT_OK)
- {
-  if (_requestTarget.compare(_configuration.root) == 0)
-  {
-	fileName << STANDARD_HTML;
-  }
-  else if (isDirectory(_requestTarget) && _directoryListingCase && _method.compare("GET") == 0)
-  {
-   directoryListing();
-   return ;
-  }
-  else if (_method.compare("POST") == 0)
-   fileName << SUCCESS_HTML;
-  else
-   fileName << "." << _requestTarget;
- }
- else if (_method.compare("DELETE") == 0 && _exitState == NO_CONTENT)
- {
-  fileName << DELETED_HTML; /* Can we delete directories ?? */
-  _exitState = EXIT_OK;
- }
- else
- {
-  fileName << "." << _configuration.locations["root"].locationDir << _errorPagePath << _exitState << ".html";
- }
+	if (_exitState == EXIT_OK)
+	{
+		if (_requestTarget.compare(_configuration.root) == 0)
+		{
+			fileName << STANDARD_HTML;
+		}
+		else if (isDirectory(_requestTarget) && _directoryListingCase && _method.compare("GET") == 0)
+		{
+			directoryListing();
+			return ;
+		}
+		else if (_method.compare("POST") == 0)
+			fileName << SUCCESS_HTML;
+		else
+			fileName << "." << _requestTarget;
+	}
+	else if (_method.compare("DELETE") == 0 && _exitState == NO_CONTENT)
+	{
+		fileName << DELETED_HTML; /* Can we delete directories ?? */
+		_exitState = EXIT_OK;
+	}
+	else
+	{
+		fileName << "." << _configuration.locations["root"].locationDir << _errorPagePath << _exitState << ".html";
+	}
 
- /* debuggig thingies */
- if(DEBUG)
- {
-  PRINT << SKY << " REQUEST TYPE: " << _method << RESET_LINE;
-  PRINT << YELLOW "\tThe state: "<< _exitState << RESET_LINE;
-  PRINT << YELLOW "File Name: "<< fileName.str() <<"\t"<< PINK "Request tartrget: "<< _requestTarget << RESET_LINE;
-  PRINT << GREEN "You are trying to access '" << fileName.str() << "'" << RESET_LINE<< RESET_LINE;
- }
+	/* debuggig thingies */
+	if(DEBUG)
+	{
+		PRINT << SKY << " REQUEST TYPE: " << _method << RESET_LINE;
+		PRINT << YELLOW "\tThe state: "<< _exitState << RESET_LINE;
+		PRINT << YELLOW "File Name: "<< fileName.str() <<"\t"<< PINK "Request tartrget: "<< _requestTarget << RESET_LINE;
+		PRINT << GREEN "You are trying to access '" << fileName.str() << "'" << RESET_LINE<< RESET_LINE;
+	}
 }
 
 void Client::sendResponse()
