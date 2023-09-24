@@ -86,6 +86,7 @@ public:
 	void parseWhateverButNotLocation(std::string line);
 	void checkIfInsideOfServer(std::string line);
 	void addServerToServerRepo();
+	void checkUploadsLocationForRedirections();
 	void addLocation();
 
 };

@@ -52,6 +52,7 @@ void Configuration::parseConfiguration(std::string configFile){   	//const char 
         {
 			checkIfInsideOfServer(line);
 			if( env == SERVER){
+				clearConfiguration();
 				while(getToken(line, 1) != "</server>"){
 					getline(file, line);
 					if(getToken(line, 1) == "<LOC>")
@@ -137,15 +138,23 @@ void Configuration::parseCGIdir(std::string line){
 	checkIsThereBackSlashInTheEnd(config.CGIDir);
 }
 
+void Configuration::checkUploadsLocationForRedirections(){
+	if(loc.locationDir == "/uploads/"){
+		if(loc.redirection != "")
+			std::cout << "Redirections are not allowed in Uploads location";
+	}
+}
+
 void Configuration::parseLocation(std::string line){
-	parseLocationRedirection(line);
 	parseLocationDir(line);
+	parseLocationRedirection(line);
 	parseLocationDirectoryListing(line);
 	parseLocationGet(line);
 	parseLocationPost(line);
 	parseLocationDelete(line);
 	parseLocationDefaultFile(line);
 	parseLocationUploadsDir(line);
+	checkUploadsLocationForRedirections();
 }
 
 void Configuration::parseLocationDirectoryListing(std::string line){
@@ -218,21 +227,23 @@ void Configuration::checkIfInsideOfServer(std::string line){
 }
 
 void Configuration::clearConfiguration(){
-	config.root = "";
+	config.root = "/html/";
 	config.serverName = "";
-	config.host = "";
-	config.port = "";
-	config.maxBody = "";
+	config.host = "0.0.0.0";
+	config.port = "2000";
+	config.maxBody = "80000";
 	config.CGIDir = "";
+	clearLocation();
 }
 
 void Configuration::clearLocation(){
 	loc.redirection = "";
-	loc.dirListing = false;
+	loc.dirListing = true;
 	loc.locationDir = "";
-	loc.methodGet = false;
-	loc.methodPost = false;
-	loc.methodDelete = false;
+	loc.methodGet = true;
+	loc.methodPost = true;
+	loc.methodDelete = true;
 	loc.defaultFile = "";
 	loc.uploadsDir = "";
 }
+
