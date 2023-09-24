@@ -152,7 +152,9 @@ bool    Client::isDirectory(std::string path) {
 }
 
 void    Client::assignContent() {
-    if (_configuration.dirListing == false)
+    std::map<std::string, location>::const_iterator it = _configuration.locations.find(_directory);
+
+    if (it != _configuration.locations.end() && it->second.dirListing == false)
         _requestTarget = _defaultFile;
     else
         _directoryListingCase = true;
