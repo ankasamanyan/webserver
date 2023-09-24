@@ -114,7 +114,7 @@ void    Client::parseBody() {
 void    Client::updateDirectoryIfUploading() {
     std::map<std::string, location>::const_iterator it = _configuration.locations.find(_directory);
 
-	if (it != _configuration.locations.end() && _method == POST && !it->second.uploadsDir.empty())
+	if (it != _configuration.locations.end() && _method == "POST" && !it->second.uploadsDir.empty())
 		_directory = it->second.uploadsDir;
 }
 
@@ -178,7 +178,7 @@ bool    Client::areAllPartsOfRequestValid() {
     return true;
 }
 
-bool Client::isPathAllowed {
+bool Client::isPathAllowed() {
     std::map<std::string, location>::const_iterator it = _configuration.locations.find(_directory);
 
     if (it == _configuration.locations.end()) {
@@ -202,7 +202,7 @@ bool    Client::isMethodAllowed() {
 
     if ((_method == "GET" && _location.methodGet) ||
         (_method == "DELETE" && _location.methodDelete) ||
-        (_method == "POST" && _location.methodPost)
+        (_method == "POST" && _location.methodPost))
         return true;
     _exitState = METHOD_NOT_ALLOWED;
     return false;
