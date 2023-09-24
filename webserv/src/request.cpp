@@ -15,7 +15,7 @@ void	Client::receiveRequest()
         Utils::printMsg("Error receiving a message from a socket", PURPLE);
     }
     PRINT << SKY "The REQUEST" << RESET_LINE;
-    // PRINT << currentChunk << RESET_LINE;
+    PRINT << currentChunk << RESET_LINE;
   	_request.append(currentChunk, numberOfBytesReceived);
     if (numberOfBytesReceived < CHUNK_SIZE) 
 	{
@@ -131,7 +131,8 @@ void    Client::defineRequestTarget() {
     _directoryListingCase = false;
     _requestTarget = _configuration.root + _directory + _file;
     redirectIfNeeded();
-    if (isDirectory(_requestTarget) && _method == "GET")
+	PRINT << ORANGE << "REQUEST BEFORE LINE  134: " << _requestTarget << GREEN << "\t\tCONFIG ROOT: " << _configuration.root << RESET_LINE;
+    if (isDirectory(_requestTarget) && _method == "GET" && _requestTarget != _configuration.root)
         assignContent();
 }
 

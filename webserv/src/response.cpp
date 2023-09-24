@@ -2,10 +2,14 @@
 
 void Client::configureResponseFile(std::stringstream &fileName)
 {
+	if (DEBUG)
+		PRINT << SKY << "REQUEST TARGET: " << _requestTarget << RESET_LINE;
  if (_exitState == EXIT_OK)
  {
   if (_path.compare("/") == 0)
-   fileName << STANDARD_HTML;
+  {
+	fileName << STANDARD_HTML;
+  }
   else if (isDirectory(_requestTarget) && _directoryListingCase && _method.compare("GET") == 0)
   {
    directoryListing();
@@ -72,7 +76,9 @@ void Client::sendResponse()
   file << STANDARD_404;
   std::ifstream errorPage((file.str()).c_str(), std::ios::binary); /* add protection */
   errorPage.read(body, sizeof(body));
-  // _responseLength = errorPage.gcount();
+
+  _responseLength = errorPage.gcount();
+
   if (_responseState == INITIALIZED)
    sendHeaders();
   send(_clientFd, body, errorPage.gcount(), 0);
@@ -90,7 +96,7 @@ void Client::sendHeaders()
  headers << " " << _exitState << " " << getHttpMsg((int)_exitState) << "\r\n";
  if (_exitState != ERROR_404)
   checkHeaders(headers);
- // headers << "connection: close\r\n";
+ headers << "connection: close\r\n";
  // headers << "content-length: " << _responseLength << "\r\n";
  headers << "\r\n";
  PRINT << PURPLE << "Response:\n" << headers.str() << RESET_LINE;
