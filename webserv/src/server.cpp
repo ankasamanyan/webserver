@@ -8,7 +8,7 @@ Server::Server(configuration innit)
 
 	setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, &option, sizeof(option));
 	_serverAddress.sin_family		= AF_INET;
-	_serverAddress.sin_port			= htons(innit.port);
+	_serverAddress.sin_port			= htons(atoi((innit.port).c_str()));
 	_serverAddress.sin_addr.s_addr	= inet_addr(innit.host.c_str());
 
 	if (_serverSocket == -1)

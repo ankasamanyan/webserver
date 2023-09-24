@@ -43,7 +43,7 @@ Configuration::Configuration(int argc, char **argv){
 
 Configuration::~Configuration(){}
 
-void Configuration::parseConfiguration(std::string configFile){    
+void Configuration::parseConfiguration(std::string configFile){   	//const char * 
     std::fstream file(configFile);
     std::string line = "default";
     if (file.fail())

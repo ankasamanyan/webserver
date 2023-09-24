@@ -1,7 +1,6 @@
 NAME = webserv
 
-SRC =	*.cpp \
-		src/*.cpp
+SRC =	src/*.cpp
 
 PURPLE	= "\033[0;34m"
 PINK	= "\033[0;35m"
