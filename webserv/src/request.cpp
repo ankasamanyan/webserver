@@ -71,7 +71,7 @@ void    Client::parseRequestLine() {
 }
 
 std::string Client::getDirectory() {
-    std:::string pathWithRoot = _configuration.root + _path;
+    std::string pathWithRoot = _configuration.root + _path;
     if (isDirectory(pathWithRoot) && _path[_path.size() - 1] != '/')
         _path.append("/");
     return _path.substr(0, _path.find_last_of("/") + 1);
