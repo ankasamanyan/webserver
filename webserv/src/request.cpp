@@ -129,7 +129,10 @@ void    Client::setDefaultFile() {
 
 void    Client::defineRequestTarget() {
     _directoryListingCase = false;
-    _requestTarget = _configuration.root + _directory + _file;
+    if (_directory == "/")
+        _requestTarget = _configuration.root;
+    else
+        _requestTarget = _configuration.root + _directory + _file;
     redirectIfNeeded();
 	PRINT << ORANGE << "REQUEST BEFORE LINE  134: " << _requestTarget << GREEN << "\t\tCONFIG ROOT: " << _configuration.root << RESET_LINE;
     if (isDirectory(_requestTarget) && _method == "GET" && _requestTarget != _configuration.root)

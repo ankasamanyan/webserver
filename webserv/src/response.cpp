@@ -6,7 +6,7 @@ void Client::configureResponseFile(std::stringstream &fileName)
 		PRINT << SKY << "REQUEST TARGET: " << _requestTarget << RESET_LINE;
  if (_exitState == EXIT_OK)
  {
-  if (_path.compare("/") == 0)
+  if (_requestTarget.compare(_configuration.root) == 0)
   {
 	fileName << STANDARD_HTML;
   }
