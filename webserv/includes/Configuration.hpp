@@ -23,9 +23,6 @@ enum environment {
 };
 
 typedef struct location{
-//can we also check that <LOC>locationDir: /uploads</LOC> does not have a redirection link inside? 
-//since we should only allow our users to post into /uploads directory, 
-//we shouldn't allow redirection for this specific location
 	std::string locationDir;
 	std::string redirection;
 	bool dirListing;
@@ -43,8 +40,8 @@ typedef struct configuration{
 	std::string port;
 	std::string maxBody;
 	std::string CGIDir;
-	std::map<std::string, location> locations;// should be initialized
-	std::map<std::string, std::string> errorPages;// should be initialized and cleaned
+	std::map<std::string, location> locations;
+	std::map<std::string, std::string> errorPages;
 }configuration;
 
 
