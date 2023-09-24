@@ -43,8 +43,8 @@ typedef struct configuration{
 	std::string port;
 	std::string maxBody;
 	std::string CGIDir;
-	std::map<std::string, location> locations;
-	std::map<std::string, std::string> errorPages;
+	std::map<std::string, location> locations;// should be initialized
+	std::map<std::string, std::string> errorPages;// should be initialized and cleaned
 }configuration;
 
 
