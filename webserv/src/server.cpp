@@ -8,7 +8,7 @@ Server::Server(configuration innit)
 
 	setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, &option, sizeof(option));
 	_serverAddress.sin_family		= AF_INET;
-	_serverAddress.sin_port			= htons(atoi(innit.port.c_str()));
+	_serverAddress.sin_port			= htons(atoi((innit.port).c_str()));
 	_serverAddress.sin_addr.s_addr	= inet_addr(innit.host.c_str());
 
 	if (_serverSocket == -1)
@@ -28,6 +28,14 @@ Server::Server(configuration innit)
 	}
 	configureSocket(_serverSocket);
     _configuration = innit;
+
+	_serverAmount = 0;
+	/* put the loop */
+	pollfd	listenPollFd;
+	listenPollFd.fd = _serverSocket;
+	listenPollFd.events = POLLIN;
+	_fdVector.push_back(listenPollFd);
+	_serverAmount++;
 }
 
 
@@ -64,52 +72,51 @@ int		Server::highestFd(std::set<int> activeClients)
 
 void	Server::serverLoop()
 {
-	pollfd	listenPollFd;
-	fdIter	iter;
-
-	listenPollFd.fd = _serverSocket;
-	listenPollFd.events = POLLIN;
-	_fdVector.push_back(listenPollFd);
+	fdIter	iter = _fdVector.begin();
 
 	poll(_fdVector.data(), _fdVector.size() , -1);
 	PRINT << PURPLE "\t\t......poll returned......" << RESET_LINE;
-
-	for (iter = _fdVector.begin(); iter != _fdVector.end(); iter++)
+	for (size_t i = 0; i < _serverAmount; i++, iter++)
 	{
 		if (iter->revents & POLLIN)
 		{
-			if (iter->fd == _serverSocket)
-			{
-                acceptClient(iter);
-				break;
-			}
+			acceptClient(iter);
+			break;
+		}
+	}
+	for (_fdVector.begin() + _serverAmount; iter != _fdVector.end(); iter++)
+	{
+		if (_clients.find(iter->fd) == _clients.end())
+			continue ;
+		if (iter->revents & POLLIN)
+		{
 			Client	&currClient =_clients.at(iter->fd);
 			currClient.receiveRequest();
-			if(currClient.getState() == VALID_)
-       			 iter->events = POLLOUT;
+			if (currClient.getState() == VALID_)
+				iter->events = POLLOUT | POLLHUP;
 			if ( currClient.getState() == SHOULD_DISCONNECT_)
 			{
 				disconnectClient(iter);
 				break;
 			}
-			/* wants to send a REQUEST */
-			PRINT << YELLOW "\t\t......Client wants to send a REQUEST......   ";
-			PRINT <<  "FD: "<< iter->fd << RESET_LINE;
-			if (REQUEST_ENDED/* add the condition */)
-				iter->events = POLLOUT | POLLHUP;
+			if (DEBUG)
+			{
+				PRINT << YELLOW "\t\t......Client wants to send a REQUEST......   ";
+				PRINT <<  "FD: "<< iter->fd << RESET_LINE;
+			}
 		}
 		else if (iter->revents & POLLOUT)
 		{
-			PRINT << PINK "\t\t......Client wants to get a RESPONSE......   ";
-			PRINT <<  "FD: "<< iter->fd << RESET_LINE;
-			Client	&currClient =_clients.at(iter->fd);
-			if (true/* if response ended */)
+			if (DEBUG)
 			{
-				currClient.sendResponse();
-				if (currClient._responseState == FULLY_SENT)
-					disconnectClient(iter);
-				break;
+				PRINT << YELLOW "\t\t......Client wants to send a RESPONSE......   ";
+				PRINT <<  "FD: "<< iter->fd << RESET_LINE;
 			}
+			Client	&currClient =_clients.at(iter->fd);
+			currClient.sendResponse();
+			if (currClient._responseState == FULLY_SENT)
+				disconnectClient(iter);
+			break;
 		}
 		else if ( iter->revents & POLLHUP)
 		{
@@ -137,4 +144,3 @@ void Server::acceptClient(fdIter iter) {
     _fdVector.push_back(pollFdForThisClient);
     PRINT << GREEN "\t\t......Someone wants to connect......   ";
 }
-

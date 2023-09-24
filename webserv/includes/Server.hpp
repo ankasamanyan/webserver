@@ -47,6 +47,7 @@ class Server
 
 	private:
 		struct sockaddr_in		_serverAddress;
+		size_t					_serverAmount;
 		int						_serverSocket;
 		std::vector<pollfd>		_fdVector;
 		std::map<int, Client>   _clients;
