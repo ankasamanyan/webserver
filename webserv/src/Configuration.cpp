@@ -233,8 +233,8 @@ void Configuration::clearConfiguration(){
 	config.port = "2000";
 	config.maxBody = "80000";
 	config.CGIDir = "";
-	//map with locations should be initialized here
-	//map with errors should be initialized here
+	config.locations["/"] = loc;
+	config.errorPages["404"] = "/errorHtml/404.html"; 
 	clearLocation();
 }
 
