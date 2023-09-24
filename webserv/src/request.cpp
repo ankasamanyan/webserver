@@ -130,7 +130,7 @@ void    Client::setDefaultFile() {
 void    Client::defineRequestTarget() {
     _directoryListingCase = false;
     if (_directory == "/")
-        _requestTarget = _configuration.root;
+        _requestTarget = _configuration.root + _file;
     else
         _requestTarget = _configuration.root + _directory + _file;
     redirectIfNeeded();
