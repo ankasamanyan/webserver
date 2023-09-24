@@ -12,6 +12,7 @@
 #include <map>
 #include <deque>
 #include <memory>
+#include <stdexcept>
 #include <iomanip>
 
 enum environment {

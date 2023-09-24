@@ -11,7 +11,7 @@ int main(int argc, char **argv)
     // innit.methodDelete = true;
     // innit.methodPost = true;
     // innit.methodGet = true;
-    // innit.maxBody = "8000";
+    // innit.maxBody = "80000";
     // innit.root = "/html";
     // innit.dirListing = true;
     // innit.CGIDir = "";
