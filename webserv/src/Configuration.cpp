@@ -44,7 +44,7 @@ Configuration::Configuration(int argc, char **argv){
 Configuration::~Configuration(){}
 
 void Configuration::parseConfiguration(std::string configFile){   	//const char * 
-    std::fstream file(configFile);
+    std::fstream file(configFile.c_str());
     std::string line = "default";
     if (file.fail())
         throw std::out_of_range("failed to open a file");
