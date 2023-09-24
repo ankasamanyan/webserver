@@ -3,6 +3,7 @@
 
 #include "Utils.hpp"
 #include "Server.hpp"
+#include "Configuration.hpp"
 #include <fstream>
 #include <iostream>
 #include <string>
