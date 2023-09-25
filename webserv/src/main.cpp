@@ -18,6 +18,12 @@ int main(int argc, char **argv)
     conf->config.locations["/uploads/"].methodDelete = true;
     conf->config.locations["/uploads/"].dirListing = true;
 
+    conf->config.locations["/"].methodPost = true;
+    conf->config.locations["/"].methodGet = true;
+    conf->config.locations["/"].methodDelete = true;
+    conf->config.locations["/"].dirListing = true;
+    conf->config.locations["/"].defaultFile = "errorHtml/500.html";
+
     conf->config.locations["/errorHtml/"].methodPost = false;
     conf->config.locations["/errorHtml/"].methodGet = true;
     conf->config.locations["/errorHtml/"].methodDelete = false;
@@ -26,9 +32,8 @@ int main(int argc, char **argv)
     conf->config.locations["/folder/"].methodPost = false;
     conf->config.locations["/folder/"].methodGet = true;
     conf->config.locations["/folder/"].methodDelete = false;
-//     conf->config.locations["/folder/"].dirListing = true;
-//	conf->config.locations["/folder/"].redirection = "/";
-	conf->config.locations["/folder/"].defaultFile = "errorHtml/500.html";
+	conf->config.locations["/folder/"].redirection = "/";
+
     conf->config.CGIDir = "";
 	/* vector parsing structs */
 	Server	server(conf->config);

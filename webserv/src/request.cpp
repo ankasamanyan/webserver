@@ -74,13 +74,13 @@ std::string Client::getDirectory() {
     std::string pathWithRoot = _configuration.root + _path;
     if (isDirectory(pathWithRoot) && _path[_path.size() - 1] != '/')
         _path.append("/");
-    return _path.substr(0, _path.find_last_of("/") + 1);
+    return _path.substr(0, _path.substr(1).find_first_of("/") + 2);
 }
 
 std::string Client::getFile() {
     std::string file;
     if (_path.find_last_of("/") != string::npos)
-        file = _path.substr(_path.find_last_of("/") + 1);
+        file = _path.substr(_path.substr(1).find_first_of(_directory) + _directory.size());
     else
         file = "";
     return file;
@@ -129,10 +129,7 @@ void    Client::setDefaultFile() {
 
 void    Client::defineRequestTarget() {
     _directoryListingCase = false;
-//    if (_directory == "/")
-//        _requestTarget = _configuration.root + _file;
-//    else
-        _requestTarget = _configuration.root + _directory.substr(1) + _file;
+    _requestTarget = _configuration.root + _directory.substr(1) + _file;
     redirectIfNeeded();
     if (isDirectory(_requestTarget) && _method == "GET" && _requestTarget != _configuration.root)
         assignContent();
