@@ -1,4 +1,4 @@
-#include "../includes/Server.hpp"
+#include "../includes/Server_handler.hpp"
 
 void	Client::checkHeaders(std::stringstream &headers)
 {

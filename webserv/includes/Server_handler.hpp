@@ -41,17 +41,20 @@ class Client;
 //     string root;
 // };
 
-class Server
+class Server_handler
 {
 	friend class Client;
 
 	private:
-		struct sockaddr_in		_serverAddress;
-		size_t					_serverAmount;
-		int						_serverSocket;
-		std::vector<pollfd>		_fdVector;
-		std::map<int, Client>   _clients;
-        configuration           _configuration;
+		struct sockaddr_in										_serverAddress;
+		size_t													_serverAmount;
+		// int														_serverSocket; /* remove this */
+		std::vector<pollfd>										_fdVector;
+		std::map<int, Client>   								_clients;
+		// configuration           								_configuration;
+		std::map<int, std::map<std::string, configuration> >	_serverConfigMap;
+
+
 
 		/* defines */
 		enum requestState
@@ -69,11 +72,13 @@ class Server
 		requestState		receiveRequest(fdIter iter);
 		int					highestFd(std::set<int> activeClients);
 		void				disconnectClient(fdIter iter);
+		void				pushConfigsIntoMap(configuration, std::map<std::string, int> &);
+		int					createNewListener(configuration config);
 
 
     public:
-		Server(configuration innit);
-		~Server();
+		Server_handler(std::deque<configuration> innit);
+		~Server_handler();
 		/* functions */
 		int		getSocket();
 		void	serverLoop();

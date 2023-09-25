@@ -1,6 +1,6 @@
 #include "../includes/Client.hpp"
 
-Client::Client(int _serverSocket, configuration &config):_configuration(config) 
+Client::Client(int _serverSocket, std::map<std::string, configuration> &config):_configMap(config) 
 {
 	int newFd = accept(_serverSocket, (struct sockaddr *)NULL, NULL);
     configureSocket(newFd);
@@ -9,6 +9,7 @@ Client::Client(int _serverSocket, configuration &config):_configuration(config)
 	_responsePos = 0;
 	_exitState = EXIT_OK;
 	_errorPagePath = "/errorHtml/";
+	_requestedServerName = "default";
 }
 
 const Client	&Client::operator=(const Client &copy)
@@ -25,15 +26,15 @@ const Client	&Client::operator=(const Client &copy)
 	_body = copy._body;
 	_requestTarget = copy._requestTarget;
 	_clientState = copy._clientState;
-	_configuration = copy._configuration;
 	_responsePos = copy._responsePos;
 	_responseState = copy._responseState;
 	_errorPagePath = copy._errorPagePath;
+	_requestedServerName = copy._requestedServerName;
 	// _responseLength = copy._responseLength;
 	return (*this);
 }
 
-Client::Client(const Client &copy):_configuration(copy._configuration)
+Client::Client(const Client &copy):_configMap(copy._configMap)
 {
 	*this = copy;
 }
@@ -41,6 +42,11 @@ Client::Client(const Client &copy):_configuration(copy._configuration)
 Client::~Client()
 {
 
+}
+
+configuration	&Client::getConfig()
+{
+		return(_configMap.at(_requestedServerName));
 }
 
 void	Client::configureSocket(int newSocket)

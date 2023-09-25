@@ -2,7 +2,7 @@
 	#define CLIENT_HPP
 
 #include "Utils.hpp"
-#include "Server.hpp"
+#include "Server_handler.hpp"
 #include "Configuration.hpp"
 #include <fstream>
 #include <iostream>
@@ -61,7 +61,7 @@ struct  location;
 struct	configuration;
 class Client
 {
-	friend class Server;
+	friend class Server_handler;
 
 	private:
 		int										_clientFd;
@@ -69,6 +69,7 @@ class Client
 		requestType								_reqType;
 		pollfd									_pollFd;
         std::string                             _request;
+        std::string                             _requestedServerName;
         std::string                             _method;
         std::string                             _path;
         std::string                             _directory;
@@ -82,7 +83,7 @@ class Client
         bool                                    _directoryListingCase;
         bool                                    _CGICase;
 		clientState								_clientState;
-		configuration							&_configuration;
+		std::map<std::string, configuration>	&_configMap;
 		size_t									_responsePos;
 		responseState							_responseState;
 		std::string								_errorPagePath;
@@ -128,12 +129,14 @@ class Client
 		void				handlePOSTResponse();
 		void				directoryListing();
 		void				configureResponseFile(std::stringstream &fileName);
+		configuration		&getConfig();
+
 
 
 
 
 	public:
-		Client(int clientFd, configuration &config);
+		Client(int _serverSocket, std::map<std::string, configuration> &config);
 		const Client	&operator=(const Client &copy);
 		Client(const Client &copy);
 		~Client();

@@ -1,4 +1,4 @@
-#include "../includes/Server.hpp"
+#include "../includes/Server_handler.hpp"
 
 void Client::configureResponseFile(std::stringstream &fileName)
 {
@@ -6,7 +6,7 @@ void Client::configureResponseFile(std::stringstream &fileName)
 		PRINT << SKY << "REQUEST TARGET: " << _requestTarget << RESET_LINE;
 	if (_exitState == EXIT_OK)
 	{
-		if (_requestTarget.compare(_configuration.root) == 0)
+		if (_requestTarget.compare(getConfig().root) == 0)
 		{
 			fileName << STANDARD_HTML;
 		}
@@ -27,7 +27,7 @@ void Client::configureResponseFile(std::stringstream &fileName)
 	}
 	else
 	{
-		fileName << "." << _configuration.locations["root"].locationDir << _errorPagePath << _exitState << ".html";
+		fileName << "." << getConfig().locations["root"].locationDir << _errorPagePath << _exitState << ".html";
 	}
 
 	/* debuggig thingies */

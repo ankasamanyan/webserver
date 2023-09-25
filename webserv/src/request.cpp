@@ -1,4 +1,4 @@
-#include "../includes/Server.hpp"
+#include "../includes/Server_handler.hpp"
 
 void	Client::receiveRequest() 
 {
@@ -71,7 +71,7 @@ void    Client::parseRequestLine() {
 }
 
 std::string Client::getDirectory() {
-    std::string pathWithRoot = _configuration.root + _path;
+    std::string pathWithRoot = getConfig().root + _path;
     if (isDirectory(pathWithRoot) && _path[_path.size() - 1] != '/')
         _path.append("/");
     return _path.substr(0, _path.substr(1).find_first_of("/") + 2);
@@ -112,34 +112,34 @@ void    Client::parseBody() {
 }
 
 void    Client::updateDirectoryIfUploading() {
-    std::map<std::string, location>::const_iterator it = _configuration.locations.find(_directory);
+    std::map<std::string, location>::const_iterator it = getConfig().locations.find(_directory);
 
-	if (it != _configuration.locations.end() && _method == "POST" && !it->second.uploadsDir.empty())
+	if (it != getConfig().locations.end() && _method == "POST" && !it->second.uploadsDir.empty())
 		_directory = it->second.uploadsDir;
 }
 
 void    Client::setDefaultFile() {
-    std::map<std::string, location>::const_iterator it = _configuration.locations.find(_directory);
+    std::map<std::string, location>::const_iterator it = getConfig().locations.find(_directory);
 
-    if (it != _configuration.locations.end() && !it->second.defaultFile.empty())
-        _defaultFile = _configuration.root + it->second.defaultFile;
+    if (it != getConfig().locations.end() && !it->second.defaultFile.empty())
+        _defaultFile = getConfig().root + it->second.defaultFile;
     else
         _defaultFile = "/html/errorHtml/404.html";
 }
 
 void    Client::defineRequestTarget() {
     _directoryListingCase = false;
-    _requestTarget = _configuration.root + _directory.substr(1) + _file;
+    _requestTarget = getConfig().root + _directory.substr(1) + _file;
     redirectIfNeeded();
-    if (isDirectory(_requestTarget) && _method == "GET" && _requestTarget != _configuration.root)
+    if (isDirectory(_requestTarget) && _method == "GET" && _requestTarget != getConfig().root)
         assignContent();
 }
 
 void    Client::redirectIfNeeded() {
-    std::map<std::string, location>::const_iterator it = _configuration.locations.find(_directory);
+    std::map<std::string, location>::const_iterator it = getConfig().locations.find(_directory);
 
-    if (it != _configuration.locations.end() && !it->second.redirection.empty()) {
-        _requestTarget = _configuration.root + it->second.redirection.substr(1) + _file;
+    if (it != getConfig().locations.end() && !it->second.redirection.empty()) {
+        _requestTarget = getConfig().root + it->second.redirection.substr(1) + _file;
     }
 }
 
@@ -152,18 +152,18 @@ bool    Client::isDirectory(std::string path) {
 }
 
 void    Client::assignContent() {
-    std::map<std::string, location>::const_iterator it = _configuration.locations.find(_directory);
+    std::map<std::string, location>::const_iterator it = getConfig().locations.find(_directory);
 
-    if (it != _configuration.locations.end() && it->second.dirListing == false)
+    if (it != getConfig().locations.end() && it->second.dirListing == false)
         _requestTarget = _defaultFile;
     else
         _directoryListingCase = true;
 }
 
 void    Client::assignCGIFlag() {
-    int CGIDirectoryLength = _configuration.CGIDir.length();
+    int CGIDirectoryLength = getConfig().CGIDir.length();
     std::string partOfPath = _path.substr(0, CGIDirectoryLength);
-    if (_configuration.CGIDir == partOfPath)
+    if (getConfig().CGIDir == partOfPath)
         _CGICase = true;
     else
         _CGICase = false;
@@ -179,9 +179,9 @@ bool    Client::areAllPartsOfRequestValid() {
 }
 
 bool Client::isPathAllowed() {
-    std::map<std::string, location>::const_iterator it = _configuration.locations.find(_directory);
+    std::map<std::string, location>::const_iterator it = getConfig().locations.find(_directory);
 
-    if (it == _configuration.locations.end()) {
+    if (it == getConfig().locations.end()) {
         assignErrorForInvalidPath();
         return false;
     }
@@ -189,7 +189,7 @@ bool Client::isPathAllowed() {
 }
 
 void    Client::assignErrorForInvalidPath() {
-    std::string fileToCheck = "." + _configuration.root + _directory.substr(1);
+    std::string fileToCheck = "." + getConfig().root + _directory.substr(1);
     if (exists(fileToCheck))
         _exitState = FORBIDDEN;
     else
@@ -197,7 +197,7 @@ void    Client::assignErrorForInvalidPath() {
 }
 
 bool    Client::isMethodAllowed() {
-    std::map<std::string, location>::const_iterator it = _configuration.locations.find(_directory);
+    std::map<std::string, location>::const_iterator it = getConfig().locations.find(_directory);
 	_location = it->second;
 
     if ((_method == "GET" && _location.methodGet) ||
@@ -216,7 +216,7 @@ bool    Client::isHTTPVersionValid() {
 }
 
 bool    Client::isContentOfAllowedSize() {
-    int allowedSize = atoi(_configuration.maxBody.c_str());
+    int allowedSize = atoi(getConfig().maxBody.c_str());
 
     if (_headers.find("Content-Length") != _headers.end()) {
         int contentSize = atoi(_headers.at("Content-Length").c_str());
