@@ -129,12 +129,11 @@ void    Client::setDefaultFile() {
 
 void    Client::defineRequestTarget() {
     _directoryListingCase = false;
-    if (_directory == "/")
-        _requestTarget = _configuration.root + _file;
-    else
-        _requestTarget = _configuration.root + _directory + _file;
+//    if (_directory == "/")
+//        _requestTarget = _configuration.root + _file;
+//    else
+        _requestTarget = _configuration.root + _directory.substr(1) + _file;
     redirectIfNeeded();
-	PRINT << ORANGE << "REQUEST BEFORE LINE  134: " << _requestTarget << GREEN << "\t\tCONFIG ROOT: " << _configuration.root << RESET_LINE;
     if (isDirectory(_requestTarget) && _method == "GET" && _requestTarget != _configuration.root)
         assignContent();
 }
@@ -143,7 +142,7 @@ void    Client::redirectIfNeeded() {
     std::map<std::string, location>::const_iterator it = _configuration.locations.find(_directory);
 
     if (it != _configuration.locations.end() && !it->second.redirection.empty()) {
-        _requestTarget = _configuration.root + it->second.redirection + _file;
+        _requestTarget = _configuration.root + it->second.redirection.substr(1) + _file;
     }
 }
 
@@ -193,7 +192,7 @@ bool Client::isPathAllowed() {
 }
 
 void    Client::assignErrorForInvalidPath() {
-    std::string fileToCheck = "." + _configuration.root + _directory;
+    std::string fileToCheck = "." + _configuration.root + _directory.substr(1);
     if (exists(fileToCheck))
         _exitState = FORBIDDEN;
     else

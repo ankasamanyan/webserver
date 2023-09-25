@@ -26,9 +26,9 @@ int main(int argc, char **argv)
     conf->config.locations["/folder/"].methodPost = false;
     conf->config.locations["/folder/"].methodGet = true;
     conf->config.locations["/folder/"].methodDelete = false;
-    // conf->config.locations["/folder/"].dirListing = true;
-	conf->config.locations["/folder/"].redirection = "/";
-	conf->config.locations["/folder/"].defaultFile = "/errorHtml/500.html";
+//     conf->config.locations["/folder/"].dirListing = true;
+//	conf->config.locations["/folder/"].redirection = "/";
+	conf->config.locations["/folder/"].defaultFile = "errorHtml/500.html";
     conf->config.CGIDir = "";
 	/* vector parsing structs */
 	Server	server(conf->config);
