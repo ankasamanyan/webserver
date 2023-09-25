@@ -13,14 +13,22 @@ std::string getToken(std::string str, int n)
     return token;
 }
 
+void removeSlashBeforeString(std::string str){
+	str.erase(0, 1);
+}
+
+void checkSlashBeforeString(std::string str){
+	if(str[0] == '/')
+		removeSlashBeforeString(str);
+}
+
 void addBackSlashInTheEnd(std::string path){
 	path = path + "/";
 }
 
-void checkIsThereBackSlashInTheEnd(std::string path){
-	if(path[path.length()] != '/'){
-		addBackSlashInTheEnd(path);
-	}
+void checkIsThereSlashInTheEnd(std::string path){
+	if(path[path.length()] != '/')
+		addBackSlashInTheEnd(path);	
 }
 
 
@@ -109,7 +117,8 @@ void Configuration::parseWhateverButNotLocation(std::string line){
 void Configuration::parseRoot(std::string line){
 	if(getToken(line, 1) == "root:")
 		config.root = getToken(line, 2);
-	checkIsThereBackSlashInTheEnd(config.root);
+	checkIsThereSlashInTheEnd(config.root);
+	removeSlashBeforeString(config.root);
 }
 
 void Configuration::parseServerName(std::string line){
@@ -135,7 +144,7 @@ void Configuration::parseMaxBody(std::string line){
 void Configuration::parseCGIdir(std::string line){
 	if(getToken(line, 1) == "CGIDIR:")
 		config.CGIDir = getToken(line, 2);
-	checkIsThereBackSlashInTheEnd(config.CGIDir);
+	checkIsThereSlashInTheEnd(config.CGIDir);
 }
 
 void Configuration::checkUploadsLocationForRedirections(){
@@ -170,27 +179,28 @@ void Configuration::parseLocationRedirection(std::string line){
 	if(getToken(line, 1) == "redirection:"){
 		loc.redirection = getToken(line, 2);
 	}
-	checkIsThereBackSlashInTheEnd(loc.redirection);
+	checkIsThereSlashInTheEnd(loc.redirection);
 }
 
 void Configuration::parseLocationDir(std::string line){
 	if(getToken(line, 1) == "locationDir:"){
 		loc.locationDir = getToken(line, 2);
 	}
-	checkIsThereBackSlashInTheEnd(loc.locationDir);
+	checkIsThereSlashInTheEnd(loc.locationDir);
 }
 
 void Configuration::parseLocationDefaultFile(std::string line){
 	if(getToken(line, 1) == "defaultFile:"){
 		loc.defaultFile = getToken(line, 2);
 	}
+	checkSlashBeforeString(loc.defaultFile);
 }
 
 void Configuration::parseLocationUploadsDir(std::string line){
 	if(getToken(line, 1) == "uploadsDir:"){
 		loc.uploadsDir = getToken(line, 2);
 	}
-	checkIsThereBackSlashInTheEnd(loc.uploadsDir);
+	checkIsThereSlashInTheEnd(loc.uploadsDir);
 }
 
 void Configuration::parseLocationGet(std::string line){
