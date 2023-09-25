@@ -195,7 +195,7 @@ void Configuration::parseLocationDefaultFile(std::string line){
 	if(getToken(line, 1) == "defaultFile:"){
 		loc.defaultFile = getToken(line, 2);
 	}
-	checkSlashBeforeString(loc.defaultFile);
+//	checkSlashBeforeString(loc.defaultFile);
 }
 
 void Configuration::parseLocationUploadsDir(std::string line){
@@ -239,6 +239,7 @@ void Configuration::checkIfInsideOfServer(std::string line){
 }
 
 void Configuration::clearConfiguration(){
+    clearLocation();
 	config.root = "/html/";
 	config.serverName = "";
 	config.host = "0.0.0.0";
@@ -246,14 +247,16 @@ void Configuration::clearConfiguration(){
 	config.maxBody = "80000";
 	config.CGIDir = "";
 	config.locations["/"] = loc;
-	config.errorPages["404"] = "/errorHtml/404.html"; 
-	clearLocation();
+	config.locations["/uploads/"] = loc;
+	config.locations["/errorHtml/"] = loc;
+	config.errorPages["404"] = "/errorHtml/404.html";
+
 }
 
 void Configuration::clearLocation(){
 	loc.redirection = "";
 	loc.dirListing = true;
-	loc.locationDir = "";
+	loc.locationDir = "/";
 	loc.methodGet = true;
 	loc.methodPost = true;
 	loc.methodDelete = true;
