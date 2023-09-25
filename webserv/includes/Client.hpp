@@ -69,7 +69,7 @@ class Client
 		requestType								_reqType;
 		pollfd									_pollFd;
         std::string                             _request;
-        std::string                             _requestedServerName;
+        std::string                             _requestedServerName; /* add from the request headers */
         std::string                             _method;
         std::string                             _path;
         std::string                             _directory;
