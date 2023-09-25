@@ -79,7 +79,7 @@ std::string Client::getDirectory() {
 
 std::string Client::getFile() {
     std::string file;
-    if (_path.find_last_of("/") != string::npos)
+    if (_path.find_last_of("/") != string::npos && _path != "/")
         file = _path.substr(_path.substr(1).find_first_of(_directory) + _directory.size());
     else
         file = "";
