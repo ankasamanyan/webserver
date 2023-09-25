@@ -80,8 +80,11 @@ void Configuration::parseConfiguration(std::string configFile){   	//const char 
 					if(env == ERRORS){
 						while(getToken(line,1) != "</errorPages>"){
 							getline(file, line);
-							if(getToken(line, 1 )!= "</errorPages>")
-								config.errorPages.insert(std::pair<std::string, std::string>(getToken(line, 1), getToken(line, 2)));	
+							if(getToken(line, 1 )!= "</errorPages>"){
+								std::string tempString = getToken(line, 2);
+								removeSlashBeforeString(tempString);
+								config.errorPages.insert(std::pair<std::string, std::string>(getToken(line, 1), tempString));
+							}	
 						}
 						env = SERVER;
 					}
@@ -118,7 +121,6 @@ void Configuration::parseRoot(std::string line){
 	if(getToken(line, 1) == "root:")
 		config.root = getToken(line, 2);
 	checkIsThereSlashInTheEnd(config.root);
-	removeSlashBeforeString(config.root);
 }
 
 void Configuration::parseServerName(std::string line){
