@@ -27,7 +27,7 @@ void Client::configureResponseFile(std::stringstream &fileName)
 	}
 	else
 	{
-		fileName << "." << getConfig().locations["root"].locationDir << _errorPagePath << _exitState << ".html";
+		fileName << "." << getConfig().root << _errorPagePath << _exitState << ".html";
 	}
 
 	/* debuggig thingies */
