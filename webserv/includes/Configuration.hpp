@@ -54,6 +54,8 @@ public:
 	configuration config;
 	location loc;
 
+    int temp;
+
 	std::deque<configuration> serverRepo;
 
 	Configuration();
@@ -85,6 +87,16 @@ public:
 	void addServerToServerRepo();
 	void checkUploadsLocationForRedirections();
 	void addLocation();
+    void euqal_sign_operator_for_loc(location &first, location &second);
+
+
+	public:
+        void print_single_config(configuration &conf);
+        void print_all_config();
+        void print_loc_map(std::map<std::string, location> &m);
+        void print_err_map(std::map<std::string, std::string> &m);
+        void print_loc(location &l);
+
 
 };
 

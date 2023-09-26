@@ -35,9 +35,10 @@ void checkIsThereSlashInTheEnd(std::string path){
 Configuration::Configuration(){}
 
 Configuration::Configuration(int argc, char **argv){
+    temp = 0;
 	if(argc == 1){
 		parseConfiguration("default_config_file.conf");
-		addServerToServerRepo();
+//		addServerToServerRepo();
 	}
 	else if (argc == 2)
     {
@@ -47,6 +48,76 @@ Configuration::Configuration(int argc, char **argv){
 		std::cout << "Wrong number of arguments" << std::endl;
 		exit(1);
 	}
+//	print_all_config();
+}
+
+char print_bool(bool b)
+{
+    if (b == true)
+    std::cout << "T";
+    else
+    std::cout << "F";
+    return (' ');
+}
+
+void Configuration::print_loc(location &l)
+{
+    std::cout << "Print location" << std::endl;
+
+    std::cout << "locDir: " << l.locationDir << std::endl;
+    std::cout << "redir: " << l.redirection << std::endl;
+    std::cout << "dirList: " << print_bool(l.dirListing) << ", Get, Post, Delete: " << print_bool(l.methodGet) << print_bool(l.methodPost) << print_bool(l.methodDelete) << std::endl;
+    std::cout << "defFile: " << l.defaultFile << std::endl;
+    std::cout << "uploaddir: " << l.uploadsDir << std::endl;
+}
+
+
+void Configuration::print_loc_map(std::map<std::string, location> &m)
+{
+    size_t i = 0;
+    std::cout << "Print loc map size: " << m.size() << std::endl;
+    for(std::map<std::string, location>::iterator it = m.begin(); it != m.end(); it++)
+    {
+        std::cout << "Loc nr: " << i++  << " name = " << it->first << std::endl;
+        print_loc(it->second);
+        std::cout << std::endl;
+    }
+}
+
+void Configuration::print_err_map(std::map<std::string, std::string> &m)
+{
+    std::cout << "Print err map size: " << m.size() << std::endl;
+    for(std::map<std::string, std::string>::iterator it = m.begin(); it != m.end(); it++)
+    {
+        std::cout << it->first << ": " << it->second << std::endl;
+        std::cout << std::endl;
+    }
+}
+
+
+void    Configuration::print_single_config(configuration &conf)
+{
+    std::cout << "new deque entry" << std::endl;
+    std::cout << "Root: " << conf.root << std::endl;
+    std::cout << "serverName: " << conf.serverName << std::endl;
+    std::cout << "host: " << conf.host << std::endl;
+    std::cout << "port: " << conf.port << std::endl;
+    std::cout << "maxBody: " << conf.maxBody << std::endl;
+    std::cout << "CGIDir: " << conf.CGIDir << std::endl;
+    print_loc_map(conf.locations);
+    print_err_map(conf.errorPages);
+    //map
+    //map
+
+}
+
+
+void Configuration::print_all_config()
+{
+    for(std::deque<configuration>::iterator it = serverRepo.begin(); it != serverRepo.end(); it++)
+    {
+        print_single_config(*it);
+    }
 }
 
 Configuration::~Configuration(){}
@@ -98,14 +169,36 @@ void Configuration::parseConfiguration(std::string configFile){   	//const char 
 }
 
 void Configuration::addServerToServerRepo(){
+//    std::cout << "This is the temp: " << temp++ << std::endl;
+//	print_single_config(config);
 	serverRepo.push_back(config);
+//    std::cout << "What we pushed: " << std::endl;
+//	print_single_config(serverRepo.back());
 	config.locations.clear();
 	config.errorPages.clear();
-	clearConfiguration();
+//	clearConfiguration();
+}
+
+void Configuration::euqal_sign_operator_for_loc(location &first, location &second)
+{
+    first.locationDir = second.locationDir;
+    first.redirection = second.redirection;
+    first.dirListing = second.dirListing;
+    first.methodGet = second.methodGet;
+    first.methodPost = second.methodPost;
+    first.methodDelete = second.methodDelete;
+    first.defaultFile = second.defaultFile;
+    first.uploadsDir = second.uploadsDir;
 }
 
 void Configuration::addLocation(){
-	config.locations.insert(std::pair<std::string, location>(loc.locationDir, loc));
+//    std::cout << "allppp" << std::endl;
+//    print_loc(loc);
+	config.locations.insert(std::make_pair(loc.locationDir, loc));
+	euqal_sign_operator_for_loc(config.locations.at(loc.locationDir), loc);
+//    std::cout << "allcccc" << std::endl;
+//    print_loc(config.locations.at(loc.locationDir));
+
 }
 
 void Configuration::parseWhateverButNotLocation(std::string line){
@@ -239,7 +332,7 @@ void Configuration::checkIfInsideOfServer(std::string line){
 }
 
 void Configuration::clearConfiguration(){
-    clearLocation();
+//    clearLocation();
 	config.root = "/html/";
 	config.serverName = "";
 	config.host = "0.0.0.0";
