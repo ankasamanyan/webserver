@@ -8,7 +8,7 @@ Client::Client(int _serverSocket, std::map<std::string, configuration> &config):
 	_responseState = INITIALIZED;
 	_responsePos = 0;
 	_exitState = EXIT_OK;
-	_errorPagePath = "/errorHtml/";
+	_errorPagePath = "errorHtml/";
 	_requestedServerName = "default";
 }
 
