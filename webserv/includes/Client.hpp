@@ -74,6 +74,7 @@ class Client
         std::string                             _path;
         std::string                             _directory;
         std::string                             _file;
+        std::string                             _query;
         std::string                             _HTTPVersion;
         std::map<std::string, std::string>		_headers;
         std::string                             _body;
@@ -97,6 +98,7 @@ class Client
         void                parseRequestLine();
         std::string         getDirectory();
         std::string         getFile();
+        std::string         getQuery();
         void                parseHeaders();
         void                parseBody();
         void                updateDirectoryIfUploading();

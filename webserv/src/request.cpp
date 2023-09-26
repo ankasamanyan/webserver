@@ -66,6 +66,7 @@ void    Client::parseRequestLine() {
     _path = splitRequestLine[1];
     _HTTPVersion = splitRequestLine[2];
     _directory = getDirectory();
+    _query = getQuery();
     _file = getFile();
 }
 
@@ -78,6 +79,19 @@ std::string Client::getDirectory() {
 
 std::string Client::getFile() {
     return Utils::trimLeft(_path.substr(_path.substr(1).find_first_of(_directory) + _directory.size()), "/");
+}
+
+std::string Client::getQuery() {
+	size_t	questionMark = _path.find("?");
+	std::string query;
+
+	if (questionMark != std::string::npos) {
+		query = _path.substr(questionMark + 1);
+		_path = _path.substr(0, questionMark);
+	}
+	else
+	    query = "";
+	return query;
 }
 
 void    Client::parseHeaders() {
