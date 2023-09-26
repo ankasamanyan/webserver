@@ -100,6 +100,7 @@ class Client
         std::string         getFile();
         std::string         getQuery();
         void                parseHeaders();
+        void                defineServerName();
         void                parseBody();
         void                updateDirectoryIfUploading();
         void                setDefaultFile();

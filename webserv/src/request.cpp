@@ -105,6 +105,13 @@ void    Client::parseHeaders() {
         headerFieldValue[1] = Utils::trimLeft(headerFieldValue[1], " ");
         _headers.insert(std::make_pair(headerFieldValue[0], headerFieldValue[1]));
     }
+    defineServerName();
+}
+
+void    Client::defineServerName() {
+	if (_headers.find("Server-Name") != _headers.end()) {
+	    _requestedServerName = _headers.at("Server-Name").c_str();
+	}
 }
 
 void    Client::parseBody() {
