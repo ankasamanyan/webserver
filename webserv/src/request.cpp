@@ -67,7 +67,6 @@ void    Client::parseRequestLine() {
     _HTTPVersion = splitRequestLine[2];
     _directory = getDirectory();
     _file = getFile();
-    PRINT << SKY "PATH" << _path << "DIRECTORY" << _directory << "FILE" << _file << RESET_LINE;
 }
 
 std::string Client::getDirectory() {
@@ -78,12 +77,7 @@ std::string Client::getDirectory() {
 }
 
 std::string Client::getFile() {
-    std::string file;
-    if (_path.find_last_of("/") != string::npos && _path != "/")
-        file = _path.substr(_path.substr(1).find_first_of(_directory) + _directory.size());
-    else
-        file = "";
-    return file;
+    return Utils::trimLeft(_path.substr(_path.substr(1).find_first_of(_directory) + _directory.size()), "/");
 }
 
 void    Client::parseHeaders() {
