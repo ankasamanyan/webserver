@@ -220,12 +220,12 @@ bool    Client::isContentOfAllowedSize() {
 
     if (_headers.find("Content-Length") != _headers.end()) {
         int contentSize = atoi(_headers.at("Content-Length").c_str());
-        if (contentSize <= allowedSize)
+        if (contentSize <= allowedSize && (size_t) contentSize < _body.max_size())
             return true;
     }
     else {
         int actualBodySize = _body.length();
-        if (actualBodySize <= allowedSize)
+        if (actualBodySize <= allowedSize && (size_t) actualBodySize < _body.max_size())
             return true;
     }
     _exitState = CONTENT_TOO_LARGE;
