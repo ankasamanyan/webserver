@@ -11,21 +11,16 @@
 #include <sys/stat.h>
 #include <cstdio>
 #include <dirent.h>
+#include <signal.h>
 
 #define STANDARD_404 "./html/errorHtml/404.html"
 #define SUCCESS_HTML "./html/Success.html"
 #define DELETED_HTML "./html/Deleted.html"
 #define STANDARD_HTML "./html/index.html"
-#define DEBUG 1
-
-enum requestType
-{
-	UNDEFINED,
-	GET,
-	POST,
-	DELETE,
-	INVALID
-};
+#define DEBUG 0
+#define	PID_INITIALIZED -42
+#define TIMEOUT 3
+#define PAINFULLY_TRUE true
 
 enum clientState
 {
@@ -33,6 +28,7 @@ enum clientState
 	VALID_,
 	SHOULD_DISCONNECT_,
 	PARTLY_READ_,
+	INITIALIZED_
 };
 
 enum responseState
@@ -66,7 +62,7 @@ class Client
 	private:
 		int										_clientFd;
 		exitState								_exitState;
-		requestType								_reqType;
+		// requestType								_reqType;
 		pollfd									_pollFd;
         std::string                             _request;
         std::string                             _requestedServerName; /* add from the request headers */
@@ -91,51 +87,56 @@ class Client
 		FILE                                    *_fileToPost;
 		size_t									_responseLength;
 
-
-		bool                isRequestValid();
-        bool                isRequestEmpty();
-		void                parseRequest();
-        void                parseRequestLine();
-        std::string         getDirectory();
-        std::string         getFile();
-        std::string         getQuery();
-        void                parseHeaders();
-        void                defineServerName();
-        void                parseBody();
-        void                updateDirectoryIfUploading();
-        void                setDefaultFile();
-        bool                areAllPartsOfRequestValid();
-        void                defineRequestTarget();
-        void                redirectIfNeeded();
-        bool                isDirectory(std::string path);
-        void                assignContent();
-        void                assignCGIFlag();
-        bool                isPathAllowed();
-        void                assignErrorForInvalidPath();
-        bool                isMethodAllowed();
-        bool                isHTTPVersionValid();
-        bool                isContentOfAllowedSize();
-        void                prepareResponse();
-        void                handleGet();
-        void                handlePost();
-        void                handleDelete();
-        bool                isAllowedToDelete();
-        bool                isInsideUploads();
-        bool                exists(std::string filePath);
-        void                attemptToRemove(std::string filePath);
-		void				configureSocket(int newSocket);
-		void				checkHeaders(std::stringstream &headres);
-		void				sendHeaders();
-		std::string		    getHttpMsg(int code);
-		void				handleGetResponse();
-		void				handleDELETEResponse();
-		void				handlePOSTResponse();
-		void				directoryListing();
-		void				configureResponseFile(std::stringstream &fileName);
-		configuration		&getConfig();
+		std::string								_cgiOutFile;
+		pid_t									_cgiChildId;
+		time_t								 	_cgiChildTimer;
 
 
-
+		bool                					isRequestValid();
+        bool                					isRequestEmpty();
+		void                					parseRequest();
+        void                					parseRequestLine();
+        std::string         					getDirectory();
+        std::string         					getFile();
+        std::string         					getQuery();
+        void                					parseHeaders();
+        void                					defineServerName();
+        void                					parseBody();
+        void                					updateDirectoryIfUploading();
+        void                					setDefaultFile();
+        bool                					areAllPartsOfRequestValid();
+        void                					defineRequestTarget();
+        void                					redirectIfNeeded();
+        bool                					isDirectory(std::string path);
+        void                					assignContent();
+        void                					assignCGIFlag();
+        bool                					isPathAllowed();
+        void                					assignErrorForInvalidPath();
+        bool                					isMethodAllowed();
+        bool                					isHTTPVersionValid();
+        bool                					isContentOfAllowedSize();
+        void                					prepareResponse();
+        void                					handleGet();
+        void                					handlePost();
+        void                					handleDelete();
+        bool                					isAllowedToDelete();
+        bool                					isInsideUploads();
+        bool                					exists(std::string filePath);
+        void                					attemptToRemove(std::string filePath);
+		void									configureSocket(int newSocket);
+		void									checkHeaders(std::stringstream &headres);
+		void									sendHeaders();
+		std::string		    					getHttpMsg(int code);
+		void									handleGetResponse();
+		void									handleDELETEResponse();
+		void									handlePOSTResponse();
+		void									directoryListing();
+		void									configureResponseFile(std::stringstream &fileName);
+		configuration							&getConfig();
+		void									handleCGI();
+		void									createEnv(std::vector<char*> &env);
+		void									pushBackEnv(const char *varName, std::map<std::string, std::string>::iterator iter, std::vector<char *> &env);
+		void									startCgiThingy();
 
 
 	public:

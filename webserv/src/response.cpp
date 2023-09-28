@@ -4,10 +4,16 @@ void Client::configureResponseFile(std::stringstream &fileName)
 {
 	if (DEBUG)
 		PRINT << SKY << "REQUEST TARGET: " << _requestTarget << RESET_LINE;
+
 	if (_exitState == EXIT_OK)
 	{
-		if (_requestTarget.compare(getConfig().root) == 0)
+		if (_CGICase == PAINFULLY_TRUE )
 		{
+			fileName << _cgiOutFile;
+		}
+		else if (_requestTarget.compare(getConfig().root) == 0)
+		{
+			PRINT << "Got into Edge case with home page Response FIle" << RESET_LINE;
 			fileName << STANDARD_HTML;
 		}
 		else if (isDirectory(_requestTarget) && _directoryListingCase && _method.compare("GET") == 0)
@@ -18,17 +24,18 @@ void Client::configureResponseFile(std::stringstream &fileName)
 		else if (_method.compare("POST") == 0)
 			fileName << SUCCESS_HTML;
 		else
-			fileName << "." << _requestTarget;
+		{
+			if (!_requestTarget.empty())
+				fileName << "." << _requestTarget;
+		}
 	}
 	else if (_method.compare("DELETE") == 0 && _exitState == NO_CONTENT)
 	{
-		fileName << DELETED_HTML; /* Can we delete directories ?? */
+		fileName << DELETED_HTML; /* delete directories ? TEST THIS PLZ */
 		_exitState = EXIT_OK;
 	}
 	else
-	{
 		fileName << "." << getConfig().root << _errorPagePath << _exitState << ".html";
-	}
 
 	/* debuggig thingies */
 	if(DEBUG)
@@ -42,50 +49,51 @@ void Client::configureResponseFile(std::stringstream &fileName)
 
 void Client::sendResponse()
 {
- char      body[CHUNK_SIZE];
- std::stringstream   fileName;
+	char      body[CHUNK_SIZE];
+	std::stringstream   fileName;
 
- configureResponseFile(fileName);
- if (_responseState == FULLY_SENT)
-  return ;
- std::ifstream inputFile((fileName.str()).c_str(), std::ios::binary);
- 
- if (inputFile.is_open())
- {
-  inputFile.seekg(_responsePos);
-  inputFile.read(body, sizeof(body));
-  if (_responseState == INITIALIZED)
-   sendHeaders();
-  send(_clientFd, body, inputFile.gcount(), 0);
+	configureResponseFile(fileName);
 
-  if (inputFile.eof())
-  {
-   PRINT << YELLOW "\t END OF FILE BTW" << RESET_LINE; 
-   _responseState = FULLY_SENT;
-   inputFile.close();
-   return ;
-  }
-  _responsePos = inputFile.tellg();
-  inputFile.close();
- }
- else if (!inputFile) 
- {
-  std::stringstream file;
+	if (_responseState == FULLY_SENT)
+		return ;
+	std::ifstream inputFile((fileName.str()).c_str(), std::ios::binary);
 
-  _exitState = ERROR_404;
-  file << STANDARD_404;
-  std::ifstream errorPage((file.str()).c_str(), std::ios::binary); /* add protection */
-  errorPage.read(body, sizeof(body));
+	if (inputFile.is_open())
+	{
+		inputFile.seekg(_responsePos);
+		inputFile.read(body, sizeof(body));
+		if (_responseState == INITIALIZED)
+			sendHeaders();
+		send(_clientFd, body, inputFile.gcount(), 0);
 
-  _responseLength = errorPage.gcount();
+		if (inputFile.eof())
+		{
+			PRINT << YELLOW "\t END OF FILE BTW" << RESET_LINE; 
+			_responseState = FULLY_SENT;
+			inputFile.close();
+			return ;
+		}
+		_responsePos = inputFile.tellg();
+		inputFile.close();
+	}
+	else if (!inputFile) 
+	{
+		std::stringstream file;
 
-  if (_responseState == INITIALIZED)
-   sendHeaders();
-  send(_clientFd, body, errorPage.gcount(), 0);
-  errorPage.close();
-  _responseState = FULLY_SENT;
-  return ;
- }
+		_exitState = ERROR_404;
+		file << STANDARD_404;
+		std::ifstream errorPage((file.str()).c_str(), std::ios::binary);
+		errorPage.read(body, sizeof(body));
+
+		_responseLength = errorPage.gcount();
+
+		if (_responseState == INITIALIZED)
+			sendHeaders();
+		send(_clientFd, body, errorPage.gcount(), 0);
+		errorPage.close();
+		_responseState = FULLY_SENT;
+		return ;
+	}
 }
 
 void Client::sendHeaders()
@@ -106,31 +114,32 @@ void Client::sendHeaders()
 
 void Client::directoryListing()
 {
-    std::stringstream    streamy;
-    std::string    type;
-    std::string    ref;
-    struct dirent*        ent;
-    DIR*                 dir = opendir(("." + _requestTarget).c_str());
+	std::stringstream       streamy;
+	std::string             type;
+	std::string             ref;
+	struct dirent*          ent;
+	DIR*                    dir = opendir(("." + _requestTarget).c_str());
 
-    streamy << HTML_HEADERS;
-    streamy << STYLES;
-    streamy << BODY;
-    if (dir)
-    {
-        while ((ent = readdir(dir)) != NULL)
-        {
-            if (strcmp(ent->d_name, ".") == 0)
-                continue;
-            type = (ent->d_type == DT_DIR)? FOLDER_FORM_OPEN : FILE_FORM_OPEN;
+	streamy << HTML_HEADERS;
+	streamy << STYLES;
+	streamy << BODY;
+	if (dir)
+	{
+		while ((ent = readdir(dir)) != NULL)
+		{
+			if (strcmp(ent->d_name, ".") == 0)
+				continue;
+			type = (ent->d_type == DT_DIR)? FOLDER_FORM_OPEN : FILE_FORM_OPEN;
   			ref = (*(_path.rbegin()) == '/')? _path + ent->d_name : _path +"/"+ ent->d_name;
-            streamy << type << "<a href=\"" << ref << "\">"<< std::string(ent->d_name).substr(0,20) << "</a>" <<  CLOSING_DIVS;
+			streamy << type << "<a href=\"" << ref << "\">"<< std::string(ent->d_name).substr(0,20) << "</a>" <<  CLOSING_DIVS;
+			if (DEBUG)
   			PRINT << ORANGE << ref << RESET_LINE;
-        }
-        closedir(dir);
-    }
-    std::string str = streamy.str();
-    send(_clientFd, str.c_str(), str.size(), 0);
-    _responseState = FULLY_SENT;
+		}
+		closedir(dir);
+	}
+	std::string str = streamy.str();
+	send(_clientFd, str.c_str(), str.size(), 0);
+	_responseState = FULLY_SENT;
 }
 
 //check if the path ends with '/', if no add the '/' so the redirect link is correct

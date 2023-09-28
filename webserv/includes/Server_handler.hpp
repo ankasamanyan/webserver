@@ -20,7 +20,7 @@
 #include <map>
 #include <sstream>
 #include <cstdlib>
-#include <sys/errno.h>
+#include <errno.h>
 
 #define CHUNK_SIZE 	8000
 #define HTTP_V 		"HTTP/1.1"
@@ -29,18 +29,6 @@
 using std::string;
 class Client;
 
-// struct configuration {
-// 	string	host;
-// 	int		port;
-//     bool    methodGet;
-//     bool    methodPost;
-//     bool    methodDelete;
-//     string  maxBody;
-//     bool    dirListing;
-//     string  CGIDir;
-//     string root;
-// };
-
 class Server_handler
 {
 	friend class Client;
@@ -48,12 +36,9 @@ class Server_handler
 	private:
 		struct sockaddr_in										_serverAddress;
 		size_t													_serverAmount;
-		// int														_serverSocket; /* remove this */
 		std::vector<pollfd>										_fdVector;
 		std::map<int, Client>   								_clients;
-		// configuration           								_configuration;
 		std::map<int, std::map<std::string, configuration> >	_serverConfigMap;
-
 
 
 		/* defines */

@@ -107,6 +107,7 @@ int		Server_handler::highestFd(std::set<int> activeClients)
 void	Server_handler::serverLoop()
 {
 	fdIter	iter = _fdVector.begin();
+	bool	newClientAdded = false; /* if stress test is problematic, delete zis code */
 
 	poll(_fdVector.data(), _fdVector.size() , -1);
 	PRINT << PURPLE "\t\t......poll returned......" << RESET_LINE;
@@ -115,10 +116,12 @@ void	Server_handler::serverLoop()
 		if(iter->revents & POLLIN)
 		{
             acceptClient(iter);
+			newClientAdded = true;
 			break;
 		}
 	}
-
+	if (newClientAdded)
+		return;
 	for (iter = _fdVector.begin() + _serverAmount; iter != _fdVector.end(); iter++)
 	{
 		if (iter->revents & POLLIN)
@@ -127,7 +130,7 @@ void	Server_handler::serverLoop()
 			Client	&currClient =_clients.at(iter->fd);
 			currClient.receiveRequest();
 			if(currClient.getState() == VALID_)
-       			 iter->events = POLLOUT;
+       			 iter->events = POLLOUT| POLLHUP;
 			if ( currClient.getState() == SHOULD_DISCONNECT_)
 			{
 				disconnectClient(iter);
@@ -136,8 +139,6 @@ void	Server_handler::serverLoop()
 			/* wants to send a REQUEST */
 			PRINT << YELLOW "\t\t......Client wants to send a REQUEST......   ";
 			PRINT <<  "FD: "<< iter->fd << RESET_LINE;
-			if (REQUEST_ENDED/* add the condition */)
-				iter->events = POLLOUT | POLLHUP;
 		}
 		else if (iter->revents & POLLOUT)
 		{

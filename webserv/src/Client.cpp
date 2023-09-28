@@ -6,17 +6,18 @@ Client::Client(int _serverSocket, std::map<std::string, configuration> &config):
     configureSocket(newFd);
 	_clientFd = newFd;
 	_responseState = INITIALIZED;
+	_clientState = INITIALIZED_;
 	_responsePos = 0;
 	_exitState = EXIT_OK;
 	_errorPagePath = "errorHtml/";
 	_requestedServerName = "default";
+	_cgiChildId = PID_INITIALIZED;
 }
 
 const Client	&Client::operator=(const Client &copy)
 {
 	_clientFd = copy._clientFd;
 	_exitState = copy._exitState;
-	_reqType = copy._reqType;
 	_pollFd = copy._pollFd;
 	_request = copy._request;
 	_method = copy._method;
@@ -30,6 +31,7 @@ const Client	&Client::operator=(const Client &copy)
 	_responseState = copy._responseState;
 	_errorPagePath = copy._errorPagePath;
 	_requestedServerName = copy._requestedServerName;
+	_cgiChildId = copy._cgiChildId;
 	// _responseLength = copy._responseLength;
 	return (*this);
 }
@@ -46,7 +48,7 @@ Client::~Client()
 
 configuration	&Client::getConfig()
 {
-		return(_configMap.at(_requestedServerName));
+	return(_configMap.at(_requestedServerName));
 }
 
 void	Client::configureSocket(int newSocket)

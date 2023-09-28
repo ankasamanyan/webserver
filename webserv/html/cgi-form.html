@@ -85,6 +85,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+			transition: background-color 0.3s ease;
         }
 
         /* Style for images on answer buttons */
@@ -127,8 +128,16 @@
             flex-direction: column;
             align-items: center;
             margin: 20px;
-		
 		}
+
+		input[type="radio"] {
+			display: none;
+		}
+
+		.answer-button:active {
+			background-color: #6c55be;
+		}
+
 		@keyframes backgroundColorChange {
         0% {
             background-color: #6c55bea9;
@@ -174,55 +183,81 @@
 	        <div class="answer-container">
 	            <!-- Answer Choice Buttons with Images -->
 	            <div class="answer-option">
-	                <a class="answer-button" href="#">
-	                    <img src="../1.1.jpeg" alt="Choice 1">
+	                <label class="answer-button">
+	                    <img src="../img/1.1.jpeg" alt="Choice 1">
+						<input type="radio" name="q1" value="1">
 	                    Choice 1
-	                </a>
+	                </label>
 	            </div>
 	            <div class="answer-option">
-	                <a class="answer-button" href="#">
-	                    <img src="../1.2.jpeg" alt="Choice 2">
+					<label class="answer-button">
+						<img src="../img/1.2.jpeg" alt="Choice 2">
+						<input type="radio" name="q1" value="2">
 	                    Choice 2
-	                </a>
+	                </label>
 	            </div>
 	        </div>
-
+			
 	        <div class="test-question">Question 2: What's your ideal vacation spot?</div>
 	        <div class="answer-container">
-	            <!-- Answer Choice Buttons with Images -->
+				<!-- Answer Choice Buttons with Images -->
 	            <div class="answer-option">
-	                <a class="answer-button" href="#">
-	                    <img src="../2.1.jpg" alt="Choice 3">
+					<label class="answer-button">
+						<img src="../img/2.1.jpg" alt="Choice 3">
+						<input type="radio" name="q2" value="1">
 	                    Choice 3
-	                </a>
+	                </label>
 	            </div>
 	            <div class="answer-option">
-	                <a class="answer-button" href="#">
-	                    <img src="../2.2.jpg" alt="Choice 4">
+					<label class="answer-button">
+						<img src="../img/2.2.jpg" alt="Choice 4">
+						<input type="radio" name="q2" value="2">
 	                    Choice 4
-	                </a>
+	                </label>
 	            </div>
 	        </div>
-
+			
 	        <div class="test-question">Question 3: What's your favorite activity?</div>
 	        <div class="answer-container">
 	            <!-- Answer Choice Buttons with Images -->
 	            <div class="answer-option">
-	                <a class="answer-button" href="#">
-	                    <img src="../3.1.jpg" alt="Choice 5">
+					<a class="answer-button" >
+						<img src="../img/3.1.jpg" alt="Choice 5">
+						<input type="radio" name="q3" value="1">
 	                    Choice 5
 	                </a>
 	            </div>
 	            <div class="answer-option">
-	                <a class="answer-button" href="#">
-	                    <img src="../3.2.jpg" alt="Choice 6">
+					<a class="answer-button">
+						<img src="../img/3.2.jpg" alt="Choice 6">
+						<input type="radio" name="q3" value="2">
 	                    Choice 6
 	                </a>
 	            </div>
 	        </div>
         	<!-- Button to trigger CGI execution form -->
-       		<a class="cgi-button" href="#">Get Your Result</a>
+       		<a class="cgi-button" onclick="calculateResult()">Get Your Result</a>
 		</form>
     </div>
+	<script>
+		function calculateResult() {
+			// Get all radio buttons
+			var radioButtons = document.querySelectorAll('input[type="radio"]');
+	
+			// Initialize the sum
+			var sum = 0;
+	
+			// Loop through the radio buttons and add their values
+			radioButtons.forEach(function (radioButton) {
+				if (radioButton.checked) {
+					sum += parseInt(radioButton.value);
+				}
+			});
+	
+			// Display the result
+			var resultDiv = document.getElementById("result");
+			resultDiv.innerHTML = "Your result is: " + sum;
+		}
+	</script>
 </body>
 </html>
