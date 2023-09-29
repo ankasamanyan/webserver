@@ -47,7 +47,7 @@ void	Client::createEnv(std::vector<char*> &env)
 	if (_method.compare("GET") == 0)
 		env.push_back(const_cast<char*>(std::string("QUERY_STRING=" + _query).c_str()));
 	else
-		env.push_back(const_cast<char*>(std::string("QUERY_STRING=" + _body).c_str()));
+		env.push_back(const_cast<char*>(std::string("QUERY_STRING=" + _request).c_str()));
 
 	pushBackEnv("CONTENT_TYPE=", _headers.find("Content-type"), env);
 	pushBackEnv("CONTENT_TYPE=", _headers.find("content-type"), env);

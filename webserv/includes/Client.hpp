@@ -24,10 +24,8 @@
 
 enum clientState
 {
-	INVALID_,
-	VALID_,
+	DONE_,
 	SHOULD_DISCONNECT_,
-	PARTLY_READ_,
 	INITIALIZED_
 };
 
@@ -65,6 +63,7 @@ class Client
 		// requestType								_reqType;
 		pollfd									_pollFd;
         std::string                             _request;
+        std::string                             _requestLine;
         std::string                             _requestedServerName; /* add from the request headers */
         std::string                             _method;
         std::string                             _path;
@@ -72,8 +71,11 @@ class Client
         std::string                             _file;
         std::string                             _query;
         std::string                             _HTTPVersion;
+        std::string                             _headersChunk;
         std::map<std::string, std::string>		_headers;
-        std::string                             _body;
+        size_t                                  _bytesWritten;
+        size_t                                  _contentLength;
+        bool                                    _shouldAppend;
         location                                _location;
         std::string                             _defaultFile;
         std::string                             _requestTarget;
@@ -92,35 +94,38 @@ class Client
 		time_t								 	_cgiChildTimer;
 
 
-		bool                					isRequestValid();
-        bool                					isRequestEmpty();
-		void                					parseRequest();
+		void                					processRequest();
+        void                					checkWhetherRequestIsEmpty();
         void                					parseRequestLine();
+        void                                    extractRequestLine();
+        void                                    splitRequestLine();
+        void                                    definePartsOfURL();
         std::string         					getDirectory();
         std::string         					getFile();
         std::string         					getQuery();
         void                					parseHeaders();
+        void                                    extractHeaders();
         void                					defineServerName();
-        void                					parseBody();
         void                					updateDirectoryIfUploading();
         void                					setDefaultFile();
-        bool                					areAllPartsOfRequestValid();
+        void                					assignPossibleErrorCodes();
         void                					defineRequestTarget();
         void                					redirectIfNeeded();
         bool                					isDirectory(std::string path);
         void                					assignContent();
         void                					assignCGIFlag();
-        bool                					isPathAllowed();
+        void                					checkPathIsAllowed();
         void                					assignErrorForInvalidPath();
-        bool                					isMethodAllowed();
-        bool                					isHTTPVersionValid();
-        bool                					isContentOfAllowedSize();
+        void                					checkMethodIsAllowed();
+        void                					checkHTTPVersionIsValid();
+        void                					checkContentIsOfAllowedSize();
         void                					prepareResponse();
         void                					handleGet();
         void                					handlePost();
+        void                                    createFileIfAllowed();
         void                					handleDelete();
         bool                					isAllowedToDelete();
-        bool                					isInsideUploads();
+        void                					checkIsInsideUploads();
         bool                					exists(std::string filePath);
         void                					attemptToRemove(std::string filePath);
 		void									configureSocket(int newSocket);

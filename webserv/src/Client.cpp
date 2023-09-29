@@ -12,6 +12,8 @@ Client::Client(int _serverSocket, std::map<std::string, configuration> &config):
 	_errorPagePath = "errorHtml/";
 	_requestedServerName = "default";
 	_cgiChildId = PID_INITIALIZED;
+	_shouldAppend = false;
+	_bytesWritten = 0;
 }
 
 const Client	&Client::operator=(const Client &copy)
@@ -20,18 +22,31 @@ const Client	&Client::operator=(const Client &copy)
 	_exitState = copy._exitState;
 	_pollFd = copy._pollFd;
 	_request = copy._request;
+	_requestLine = copy._requestLine;
 	_method = copy._method;
 	_path = copy._path;
+	_directory = copy._directory;
+	_file = copy._file;
+	_query = copy._query;
 	_HTTPVersion = copy._HTTPVersion;
+	_headersChunk = copy._headersChunk;
 	_headers = copy._headers;
-	_body = copy._body;
+	_contentLength = copy._contentLength;
+	_bytesWritten = copy._bytesWritten;
+	_shouldAppend = copy._shouldAppend;
+	_location = copy._location;
+	_defaultFile = copy._defaultFile;
 	_requestTarget = copy._requestTarget;
+	_directoryListingCase = copy._directoryListingCase;
+	_CGICase = copy._CGICase;
+	_configMap = copy._configMap;
 	_clientState = copy._clientState;
 	_responsePos = copy._responsePos;
 	_responseState = copy._responseState;
 	_errorPagePath = copy._errorPagePath;
 	_requestedServerName = copy._requestedServerName;
 	_cgiChildId = copy._cgiChildId;
+	_fileToPost = copy._fileToPost;
 	// _responseLength = copy._responseLength;
 	return (*this);
 }

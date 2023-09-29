@@ -124,13 +124,13 @@ void	Server_handler::serverLoop()
 		return;
 	for (iter = _fdVector.begin() + _serverAmount; iter != _fdVector.end(); iter++)
 	{
+	    Client	&currClient =_clients.at(iter->fd);
 		if (iter->revents & POLLIN)
 		{
-
-			Client	&currClient =_clients.at(iter->fd);
 			currClient.receiveRequest();
-			if(currClient.getState() == VALID_)
-       			 iter->events = POLLOUT| POLLHUP;
+			if(currClient.getState() == DONE_) {
+       			iter->events = POLLOUT| POLLHUP;
+       	    }
 			if ( currClient.getState() == SHOULD_DISCONNECT_)
 			{
 				disconnectClient(iter);
@@ -144,7 +144,6 @@ void	Server_handler::serverLoop()
 		{
 			PRINT << PINK "\t\t......Client wants to get a RESPONSE......   ";
 			PRINT <<  "FD: "<< iter->fd << RESET_LINE;
-			Client	&currClient =_clients.at(iter->fd);
 			if (true/* if response ended */)
 			{
 				currClient.sendResponse();
@@ -158,7 +157,7 @@ void	Server_handler::serverLoop()
 			disconnectClient(iter);
 			PRINT << ON_PURPLE "\t\t......Client disconnected......   " << RESET_LINE;
 			break;
-		} 
+		}
 		else
 		{
 			PRINT << RED "\t\t......SAMSING WEIRD IS HAPPENING......   "; 
