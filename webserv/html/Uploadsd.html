@@ -8,7 +8,6 @@
     <style>
         /* Define the background image and styling for the page */
         body {
-            background-image: url('../img/19.png');
             background-repeat: repeat; /* Repeat the background image */
             background-size: 205px;
             background-position: 0 50px; /* Adjusted background position to start below the top bar */
@@ -21,13 +20,12 @@
             align-items: center;
             min-height: 100vh;
         }
-
 		/* Style for the top navigation bar */
 		.topbar {
-            background-color: white; /* White top bar background */
-            color: #6c55be; /* Lily text color */
+            /* background-color: white; White top bar background */
+            /* color: #6c55be; Lily text color */
             padding: 30px 0; /* Increased padding */
-			box-shadow: 0 0 100px rgba(0, 0, 0, 0.2); 
+			/* box-shadow: 0 0 100px rgba(0, 0, 0, 0.2);  */
 			font-size: 23px;
             display: flex;
             justify-content: space-between;
@@ -37,17 +35,20 @@
             width: 100%;
             z-index: 999; /* Ensure it's above other content */
         }
-
+		
         .topbar a {
-            color: #6c55be; /* Lily link color */
+			color: #ffffff; /* Lily link color */
             text-decoration: none;
-            margin: 0 30px; /* Increased margins */
+            margin: 0 50px; /* Increased margins */
+            animation: fadeIn 2s ease-in-out forwards; /* Define the animation */	
         }
-
+		
         /* Style for the company name */
         .company-name {
-            color: #6c55be; /* Lily text color */
-            margin: 0 30px; /* Increased margins */
+			font-size: 25px;
+            color: #ffffff; /* Lily text color */
+            margin: 0 50px; /* Increased margins */
+            animation: fadeIn 2s ease-in-out forwards; /* Define the animation */
         }
 
 
@@ -145,7 +146,7 @@
 <body>
     <!-- Top Navigation Bar -->
     <div class="topbar">
-        <div class="company-name" href="/"><a href="/">42 Capybaras</a></div>
+        <div class="company-name" href="/"><a href="/">✨42Capybaras✨</a></div>
         <div class="links">
             <a href="../Uploads.html">Upload</a> <!-- Navigation link for the Uploads page -->
             <a href="/">About us</a>

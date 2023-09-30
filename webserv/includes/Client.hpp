@@ -17,7 +17,7 @@
 #define SUCCESS_HTML "./html/Success.html"
 #define DELETED_HTML "./html/Deleted.html"
 #define STANDARD_HTML "./html/index.html"
-#define DEBUG 0
+#define DEBUG 1
 #define	PID_INITIALIZED -42
 #define TIMEOUT 3
 #define PAINFULLY_TRUE true
@@ -92,6 +92,8 @@ class Client
 		std::string								_cgiOutFile;
 		pid_t									_cgiChildId;
 		time_t								 	_cgiChildTimer;
+		std::vector<char*>						_env;
+		std::vector<char*>						_argv;
 
 
 		void                					processRequest();
@@ -139,9 +141,12 @@ class Client
 		void									configureResponseFile(std::stringstream &fileName);
 		configuration							&getConfig();
 		void									handleCGI();
-		void									createEnv(std::vector<char*> &env);
-		void									pushBackEnv(const char *varName, std::map<std::string, std::string>::iterator iter, std::vector<char *> &env);
+		void									createEnv(std::vector<std::string> &env);
+		void									pushBackEnv(const char *varName, std::map<std::string, std::string>::iterator iter, std::vector<std::string> &env);
 		void									startCgiThingy();
+		void									envFromHeaders(std::vector<std::string> &env);
+		void									envFromFirstLine(std::vector<std::string> &env);
+		void									castTheVector(std::vector<std::string> &src, std::vector<char *> dest);
 
 
 	public:

@@ -165,7 +165,7 @@
 <body>
     <!-- Top Navigation Bar -->
     <div class="topbar">
-        <div class="company-name"><a href="/">42 Capybaras</a></div>
+        <div class="company-name"><a href="/">✨42Capybaras✨</a></div>
         <div class="links">
             <a href="../Uploads.html">Upload</a> <!-- Navigation link for the Uploads page -->
             <a href="#">About us</a>
@@ -175,7 +175,7 @@
 
     <!-- Main Content -->
     <div class="content">
-		<form action="../cgi-bin/whoami.sh">
+		<form action="../cgi-bin/whoami.sh" method="post" >
 	        <h1>What Kind of Capybara Are You?</h1>
 
 	        <!-- Test Questions -->
@@ -204,14 +204,14 @@
 	            <div class="answer-option">
 					<label class="answer-button">
 						<img src="../img/2.1.jpg" alt="Choice 3">
-						<input type="radio" name="q2" value="1">
+						<input type="radio" name="q2" value="3">
 	                    Choice 3
 	                </label>
 	            </div>
 	            <div class="answer-option">
 					<label class="answer-button">
 						<img src="../img/2.2.jpg" alt="Choice 4">
-						<input type="radio" name="q2" value="2">
+						<input type="radio" name="q2" value="4">
 	                    Choice 4
 	                </label>
 	            </div>
@@ -223,14 +223,14 @@
 	            <div class="answer-option">
 					<a class="answer-button" >
 						<img src="../img/3.1.jpg" alt="Choice 5">
-						<input type="radio" name="q3" value="1">
+						<input type="radio" name="q3" value="5">
 	                    Choice 5
 	                </a>
 	            </div>
 	            <div class="answer-option">
 					<a class="answer-button">
 						<img src="../img/3.2.jpg" alt="Choice 6">
-						<input type="radio" name="q3" value="2">
+						<input type="radio" name="q3" value="6">
 	                    Choice 6
 	                </a>
 	            </div>
@@ -239,6 +239,7 @@
        		<a class="cgi-button" onclick="calculateResult()">Get Your Result</a>
 		</form>
     </div>
+	<div id="result"></div>
 	<script>
 		function calculateResult() {
 			// Get all radio buttons
