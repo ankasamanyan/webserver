@@ -122,9 +122,10 @@ void    Client::assignPossibleErrorCodes() {
 void Client::checkPathIsAllowed() {
     std::map<std::string, location>::const_iterator it = getConfig().locations.find(_directory);
 
-    if (it == getConfig().locations.end()) {
+    if (it == getConfig().locations.end())
         assignErrorForInvalidPath();
-    }
+    else
+        _location = it->second;
 }
 
 void    Client::assignErrorForInvalidPath() {
@@ -137,9 +138,6 @@ void    Client::assignErrorForInvalidPath() {
 
 void    Client::checkMethodIsAllowed() {
     if (_exitState == EXIT_OK) {
-        std::map<std::string, location>::const_iterator it = getConfig().locations.find(_directory);
-        _location = it->second;
-
         if ((_method == "GET" && _location.methodGet) ||
             (_method == "DELETE" && _location.methodDelete) ||
             (_method == "POST" && _location.methodPost))
@@ -175,11 +173,26 @@ void    Client::checkContentIsOfAllowedSize() {
 
 void    Client::continueToProcessIfStillValid() {
     if (_exitState == EXIT_OK) {
+        redirectIfNeeded();
         setDefaultFile();
         updateDirectoryIfUploading();
         defineRequestTarget();
         assignCGIFlag();
     }
+}
+
+void    Client::redirectIfNeeded() {
+    int amountOfTimesWeAllowToRedirect = 3;
+
+    while (!_location.redirection.empty() && amountOfTimesWeAllowToRedirect > 0) {
+        _directory = _location.redirection;
+        checkPathIsAllowed();
+        if (_exitState != EXIT_OK)
+            return ;
+        amountOfTimesWeAllowToRedirect--;
+    }
+    if (amountOfTimesWeAllowToRedirect == 0)
+        PRINT << SKY "Enough is enough, my friend. The redirection stops NOW" << RESET_LINE;
 }
 
 void    Client::updateDirectoryIfUploading() {
@@ -201,17 +214,8 @@ void    Client::setDefaultFile() {
 void    Client::defineRequestTarget() {
     _directoryListingCase = false;
     _requestTarget = getConfig().root + _directory.substr(1) + _file;
-    redirectIfNeeded();
     if (isDirectory(_requestTarget) && _method == "GET" && _requestTarget != getConfig().root)
         assignContent();
-}
-
-void    Client::redirectIfNeeded() {
-    std::map<std::string, location>::const_iterator it = getConfig().locations.find(_directory);
-
-    if (it != getConfig().locations.end() && !it->second.redirection.empty()) {
-        _requestTarget = getConfig().root + it->second.redirection.substr(1) + _file;
-    }
 }
 
 bool    Client::isDirectory(std::string path) {
