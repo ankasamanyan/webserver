@@ -46,6 +46,18 @@ typedef struct location{
 }location;
 
 typedef struct configuration{
+    configuration &operator=(const configuration&copy)
+    {
+        root = copy.root;
+        serverName = copy.serverName;
+        host = copy.host;
+        port = copy.port;
+        maxBody = copy.maxBody;
+        CGIDir = copy.CGIDir;
+        locations = copy.locations;
+        errorPages = copy.errorPages;
+        return (*this);
+    }
 	std::string root;
     std::string serverName;
 	std::string host;

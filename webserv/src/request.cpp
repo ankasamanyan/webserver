@@ -195,20 +195,20 @@ void    Client::redirectIfNeeded() {
         PRINT << SKY "Enough is enough, my friend. The redirection stops NOW" << RESET_LINE;
 }
 
+void    Client::setDefaultFile() {
+    if (_exitState == EXIT_OK) {
+        if (!_location.defaultFile.empty())
+            _defaultFile = getConfig().root + _location.defaultFile;
+        else
+            _defaultFile = "/html/errorHtml/404.html";
+    }
+}
+
 void    Client::updateDirectoryIfUploading() {
     std::map<std::string, location>::const_iterator it = getConfig().locations.find(_directory);
 
 	if (it != getConfig().locations.end() && _method == "POST" && !it->second.uploadsDir.empty())
 		_directory = it->second.uploadsDir;
-}
-
-void    Client::setDefaultFile() {
-    std::map<std::string, location>::const_iterator it = getConfig().locations.find(_directory);
-
-    if (it != getConfig().locations.end() && !it->second.defaultFile.empty())
-        _defaultFile = getConfig().root + it->second.defaultFile;
-    else
-        _defaultFile = "/html/errorHtml/404.html";
 }
 
 void    Client::defineRequestTarget() {
