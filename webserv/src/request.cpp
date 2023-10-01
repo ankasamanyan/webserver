@@ -251,6 +251,8 @@ void    Client::prepareResponse() {
         handlePost();
     else if (_method == "DELETE")
         handleDelete();
+    else
+        _clientState = DONE_;
 }
 
 void    Client::handleGet() {
