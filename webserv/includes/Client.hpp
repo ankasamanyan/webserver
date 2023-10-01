@@ -97,7 +97,7 @@ class Client
 
 
 		void                					processRequest();
-        void                					parseRequestIfNotEmpty();
+        void                					checkWhetherRequestIsEmpty();
         void                					parseRequestLine();
         void                                    extractRequestLine();
         void                                    splitRequestLine();
@@ -108,20 +108,19 @@ class Client
         void                					parseHeaders();
         void                                    extractHeaders();
         void                					defineServerName();
-        void                					assignPossibleErrorCodes();
-        void                					checkPathIsAllowed();
-        void                					assignErrorForInvalidPath();
-        void                					checkMethodIsAllowed();
-        void                					checkHTTPVersionIsValid();
-        void                					checkContentIsOfAllowedSize();
-        void                                    continueToProcessIfStillValid();
         void                					updateDirectoryIfUploading();
         void                					setDefaultFile();
+        void                					assignPossibleErrorCodes();
         void                					defineRequestTarget();
         void                					redirectIfNeeded();
         bool                					isDirectory(std::string path);
         void                					assignContent();
         void                					assignCGIFlag();
+        void                					checkPathIsAllowed();
+        void                					assignErrorForInvalidPath();
+        void                					checkMethodIsAllowed();
+        void                					checkHTTPVersionIsValid();
+        void                					checkContentIsOfAllowedSize();
         void                					prepareResponse();
         void                					handleGet();
         void                					handlePost();

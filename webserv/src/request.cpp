@@ -25,18 +25,19 @@ void	Client::receiveRequest()
 }
 
 void    Client::processRequest() {
-    parseRequestIfNotEmpty();
-    assignPossibleErrorCodes();
-    continueToProcessIfStillValid();
-}
-
-void    Client::parseRequestIfNotEmpty() {
-    if (_request.empty()) {
-        _exitState = BAD_REQUEST;
-        return ;
-    }
+    checkWhetherRequestIsEmpty();
     parseRequestLine();
     parseHeaders();
+    setDefaultFile();
+    updateDirectoryIfUploading();
+    defineRequestTarget();
+    assignCGIFlag();
+    assignPossibleErrorCodes();
+}
+
+void    Client::checkWhetherRequestIsEmpty() {
+    if (_request.empty())
+        _exitState = BAD_REQUEST;
 }
 
 void    Client::parseRequestLine() {
@@ -60,8 +61,7 @@ void    Client::splitRequestLine() {
 void    Client::definePartsOfURL() {
     _directory = getDirectory();
     _query = getQuery();
-    _file = getFile();
-}
+    _file = getFile();}
 
 std::string Client::getDirectory() {
     std::string pathWithRoot = getConfig().root + _path;
@@ -108,79 +108,6 @@ void    Client::defineServerName() {
 	if (_headers.find("Server-Name") != _headers.end()) {
 	    _requestedServerName = _headers.at("Server-Name").c_str();
 	}
-}
-
-void    Client::assignPossibleErrorCodes() {
-    if (_exitState == EXIT_OK) {
-        checkPathIsAllowed();
-        checkMethodIsAllowed();
-        checkHTTPVersionIsValid();
-        checkContentIsOfAllowedSize();
-        PRINT << YELLOW "WE ARE FINISHED WITH ASSIGNING ERROR CODES" << RESET_LINE;
-    }
-}
-
-void Client::checkPathIsAllowed() {
-    std::map<std::string, location>::const_iterator it = getConfig().locations.find(_directory);
-
-    if (it == getConfig().locations.end()) {
-        assignErrorForInvalidPath();
-    }
-}
-
-void    Client::assignErrorForInvalidPath() {
-    std::string fileToCheck = "." + getConfig().root + _directory.substr(1);
-    if (exists(fileToCheck))
-        _exitState = FORBIDDEN;
-    else
-        _exitState = ERROR_404;
-}
-
-void    Client::checkMethodIsAllowed() {
-    if (_exitState == EXIT_OK) {
-        std::map<std::string, location>::const_iterator it = getConfig().locations.find(_directory);
-        _location = it->second;
-
-        if ((_method == "GET" && _location.methodGet) ||
-            (_method == "DELETE" && _location.methodDelete) ||
-            (_method == "POST" && _location.methodPost))
-            return ;
-        _exitState = METHOD_NOT_ALLOWED;
-    }
-}
-
-void    Client::checkHTTPVersionIsValid() {
-    if (_exitState == EXIT_OK) {
-        if (_HTTPVersion == "HTTP/1.1")
-            return ;
-        _exitState = INVALID_HHTPV;
-    }
-}
-
-void    Client::checkContentIsOfAllowedSize() {
-    if (_exitState == EXIT_OK) {
-        size_t allowedSize = atoi(getConfig().maxBody.c_str());
-
-        if (_headers.find("Content-Length") != _headers.end()) {
-            _contentLength = atoi(_headers.at("Content-Length").c_str());
-            if (_contentLength <= allowedSize)
-                return ;
-            else {
-                _exitState = CONTENT_TOO_LARGE;
-                return ;
-            }
-        }
-        _contentLength = 0;
-    }
-}
-
-void    Client::continueToProcessIfStillValid() {
-    if (_exitState == EXIT_OK) {
-        setDefaultFile();
-        updateDirectoryIfUploading();
-        defineRequestTarget();
-        assignCGIFlag();
-    }
 }
 
 void    Client::updateDirectoryIfUploading() {
@@ -241,6 +168,62 @@ void    Client::assignCGIFlag() {
         _CGICase = false;
 }
 
+void    Client::assignPossibleErrorCodes() {
+    checkPathIsAllowed();
+    checkMethodIsAllowed();
+    checkHTTPVersionIsValid();
+    checkContentIsOfAllowedSize();
+
+}
+
+void Client::checkPathIsAllowed() {
+    std::map<std::string, location>::const_iterator it = getConfig().locations.find(_directory);
+
+    if (it == getConfig().locations.end()) {
+        assignErrorForInvalidPath();
+    }
+}
+
+void    Client::assignErrorForInvalidPath() {
+    std::string fileToCheck = "." + getConfig().root + _directory.substr(1);
+    if (exists(fileToCheck))
+        _exitState = FORBIDDEN;
+    else
+        _exitState = ERROR_404;
+}
+
+void    Client::checkMethodIsAllowed() {
+    std::map<std::string, location>::const_iterator it = getConfig().locations.find(_directory);
+	_location = it->second;
+
+    if ((_method == "GET" && _location.methodGet) ||
+        (_method == "DELETE" && _location.methodDelete) ||
+        (_method == "POST" && _location.methodPost))
+        return ;
+    _exitState = METHOD_NOT_ALLOWED;
+}
+
+void    Client::checkHTTPVersionIsValid() {
+    if (_HTTPVersion == "HTTP/1.1")
+        return ;
+    _exitState = INVALID_HHTPV;
+}
+
+void    Client::checkContentIsOfAllowedSize() {
+    size_t allowedSize = atoi(getConfig().maxBody.c_str());
+
+    if (_headers.find("Content-Length") != _headers.end()) {
+        _contentLength = atoi(_headers.at("Content-Length").c_str());
+        if (_contentLength <= allowedSize)
+            return ;
+        else {
+            _exitState = CONTENT_TOO_LARGE;
+            return ;
+        }
+    }
+    _contentLength = 0;
+}
+
 clientState Client::getState() {
 	return _clientState;
 }
@@ -275,7 +258,7 @@ void    Client::checkIsInsideUploads() {
 void    Client::createFileIfAllowed() {
     std::ofstream outputFileStream;
     std::string pathToPost = "." + _requestTarget;
-    if (_exitState == EXIT_OK) {
+    if (_exitState != CONTENT_TOO_LARGE && _exitState != FORBIDDEN) {
         if (_shouldAppend)
             outputFileStream.open((pathToPost).c_str(), std::ios::binary | std::ios::app);
         else {
@@ -286,7 +269,7 @@ void    Client::createFileIfAllowed() {
     }
     _bytesWritten += _request.size();
     _request.clear();
-    if (_exitState == EXIT_OK) {
+    if (_exitState != CONTENT_TOO_LARGE && _exitState != FORBIDDEN) {
         outputFileStream.close();
     }
 }
