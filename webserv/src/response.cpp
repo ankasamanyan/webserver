@@ -17,14 +17,9 @@ void Client::configureResponseFile(std::stringstream &fileName)
 	if (_exitState == EXIT_OK)
 	{
 		if (_CGICase == PAINFULLY_TRUE )
-		{
 			fileName << _cgiOutFile;
-		}
 		else if (_requestTarget.compare(getConfig().root) == 0)
-		{
-			PRINT << "Got into Edge case with home page Response FIle" << RESET_LINE;
 			fileName << STANDARD_HTML;
-		}
 		else if (isDirectory(_requestTarget) && _directoryListingCase && _method.compare("GET") == 0)
 		{
 			directoryListing();
@@ -33,10 +28,8 @@ void Client::configureResponseFile(std::stringstream &fileName)
 		else if (_method.compare("POST") == 0)
 			fileName << SUCCESS_HTML;
 		else
-		{
 			if (!_requestTarget.empty())
 				fileName << "." << _requestTarget;
-		}
 	}
 	else if (_method.compare("DELETE") == 0 && _exitState == NO_CONTENT)
 	{
