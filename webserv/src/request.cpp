@@ -6,15 +6,11 @@ void	Client::receiveRequest()
 
     memset(currentChunk, 0, CHUNK_SIZE);
     ssize_t numberOfBytesReceived = recv(_clientFd, currentChunk, CHUNK_SIZE, 0);
-	if (numberOfBytesReceived == 0) {
+	if (numberOfBytesReceived == 0 || numberOfBytesReceived < 0) {
 		_clientState = SHOULD_DISCONNECT_;
 		return ; 
 	}
-    if (numberOfBytesReceived < 0) {
-        Utils::printMsg("Error receiving a message from a socket", PURPLE);
-    }
     PRINT << SKY "The REQUEST" << RESET_LINE;
-	// PRINT << currentChunk << RESET_LINE;
   	_request.append(currentChunk, numberOfBytesReceived);
     if (_method.empty())
         processRequest();
