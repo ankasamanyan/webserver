@@ -116,7 +116,6 @@ void    Client::assignPossibleErrorCodes() {
         checkMethodIsAllowed();
         checkHTTPVersionIsValid();
         checkContentIsOfAllowedSize();
-        PRINT << YELLOW "WE ARE FINISHED WITH ASSIGNING ERROR CODES" << RESET_LINE;
     }
 }
 
