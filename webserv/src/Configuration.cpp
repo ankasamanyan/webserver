@@ -48,7 +48,6 @@ Configuration::Configuration(int argc, char **argv){
 		std::cout << "Wrong number of arguments" << std::endl;
 		exit(1);
 	}
-//	print_all_config();
 }
 
 char print_bool(bool b)
@@ -106,9 +105,6 @@ void    Configuration::print_single_config(configuration &conf)
     std::cout << "CGIDir: " << conf.CGIDir << std::endl;
     print_loc_map(conf.locations);
     print_err_map(conf.errorPages);
-    //map
-    //map
-
 }
 
 
@@ -171,36 +167,19 @@ void Configuration::parseConfiguration(std::string configFile){   	//const char 
 }
 
 void Configuration::addServerToServerRepo(){
-//    std::cout << "This is the temp: " << temp++ << std::endl;
 //	print_single_config(config);
 	serverRepo.push_back(config);
-//    std::cout << "What we pushed: " << std::endl;
 //	print_single_config(serverRepo.back());
 	config.locations.clear();
 	config.errorPages.clear();
 //	clearConfiguration();
 }
 
-// void Configuration::euqal_sign_operator_for_loc(location &first, location &second)
-// {
-//     first.locationDir = second.locationDir;
-//     first.redirection = second.redirection;
-//     first.dirListing = second.dirListing;
-//     first.methodGet = second.methodGet;
-//     first.methodPost = second.methodPost;
-//     first.methodDelete = second.methodDelete;
-//     first.defaultFile = second.defaultFile;
-//     first.uploadsDir = second.uploadsDir;
-// }
-
 void Configuration::addLocation(){
-//    std::cout << "allppp" << std::endl;
-//    print_loc(loc);
 	config.locations.insert(std::make_pair(loc.locationDir, loc));
-	// euqal_sign_operator_for_loc(config.locations.at(loc.locationDir), loc);
-//    std::cout << "allcccc" << std::endl;
+	std::cout << "ADDED LOCATION: " << loc.locationDir << " " << loc.methodGet << loc.methodDelete << loc.methodPost << std::endl;
+//	 euqal_sign_operator_for_loc(config.locations.at(loc.locationDir), loc);
 //    print_loc(config.locations.at(loc.locationDir));
-
 }
 
 void Configuration::parseWhateverButNotLocation(std::string line){
@@ -341,11 +320,25 @@ void Configuration::clearConfiguration(){
 	config.port = "2000";
 	config.maxBody = "80000";
 	config.CGIDir = "";
-	config.locations["/"] = loc;
-	config.locations["/uploads/"] = loc;
-	config.locations["/errorHtml/"] = loc;
+    if(config.locations.find("/") != config.locations.end())
+    {
+        std::cout << "Added default /" << std::endl;
+        loc.locationDir = "/";
+    	config.locations.insert(std::make_pair(loc.locationDir, loc));
+    }
+    if(config.locations.find("/uploads") != config.locations.end())
+    {
+        std::cout << "Added default uploads" << std::endl;
+	    loc.locationDir = "/uploads/";
+	    config.locations.insert(std::make_pair(loc.locationDir, loc));
+    }
+    if(config.locations.find("/errorHtml/") != config.locations.end())
+    {
+        std::cout << "Added default errorHtml" << std::endl;
+	    loc.locationDir = "/errorHtml/";
+	    config.locations.insert(std::make_pair(loc.locationDir, loc));
+    }
 	config.errorPages["404"] = "/errorHtml/404.html";
-
 }
 
 void Configuration::clearLocation(){

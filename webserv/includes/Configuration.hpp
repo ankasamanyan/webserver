@@ -100,7 +100,6 @@ public:
 	void checkUploadsLocationForRedirections();
 	void addLocation();
 
-
 	public:
         void print_single_config(configuration &conf);
         void print_all_config();
