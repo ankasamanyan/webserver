@@ -268,12 +268,8 @@ void    Client::handlePost() {
 void    Client::checkHasRights() {
     if (_method == "DELETE" && !_location.methodDelete)
         _exitState = FORBIDDEN;
-
-    else if (_method == "POST") {
-        std::map<std::string, location>::const_iterator it = getConfig().locations.find(_location.uploadsDir);
-        if (it != getConfig().locations.end() && !it->second.methodPost)
-            _exitState = FORBIDDEN;
-    }
+    else if (_method == "POST" && !_location.methodPost)
+        _exitState = FORBIDDEN;
 }
 
 void    Client::createFileIfAllowed() {
