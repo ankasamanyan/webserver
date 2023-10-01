@@ -31,6 +31,18 @@ typedef struct location{
 	bool methodDelete;
 	std::string defaultFile;
 	std::string uploadsDir;
+	location &operator=(const location&copy)
+	{
+		locationDir = copy.locationDir;
+	    redirection = copy.redirection;
+	    dirListing = copy.dirListing;
+	    methodGet = copy.methodGet;
+	    methodPost = copy.methodPost;
+	    methodDelete = copy.methodDelete;
+	    defaultFile = copy.defaultFile;
+	    uploadsDir = copy.uploadsDir;
+		return (*this);
+	}
 }location;
 
 typedef struct configuration{
@@ -87,7 +99,6 @@ public:
 	void addServerToServerRepo();
 	void checkUploadsLocationForRedirections();
 	void addLocation();
-    void euqal_sign_operator_for_loc(location &first, location &second);
 
 
 	public:

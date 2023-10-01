@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact us</title>
+	<style>
+	body {
+	    background-size: 205px;
+	    font-family: Arial, sans-serif;
+	    margin: 0;
+	    padding: 0;
+	    display: flex;
+	    flex-direction: column;
+	    align-items: center;
+	    min-height: 100vh;
+	    animation: backgroundColorChange 5s linear infinite;
+        }
+		
+		h1 {
+            font-size: 48px; /* Font size remains the same */
+            color: #ffffff;
+			margin-bottom: -180px;
+        }
+ 		/* Style for the top navigation bar */
+		 .topbar {
+            /* background-color: white; White top bar background */
+            /* color: #6c55be; Lily text color */
+            padding: 30px 0; /* Increased padding */
+			/* box-shadow: 0 0 100px rgba(0, 0, 0, 0.2);  */
+			font-size: 23px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 999; /* Ensure it's above other content */
+        }
+		
+        .topbar a {
+			color: #ffffff; /* Lily link color */
+            text-decoration: none;
+            margin: 0 50px; /* Increased margins */
+            animation: fadeIn 2s ease-in-out forwards; /* Define the animation */	
+        }
+		
+        /* Style for the company name */
+        .company-name {
+			font-size: 25px;
+            color: #ffffff; /* Lily text color */
+            margin: 0 50px; /* Increased margins */
+            animation: fadeIn 2s ease-in-out forwards; /* Define the animation */
+        }
+
+		     
+		.content {
+		    /* padding: 80px; */
+		    text-align: center;
+		    display: flex;
+		    flex-direction:row; 
+		    align-items: center; 
+		    flex: 1;
+		    margin-bottom: 180px; 
+		}
+
+		h1 {
+			font-size: 48px; /* Font size remains the same */
+		    color: #ffffff;
+		}
+
+		.team-member {
+		    background-color: #ffffff76;
+		    padding: 20px;
+		    margin: 20px;
+			padding-top: 30px;
+		    border-radius: 10px;
+		    text-align: center;
+		    min-width: 300px;
+			min-height: 300px;
+		}
+
+		.team-member img {
+		    width: 150px;
+		    height: 150px;
+		    border-radius: 50%;
+		    margin-bottom: 10px;
+		}
+
+		.button  a{
+			text-decoration: none;
+			/* color: #281f46; */
+            display: inline-block;
+            padding: 20px 30px;
+            background-color: transparent; /* Transparent background */
+			color: rgb(255, 255, 255); /* White text on hover */
+			border: 2px solid white; 
+            font-weight: bold;
+            border-radius: 10px;
+            /* margin-top: 20px; */
+            transition: background-color 0.3s ease, color 0.3s ease; /* Add transition effect */
+		}
+		.button:hover a{
+			/* background-color: #6c55be; */
+			color: #6c55be; /* Lily text color */
+			border: 2px solid #6c55be; /* Lily-colored outline */
+        }
+		
+		h2 {
+			
+			color: #6c55be;
+		}
+	@keyframes backgroundColorChange {
+		0% {
+			background-color: #6c55bea9;
+		}
+		25% {
+			background-color: #9f53b0a9;
+		}
+		50% {
+			background-color: #c87b40a9;
+		}
+		75% {
+			background-color: #b05374a9;
+		}
+		100% {
+			background-color: #6c55bea9;
+		}
+	}
+	
+	</style>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <div class="topbar">
+        <div class="company-name"><a href="/">✨42Capybaras✨</a></div>
+        <div class="links">
+            <a href="../Uploads.html">Upload</a> <!-- Navigation link for the Uploads page -->
+            <a href="../cgi-form.html">CGI</a>
+            <a href="../Contact-us.html">Contact us</a>
+        </div>
+    </div>
+		<div class="content"><h1>Our Team</h1></div>
+	
+    <!-- Main Content -->
+    <div class="content">
+        
+        <!-- Team Member 1 -->
+        <div class="team-member">
+            <img src="../img/Maria.jpeg" alt="Team Member 1">
+            <h2>Maria</h2>
+            <p class="button"><a  href="https://github.com/Mariokka">GitHub</a></p>
+        </div>
+
+        <!-- Team Member 2 -->
+        <div class="team-member">
+            <img src="../img/Tetiana.jpeg" alt="Team Member 2">
+            <h2>Tetiana</h2>
+            <p class="button" ><a href="https://github.com/tfedorenko">GitHub</a></p>
+        </div>
+
+        <!-- Team Member 3 -->
+        <div class="team-member">
+            <img src="../img/Anahit.jpeg" alt="Team Member 3">
+            <h2>Anahit</h2>
+            <p class="button"><a href="https://github.com/ankasamanyan">GitHub</a></p>
+        </div>
+    </div>
+</body>
+</html>

@@ -10,7 +10,7 @@ void	Client::handleCGI()
 	}
 	int status;
 
-	if (waitpid(_cgiChildId, &status, WNOHANG) == 0)
+	if (waitpid(_cgiChildId, &status, -1) == 0)
 	{
 		if (_cgiChildTimer + TIMEOUT < time(NULL))
 		{
@@ -20,7 +20,11 @@ void	Client::handleCGI()
 			_exitState = INTERNAL_SERVER_ERROR;
 		}
 		else
-			return ;
+		{
+			sendResponse();
+			if (_responseState == FULLY_SENT)
+				remove(_cgiOutFile.c_str());
+		}
 	}
 	if (WIFEXITED(status) == 0 || WEXITSTATUS(status) != 0)
 	{
@@ -32,10 +36,9 @@ void	Client::handleCGI()
 		_exitState = INTERNAL_SERVER_ERROR;
 		PRINT << BLUE << "\r\n Setting 500 in second if clause" << RESET_LINE;
 	}
-	
-	sendResponse();
-	if (_responseState == FULLY_SENT)
-		remove(_cgiOutFile.c_str());
+	// sendResponse();
+	// if (_responseState == FULLY_SENT)
+	// 	remove(_cgiOutFile.c_str());
 }
 
 void	Client::createEnv(std::vector<std::string> &env)
@@ -88,7 +91,7 @@ void	Client::startCgiThingy()
 
 	PRINT << YELLOW "\r\nREQUEST TARGET IN CGI: "<<_requestTarget << RESET <<"\n\n" << RESET_LINE;
 	Utils::ft_itoa(_clientFd,str);
-	_cgiOutFile = "." + getConfig().root + getConfig().CGIDir.substr(1) + ("cgi"+str);
+	_cgiOutFile = "." + getConfig().root + getConfig().CGIDir.substr(1) + ("cgi"+str+".html");
 
 	PRINT << ON_PURPLE << " CGI OUTFILE " << _cgiOutFile.c_str() << RESET << "\r\n" << RESET_LINE;  
 
@@ -104,7 +107,7 @@ void	Client::startCgiThingy()
 	_cgiChildId = fork();
 	PRINT << GREEN << " CGI FORK ID " << _cgiChildId << "\r\n" << RESET_LINE;  
 	
-	PRINT << BLUE << " INFILE DATA \n\n" << _query << RESET_LINE;
+	PRINT << BLUE << " INFILE DATA " << _query <<"\n"<< RESET_LINE;
 
 	if (_cgiChildId == 0)
 	{

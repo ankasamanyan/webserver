@@ -102,7 +102,7 @@ void Client::sendHeaders()
 
  headers << HTTP_V;
  headers << " " << _exitState << " " << getHttpMsg((int)_exitState) << "\r\n";
- if (_exitState != ERROR_404)
+ if (_exitState != ERROR_404 && !_CGICase)
   checkHeaders(headers);
  headers << "connection: close\r\n";
  // headers << "content-length: " << _responseLength << "\r\n";

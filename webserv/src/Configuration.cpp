@@ -181,23 +181,23 @@ void Configuration::addServerToServerRepo(){
 //	clearConfiguration();
 }
 
-void Configuration::euqal_sign_operator_for_loc(location &first, location &second)
-{
-    first.locationDir = second.locationDir;
-    first.redirection = second.redirection;
-    first.dirListing = second.dirListing;
-    first.methodGet = second.methodGet;
-    first.methodPost = second.methodPost;
-    first.methodDelete = second.methodDelete;
-    first.defaultFile = second.defaultFile;
-    first.uploadsDir = second.uploadsDir;
-}
+// void Configuration::euqal_sign_operator_for_loc(location &first, location &second)
+// {
+//     first.locationDir = second.locationDir;
+//     first.redirection = second.redirection;
+//     first.dirListing = second.dirListing;
+//     first.methodGet = second.methodGet;
+//     first.methodPost = second.methodPost;
+//     first.methodDelete = second.methodDelete;
+//     first.defaultFile = second.defaultFile;
+//     first.uploadsDir = second.uploadsDir;
+// }
 
 void Configuration::addLocation(){
 //    std::cout << "allppp" << std::endl;
 //    print_loc(loc);
 	config.locations.insert(std::make_pair(loc.locationDir, loc));
-	euqal_sign_operator_for_loc(config.locations.at(loc.locationDir), loc);
+	// euqal_sign_operator_for_loc(config.locations.at(loc.locationDir), loc);
 //    std::cout << "allcccc" << std::endl;
 //    print_loc(config.locations.at(loc.locationDir));
 

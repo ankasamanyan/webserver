@@ -47,6 +47,7 @@ const Client	&Client::operator=(const Client &copy)
 	_requestedServerName = copy._requestedServerName;
 	_cgiChildId = copy._cgiChildId;
 	_fileToPost = copy._fileToPost;
+	_location = copy._location;
 	// _responseLength = copy._responseLength;
 	return (*this);
 }
