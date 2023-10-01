@@ -158,7 +158,7 @@ min-height: 180px;display: flex;flex-direction: column;justify-content: center;a
 50% {background-color: #c87b40a9;}75% {background-color: #b05374a9;}100% {background-color: #6c55bea9;}}</style>"
 
 #define BODY "<body><div class=\"topbar\"><div class=\"company-name\"><a href=\"/\">✨42Capybaras✨</a></div> \
-<div class=\"links\"><a href=\"../Uploads.html\">Upload</a><a href=\"#\">About us</a><a href=\"#\">Contact us</a> \
+<div class=\"links\"><a href=\"../Uploads.html\">Upload</a><a href=\"../cgi-form.html\">CGI</a><a href=\"../Contact-us.html\">Contact us</a> \
 </div></div><div class=\"content\">"
 
 #define CLOSING_TAGS "</div></body></html>"

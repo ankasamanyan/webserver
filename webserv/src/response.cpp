@@ -5,6 +5,16 @@ void Client::configureResponseFile(std::stringstream &fileName)
 	if (DEBUG)
 		PRINT << SKY << "REQUEST TARGET: " << _requestTarget << RESET_LINE;
 
+		std::string	exitCodeString;
+		Utils::ft_itoa((int)_exitState,exitCodeString);
+		std::map<std::string, string>::const_iterator it = getConfig().errorPages.find(exitCodeString);
+		if (it != getConfig().errorPages.end())
+		{
+			fileName << it->second;
+			PRINT << ON_PINK << it->second << RESET_LINE;
+			return ;
+		}
+
 	if (_exitState == EXIT_OK)
 	{
 		if (_CGICase == PAINFULLY_TRUE )
@@ -35,7 +45,9 @@ void Client::configureResponseFile(std::stringstream &fileName)
 		_exitState = EXIT_OK;
 	}
 	else
+	{
 		fileName << "." << getConfig().root << _errorPagePath << _exitState << ".html";
+	}
 
 	/* debuggig thingies */
 	if(DEBUG)

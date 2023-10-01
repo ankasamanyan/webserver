@@ -149,7 +149,6 @@ class Client
 		void									envFromFirstLine(std::vector<std::string> &env);
 		void									castTheVector(std::vector<std::string> &src, std::vector<char *> &dest);
 
-
 	public:
 		Client(int _serverSocket, std::map<std::string, configuration> &config);
 		const Client	&operator=(const Client &copy);
