@@ -10,7 +10,7 @@ void	Client::handleCGI()
 	}
 	int status;
 
-	if (waitpid(_cgiChildId, &status, 0) == 0)
+	if (waitpid(_cgiChildId, &status, WNOHANG) == 0)
 	{
 		if (_cgiChildTimer + TIMEOUT < time(NULL))
 		{
@@ -27,18 +27,9 @@ void	Client::handleCGI()
 			remove(_cgiOutFile.c_str());
 	}
 	if (WIFEXITED(status) == 0 || WEXITSTATUS(status) != 0)
-	{
 		_exitState = INTERNAL_SERVER_ERROR;
-		PRINT << BLUE << "\r\n Setting 500 in first if clause" << RESET_LINE;
-	}
 	if (access(_cgiOutFile.c_str(), R_OK) != 0)
-	{
 		_exitState = INTERNAL_SERVER_ERROR;
-		PRINT << BLUE << "\r\n Setting 500 in second if clause" << RESET_LINE;
-	}
-	// sendResponse();
-	// if (_responseState == FULLY_SENT)
-	// 	remove(_cgiOutFile.c_str());
 }
 
 void	Client::createEnv(std::vector<std::string> &env)
@@ -95,15 +86,6 @@ void	Client::startCgiThingy()
 
 	PRINT << ON_PURPLE << " CGI OUTFILE " << _cgiOutFile.c_str() << RESET << "\r\n" << RESET_LINE;  
 
-	// int cgiFd = open(_cgiOutFile.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0777);
-	
-	// PRINT << ON_PINK << " CGI FD " << cgiFd << "\r\n" << RESET_LINE;  
-    // if (cgiFd == -1) 
-	// {
-    //     perror("open");
-    //     exit(EXIT_FAILURE);
-    // }
-
 	_cgiChildId = fork();
 	PRINT << GREEN << " CGI FORK ID " << _cgiChildId << "\r\n" << RESET_LINE;  
 	
@@ -118,11 +100,9 @@ void	Client::startCgiThingy()
 		argvVector.push_back(_requestTarget.substr(1));
 
 		castTheVector(argvVector, _argv);
-
 		createEnv(envVector);
 
-		// if (!_argv.empty())
-		PRINT << "THIS IS ARGV" <<_argv[0] << RESET_LINE;
+		if (!_argv.empty())
 			execve(_argv[0], _argv.data(), _env.data());
 
 		std::cerr << "Child Process error: ";
@@ -131,9 +111,7 @@ void	Client::startCgiThingy()
 	}
 	else
 	{
-
 		PRINT << BLUE << " PRINT FROM CGI PARENT\n\n" << RESET_LINE;
 		_cgiChildTimer = time(NULL);
-		// close(cgiFd);
 	}
 }
