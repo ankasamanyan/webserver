@@ -177,7 +177,7 @@ void Configuration::addServerToServerRepo(){
 
 void Configuration::addLocation(){
 	config.locations.insert(std::make_pair(loc.locationDir, loc));
-	std::cout << "ADDED LOCATION: " << loc.locationDir << " " << loc.methodGet << loc.methodDelete << loc.methodPost << std::endl;
+//	std::cout << "ADDED LOCATION: " << loc.locationDir << " " << loc.methodGet << loc.methodDelete << loc.methodPost << std::endl;
 //	 euqal_sign_operator_for_loc(config.locations.at(loc.locationDir), loc);
 //    print_loc(config.locations.at(loc.locationDir));
 }
