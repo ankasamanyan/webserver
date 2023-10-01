@@ -146,7 +146,7 @@ class Client
 		void									startCgiThingy();
 		void									envFromHeaders(std::vector<std::string> &env);
 		void									envFromFirstLine(std::vector<std::string> &env);
-		void									castTheVector(std::vector<std::string> &src, std::vector<char *> dest);
+		void									castTheVector(std::vector<std::string> &src, std::vector<char *> &dest);
 
 
 	public:

@@ -10,7 +10,7 @@ void	Client::handleCGI()
 	}
 	int status;
 
-	if (waitpid(_cgiChildId, &status, -1) == 0)
+	if (waitpid(_cgiChildId, &status, 0) == 0)
 	{
 		if (_cgiChildTimer + TIMEOUT < time(NULL))
 		{
@@ -19,12 +19,12 @@ void	Client::handleCGI()
 			waitpid(_cgiChildId, &status, 0);
 			_exitState = INTERNAL_SERVER_ERROR;
 		}
-		else
-		{
-			sendResponse();
-			if (_responseState == FULLY_SENT)
-				remove(_cgiOutFile.c_str());
-		}
+	}
+	else
+	{
+		sendResponse();
+		if (_responseState == FULLY_SENT)
+			remove(_cgiOutFile.c_str());
 	}
 	if (WIFEXITED(status) == 0 || WEXITSTATUS(status) != 0)
 	{
@@ -72,7 +72,7 @@ void	Client::envFromFirstLine(std::vector<std::string> &env)
 		env.push_back(std::string("QUERY_STRING=" + _request));
 }
 
-void	Client::castTheVector(std::vector<std::string> &src, std::vector<char *> dest)
+void	Client::castTheVector(std::vector<std::string> &src, std::vector<char *> &dest)
 {
 	for (size_t i = 0; i < src.size(); ++i)
 		dest.push_back(const_cast<char*>(src[i].c_str()));
@@ -87,11 +87,11 @@ void	Client::pushBackEnv(const char *varName, std::map<std::string, std::string>
 
 void	Client::startCgiThingy()
 {
-	std::string		str;
+	std::string		fd;
 
 	PRINT << YELLOW "\r\nREQUEST TARGET IN CGI: "<<_requestTarget << RESET <<"\n\n" << RESET_LINE;
-	Utils::ft_itoa(_clientFd,str);
-	_cgiOutFile = "." + getConfig().root + getConfig().CGIDir.substr(1) + ("cgi"+str+".html");
+	Utils::ft_itoa(_clientFd,fd);
+	_cgiOutFile = "." + getConfig().root + getConfig().CGIDir.substr(1) + ("cgi"+ fd +".html");
 
 	PRINT << ON_PURPLE << " CGI OUTFILE " << _cgiOutFile.c_str() << RESET << "\r\n" << RESET_LINE;  
 
@@ -120,11 +120,13 @@ void	Client::startCgiThingy()
 		castTheVector(argvVector, _argv);
 
 		createEnv(envVector);
-		if (!_argv.empty())
+
+		// if (!_argv.empty())
+		PRINT << "THIS IS ARGV" <<_argv[0] << RESET_LINE;
 			execve(_argv[0], _argv.data(), _env.data());
 
 		std::cerr << "Child Process error: ";
-		std::cerr << strerror(errno) << RESET_LINE;
+		std::cerr << ON_PURPLE << strerror(errno) << RESET_LINE;
 		exit(1);
 	}
 	else
