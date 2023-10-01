@@ -10,8 +10,7 @@ void Client::configureResponseFile(std::stringstream &fileName)
 		std::map<std::string, string>::const_iterator it = getConfig().errorPages.find(exitCodeString);
 		if (it != getConfig().errorPages.end())
 		{
-			fileName << it->second;
-			PRINT << ON_PINK << it->second << RESET_LINE;
+			fileName << "." + getConfig().root << it->second;
 			return ;
 		}
 

@@ -84,6 +84,7 @@ public:
 
 	Configuration();
 	Configuration(int argc, char **argv);
+	Configuration &operator=(const Configuration &copy);
 	~Configuration();
 
 	void clearConfiguration();

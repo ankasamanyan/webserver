@@ -1,5 +1,12 @@
 #include "../includes/Configuration.hpp"
 
+Configuration &Configuration::operator=(const Configuration &copy)
+{
+	std::cout << "THE EQUAL SIGN OPERATOR GOT CALLED!" << std::endl; 
+	(void)copy;
+	return (*this);
+}
+
 std::string getToken(std::string str, int n)
 {
     std::istringstream line(str);
@@ -338,7 +345,8 @@ void Configuration::clearConfiguration(){
 	    loc.locationDir = "/errorHtml/";
 	    config.locations.insert(std::make_pair(loc.locationDir, loc));
     }
-	config.errorPages["404"] = "/errorHtml/404.html";
+	
+	// config.errorPages["404"] = "errorHtml/404.html";
 }
 
 void Configuration::clearLocation(){
