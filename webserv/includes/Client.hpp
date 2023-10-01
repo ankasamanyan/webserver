@@ -115,7 +115,6 @@ class Client
         void                					checkHTTPVersionIsValid();
         void                					checkContentIsOfAllowedSize();
         void                                    continueToProcessIfStillValid();
-        void                					updateDirectoryIfUploading();
         void                					setDefaultFile();
         void                					defineRequestTarget();
         void                					redirectIfNeeded();

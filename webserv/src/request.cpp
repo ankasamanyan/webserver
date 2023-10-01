@@ -175,7 +175,6 @@ void    Client::continueToProcessIfStillValid() {
     if (_exitState == EXIT_OK) {
         redirectIfNeeded();
         setDefaultFile();
-        updateDirectoryIfUploading();
         defineRequestTarget();
         assignCGIFlag();
     }
@@ -204,18 +203,15 @@ void    Client::setDefaultFile() {
     }
 }
 
-void    Client::updateDirectoryIfUploading() {
-    std::map<std::string, location>::const_iterator it = getConfig().locations.find(_directory);
-
-	if (it != getConfig().locations.end() && _method == "POST" && !it->second.uploadsDir.empty())
-		_directory = it->second.uploadsDir;
-}
-
 void    Client::defineRequestTarget() {
-    _directoryListingCase = false;
-    _requestTarget = getConfig().root + _directory.substr(1) + _file;
-    if (isDirectory(_requestTarget) && _method == "GET" && _requestTarget != getConfig().root)
-        assignContent();
+    if (_exitState == EXIT_OK) {
+        _directoryListingCase = false;
+        _requestTarget = getConfig().root + _directory.substr(1) + _file;
+        if (isDirectory(_requestTarget) && _method == "GET" && _requestTarget != getConfig().root)
+            assignContent();
+        else if (_method == "GET" && exists("." + _requestTarget) == false)
+            _exitState = ERROR_404;
+    }
 }
 
 bool    Client::isDirectory(std::string path) {
@@ -227,9 +223,7 @@ bool    Client::isDirectory(std::string path) {
 }
 
 void    Client::assignContent() {
-    std::map<std::string, location>::const_iterator it = getConfig().locations.find(_directory);
-
-    if (it != getConfig().locations.end() && it->second.dirListing == false)
+    if (_location.dirListing == false)
         _requestTarget = _defaultFile;
     else
         _directoryListingCase = true;
