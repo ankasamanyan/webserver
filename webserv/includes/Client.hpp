@@ -127,7 +127,7 @@ class Client
         void                                    createFileIfAllowed();
         void                					handleDelete();
         bool                					isAllowedToDelete();
-        void                					checkIsInsideUploads();
+        void                					checkHasRights();
         bool                					exists(std::string filePath);
         void                					attemptToRemove(std::string filePath);
 		void									configureSocket(int newSocket);

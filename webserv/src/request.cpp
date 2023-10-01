@@ -259,16 +259,21 @@ void    Client::handleGet() {
 }
 
 void    Client::handlePost() {
-    checkIsInsideUploads();
+    checkHasRights();
     createFileIfAllowed();
     if (_bytesWritten >= _contentLength)
         _clientState = DONE_;
 }
 
-void    Client::checkIsInsideUploads() {
-    if (_requestTarget.find("/uploads") != std::string::npos)
-        return ;
-    _exitState = FORBIDDEN;
+void    Client::checkHasRights() {
+    if (_method == "DELETE" && !_location.methodDelete)
+        _exitState = FORBIDDEN;
+
+    else if (_method == "POST") {
+        std::map<std::string, location>::const_iterator it = getConfig().locations.find(_location.uploadsDir);
+        if (it != getConfig().locations.end() && !it->second.methodPost)
+            _exitState = FORBIDDEN;
+    }
 }
 
 void    Client::createFileIfAllowed() {
@@ -304,7 +309,7 @@ void    Client::handleDelete() {
 }
 
 bool    Client::isAllowedToDelete() {
-    checkIsInsideUploads();
+    checkHasRights();
     return !(isDirectory(_requestTarget) || _exitState == FORBIDDEN);
 }
 

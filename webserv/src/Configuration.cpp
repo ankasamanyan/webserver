@@ -354,8 +354,8 @@ void Configuration::clearLocation(){
 	loc.dirListing = true;
 	loc.locationDir = "/";
 	loc.methodGet = true;
-	loc.methodPost = true;
-	loc.methodDelete = true;
+	loc.methodPost = false;
+	loc.methodDelete = false;
 	loc.defaultFile = "";
 	loc.uploadsDir = "";
 }
