@@ -150,6 +150,7 @@ class Client
 		void									castTheVector(std::vector<std::string> &src, std::vector<char *> &dest);
 		void									CgiParentHandler();
 		void									checkExtention();
+		size_t									fileSize(const std::string &filePath);
 
 	public:
 		Client(int _serverSocket, std::map<std::string, configuration> &config);

@@ -37,9 +37,7 @@ void Client::configureResponseFile(std::stringstream &fileName)
 		_exitState = EXIT_OK;
 	}
 	else
-	{
 		fileName << "." << getConfig().root << _errorPagePath << _exitState << ".html";
-	}
 
 	/* debuggig thingies */
 	if(DEBUG)
@@ -57,6 +55,7 @@ void Client::sendResponse()
 	std::stringstream   fileName;
 
 	configureResponseFile(fileName);
+	_responseLength = fileSize(fileName.str());
 
 	if (_responseState == FULLY_SENT)
 		return ;
@@ -109,7 +108,7 @@ void Client::sendHeaders()
  if (_exitState != ERROR_404 && !_CGICase)
   checkHeaders(headers);
  headers << "connection: close\r\n";
- // headers << "content-length: " << _responseLength << "\r\n";
+ headers << "content-length: " << _responseLength << "\r\n";
  headers << "\r\n";
  PRINT << PURPLE << "Response:\n" << headers.str() << RESET_LINE;
  send(_clientFd, (headers.str()).c_str(), (headers.str()).length(), 0);
@@ -146,4 +145,13 @@ void Client::directoryListing()
 	_responseState = FULLY_SENT;
 }
 
-//check if the path ends with '/', if no add the '/' so the redirect link is correct
+size_t Client::fileSize(const std::string &filePath)
+{
+	struct stat	fileInfo;
+
+	if (filePath.empty())
+		return 0;
+	if (stat(filePath.c_str(), &fileInfo) != 0)
+		return 0;
+	return static_cast<size_t>(fileInfo.st_size);
+}
