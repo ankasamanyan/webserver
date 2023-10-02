@@ -144,13 +144,13 @@ void	Server_handler::serverLoop()
 		{
 			PRINT << PINK "\t\t......Client wants to get a RESPONSE......   ";
 			PRINT <<  "FD: "<< iter->fd << RESET_LINE;
-			if (true/* if response ended */)
-			{
+			if (currClient._CGICase == true)
+				currClient.CgiParentHandler();
+			else
 				currClient.sendResponse();
-				if (currClient._responseState == FULLY_SENT)
-					disconnectClient(iter);
-				break;
-			}
+			if (currClient._responseState == FULLY_SENT)
+				disconnectClient(iter);
+			break;
 		}
 		else if ( iter->revents & POLLHUP)
 		{

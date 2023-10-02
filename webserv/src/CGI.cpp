@@ -2,36 +2,46 @@
 
 void	Client::handleCGI()
 {
-	PRINT << BLUE << "\r\n HandkeCGI called" << RESET_LINE;
 	if (_cgiChildId == PID_INITIALIZED)
 	{
 		startCgiThingy();
+		_clientState = DONE_;
 		return ;
-	}
+	}	
+}
+
+void	Client::CgiParentHandler()
+{
 	int status;
 
-	if (waitpid(_cgiChildId, &status, WNOHANG) == 0)
+	if (waitpid(_cgiChildId, &status, WNOHANG) == 0) // kiddo isnt finished yet
 	{
-		if (_cgiChildTimer + TIMEOUT < time(NULL))
+		if (_cgiChildTimer + TIMEOUT < time(NULL))	// check if alloted time for kiddo to play has been surpased
 		{
-			std::cerr << "Kiddo plays for too long!" << std::endl;
+			std::cerr << ON_RED << "Kiddo plays for too long!"  << RESET_LINE << std::endl;
 			kill(_cgiChildId, SIGKILL);
 			waitpid(_cgiChildId, &status, 0);
 			_exitState = INTERNAL_SERVER_ERROR;
+			_clientState = DONE_;
 		}
 	}
-	else
+	else	// kiddo is done playing
 	{
+		if (WIFEXITED(status) == 0 || WEXITSTATUS(status) != 0)
+		{
+			std::cerr << ON_PINK << "THE SCRIPT HAS FAILED OR HASN'T FINISHED :(" << RESET_LINE;
+			_exitState = INTERNAL_SERVER_ERROR;
+		}
+		if (access(_cgiOutFile.c_str(), R_OK) != 0)
+		{
+			std::cerr << ON_PINK << "THE OUTPUT FILE IS NOT ACCESSABLE :(" << RESET_LINE;
+			_exitState = INTERNAL_SERVER_ERROR;
+		}
 		sendResponse();
 		if (_responseState == FULLY_SENT)
 			remove(_cgiOutFile.c_str());
 	}
-	if (WIFEXITED(status) == 0 || WEXITSTATUS(status) != 0)
-		_exitState = INTERNAL_SERVER_ERROR;
-	if (access(_cgiOutFile.c_str(), R_OK) != 0)
-		_exitState = INTERNAL_SERVER_ERROR;
 }
-
 void	Client::createEnv(std::vector<std::string> &env)
 {
 	envFromFirstLine(env);
@@ -115,3 +125,14 @@ void	Client::startCgiThingy()
 		_cgiChildTimer = time(NULL);
 	}
 }
+
+// void	Client::checkExtention()
+// {
+// 	std::string		ext;
+// 	size_t 			ext_in = _path.rfind('.');
+
+// 	if (ext_in != std::string::npos)
+// 		ext = _path.substr(ext_in);
+// 	if (ext.compare(".py") != 0)
+// 		_exitState = ERROR_404;
+// }
