@@ -119,6 +119,7 @@ class Client
         void                					setDefaultFile();
         void                					defineRequestTarget();
         void                					redirectIfNeeded();
+        void                                    handleRootDirectoryCase();
         bool                					isDirectory(std::string path);
         void                					assignContent();
         void                					assignCGIFlag();

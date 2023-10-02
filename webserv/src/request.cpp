@@ -189,6 +189,19 @@ void    Client::redirectIfNeeded() {
     }
     if (amountOfTimesWeAllowToRedirect == 0)
         PRINT << SKY "Enough is enough, my friend. The redirection stops NOW" << RESET_LINE;
+    handleRootDirectoryCase();
+}
+
+void    Client::handleRootDirectoryCase() {
+    if (_directory == "/" && !_file.empty()) {
+        std::string tmp = _directory + _file;
+        std::string pathWithRoot = getConfig().root + tmp;
+        if (isDirectory(pathWithRoot) && tmp[tmp.size() - 1] != '/')
+            tmp.append("/");
+        _directory = tmp.substr(0, tmp.substr(1).find_first_of("/") + 2);
+        checkPathIsAllowed();
+        _file = Utils::trimLeft(tmp.substr(tmp.substr(1).find_first_of(_directory) + _directory.size()), "/");
+    }
 }
 
 void    Client::setDefaultFile() {
