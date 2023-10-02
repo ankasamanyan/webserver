@@ -14,6 +14,7 @@ Client::Client(int _serverSocket, std::map<std::string, configuration> &config):
 	_cgiChildId = PID_INITIALIZED;
 	_shouldAppend = false;
 	_bytesWritten = 0;
+	_CGICase = false;
 }
 
 const Client	&Client::operator=(const Client &copy)

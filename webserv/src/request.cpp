@@ -229,6 +229,7 @@ void    Client::assignContent() {
 void    Client::assignCGIFlag() {
     int CGIDirectoryLength = getConfig().CGIDir.length();
     std::string partOfPath = _path.substr(0, CGIDirectoryLength);
+    PRINT << "CGI ASSIGNMENT IS HAPPENING! PARTOFPATH - " << partOfPath << ", CGIDIR - " << getConfig().CGIDir << RESET_LINE;
     if (getConfig().CGIDir == partOfPath)
         _CGICase = true;
     else
