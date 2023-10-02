@@ -88,7 +88,7 @@ void Client::sendResponse()
 		std::ifstream errorPage((file.str()).c_str(), std::ios::binary);
 		errorPage.read(body, sizeof(body));
 
-		_responseLength = errorPage.gcount();
+		_responseLength = fileSize(file.str());
 
 		if (_responseState == INITIALIZED)
 			sendHeaders();
