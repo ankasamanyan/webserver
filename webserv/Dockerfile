@@ -19,8 +19,5 @@ RUN apt-get install -y build-essential
 # Set the working directory
 WORKDIR /usr/src/webserv
 
-# Expose the necessary port
-EXPOSE 2000
-
 # Define the command to run your application
 CMD ["make", "run"]

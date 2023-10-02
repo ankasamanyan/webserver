@@ -326,7 +326,7 @@ void Configuration::clearConfiguration(){
 	config.host = "0.0.0.0";
 	config.port = "2000";
 	config.maxBody = "80000";
-	config.CGIDir = "";
+	config.CGIDir = "/cgi-bin/";
     if(config.locations.find("/") != config.locations.end())
     {
         std::cout << "Added default /" << std::endl;
@@ -357,6 +357,5 @@ void Configuration::clearLocation(){
 	loc.methodPost = false;
 	loc.methodDelete = false;
 	loc.defaultFile = "";
-	loc.uploadsDir = "";
 }
 

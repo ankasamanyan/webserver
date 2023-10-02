@@ -7,3 +7,4 @@ services:
       - ./webserv:/usr/src/webserv
     ports:
      - 2000:2000
+     - 2020:2020

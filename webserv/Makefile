@@ -38,5 +38,5 @@ push:
 	@echo $(PURPLE) ✨All added, commited and pushed✨ $(RESET)
 
 run: re
-	./$(NAME)
+	./$(NAME) config_file.conf
 
