@@ -2,6 +2,7 @@
 
 void	Client::receiveRequest() 
 {
+	PRINT << "receiveRequest called" << RESET_LINE;
     char currentChunk[CHUNK_SIZE];
 
     memset(currentChunk, 0, CHUNK_SIZE);

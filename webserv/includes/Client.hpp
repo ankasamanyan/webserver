@@ -26,7 +26,8 @@ enum clientState
 {
 	DONE_,
 	SHOULD_DISCONNECT_,
-	INITIALIZED_
+	INITIALIZED_,
+	CGI_LOOPING_TIME,
 };
 
 enum responseState
@@ -147,6 +148,9 @@ class Client
 		void									envFromHeaders(std::vector<std::string> &env);
 		void									envFromFirstLine(std::vector<std::string> &env);
 		void									castTheVector(std::vector<std::string> &src, std::vector<char *> &dest);
+		void									CgiParentHandler();
+		void									checkExtention();
+		size_t									fileSize(const std::string &filePath);
 
 	public:
 		Client(int _serverSocket, std::map<std::string, configuration> &config);
