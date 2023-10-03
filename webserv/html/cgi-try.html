@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Kind of Capybara Are You?</title>
+    <style>
+        body {
+            background-size: 205px;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+			animation: backgroundColorChange 5s linear infinite;
+        }
+		h1 {
+            font-size: 48px; /* Font size remains the same */
+            color: #ffffff;
+        }
+        /* Style for the top navigation bar */
+		.topbar {
+            padding: 30px 0;
+			font-size: 23px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 999; /* Ensure it's above other content */
+        }
+		
+        .topbar a {
+			color: #ffffff; /* Lily link color */
+            text-decoration: none;
+            margin: 0 50px; /* Increased margins */
+            animation: fadeIn 2s ease-in-out forwards; /* Define the animation */	
+        }
+		
+        /* Style for the company name */
+        .company-name {
+			font-size: 25px;
+            color: #ffffff; /* Lily text color */
+            margin: 0 50px; /* Increased margins */
+            animation: fadeIn 2s ease-in-out forwards; /* Define the animation */
+        }
+
+        /* Style for the main content area */
+        .content {
+            background-color: rgba(255, 255, 255, 0.32); /* White background for the content area */
+            padding: 80px; /* Increased padding to make the box two times bigger */
+            border-radius: 15px; /* Rounded corners */
+            box-shadow: 0 0 100px rgba(0, 0, 0, 0.2); /* Box shadow for the content area */
+            text-align: center;
+            margin-top: 160px; /* Adjusted margin to start below the top bar */
+        }
+
+        /* Style for the test questions */
+        .test-question {
+            font-size: 28px;
+            color: #6c55be;
+            margin-bottom: 20px;
+        }
+
+        /* Style for answer choice buttons */
+        .answer-button {
+            display: inline-block;
+            padding: 20px;
+            background-color: transparent;
+            color: #6c55be;
+            text-decoration: none;
+            font-weight: bold;
+            border: 2px solid #6c55be;
+            border-radius: 10px;
+            margin: 10px;
+            width: 200px;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+			transition: background-color 0.3s ease;
+        }
+
+        /* Style for images on answer buttons */
+        .answer-button img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        /* Style for the button to trigger CGI execution form */
+        .cgi-button {
+            padding: 20px 30px;
+            /* background-color: #6c55be; */
+            color: #6c55be;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 50px;
+            font-size: 24px;
+            text-decoration: none;
+			border: 2px solid #6c55be; 
+        }
+		
+        /* Style the CGI button on hover */
+        .cgi-button:hover {
+			background-color: #6c55be9b;
+			border: 2px solid transparent; 
+			color: white;
+        }
+
+        /* Style for the answer choice container */
+        .answer-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Style for answer choice options */
+        .answer-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px;
+		}
+
+		input[type="radio"] {
+			display: none;
+		}
+
+		.answer-button:active {
+			background-color: #6c55be;
+		}
+
+		@keyframes backgroundColorChange {
+        0% {
+            background-color: #6c55bea9;
+			/* border: #6c55be; */
+        }
+        25% {
+			background-color: #9f53b0a9;
+			/* border: #9f53b0; */
+        }
+        50% {
+			background-color: #c87b40a9;
+			/* border: #c87b40; */
+        }
+        75% {
+			background-color: #b05374a9;
+			/* border: #b05374; */
+        }
+        100% {
+			background-color: #6c55bea9;
+			/* border: #6c55be; */
+        }
+	}
+	input[type="submit"] {
+		display: none;
+	}
+	.custom-file-input {
+			background-color: #6c55be6e; /* Background color for the button */
+			font-size: 15px;
+            border-radius: 5px;
+			width: auto;
+
+			color: white; /* Text color for the button */
+			padding: 15px 50px;
+
+			border: 1px solid transparent;
+			cursor: pointer; /* Change cursor to pointer */
+			transition: background-color 0.3s ease; /* Add transition effect */
+		}
+		.custom-file-input:hover {
+			background-color: #6c55be; /* Background color for the button */
+		}
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <div class="topbar">
+        <div class="company-name"><a href="/">✨42Capybaras✨</a></div>
+        <div class="links">
+            <a href="../Uploads.html">Upload</a>
+            <a href="../cgi-form.html">CGI</a>
+            <a href="../Contact-us.html">Contact us</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+		<form >
+	        <h1>What Kind of Capybara Are You?</h1>
+
+	        <!-- Test Questions -->
+	        <div class="test-question">Question 1: What's your favorite color?</div>
+	        <div class="answer-container">
+	            <!-- Answer Choice Buttons with Images -->
+	            <div class="answer-option">
+	                <label class="answer-button">
+	                    <!-- <img src="../img/1.1.jpeg" alt="Choice 1"> -->
+						<input type="radio" name="q1" value="1">
+	                    Choice 1
+	                </label>
+	            </div>
+	            <!-- <div class="answer-option"> -->
+				<label class="answer-button">
+					<!-- <img src="../img/1.2.jpeg" alt="Choice 2"> -->
+					<input type="radio" name="q1" value="2">
+                    Choice 2
+                </label>
+	            <!-- </div> -->
+	        </div>
+			
+	        <div class="test-question">Question 2: What's your ideal vacation spot?</div>
+	        <div class="answer-container">
+				<!-- Answer Choice Buttons with Images -->
+	            <div class="answer-option">
+					<label class="answer-button">
+						<!-- <img src="../img/2.1.jpg" alt="Choice 3"> -->
+						<input type="radio" name="q2" value="3">
+	                    Choice 3
+	                </label>
+	            </div>
+	            <div class="answer-option">
+					<label class="answer-button">
+						<!-- <img src="../img/2.2.jpg" alt="Choice 4"> -->
+						<input type="radio" name="q2" value="4">
+	                    Choice 4
+	                </label>
+	            </div>
+	        </div>
+	        <div class="test-question">Question 3: What's your favorite activity?</div>
+	        <div class="answer-container">
+	            <!-- Answer Choice Buttons with Images -->
+	            <div class="answer-option">
+					<a class="answer-button" >
+						<!-- <img src="../img/3.1.jpg" alt="Choice 5"> -->
+						<input type="radio" name="q3" value="5">
+	                    Choice 5
+	                </a>
+	            </div>
+	            <div class="answer-option">
+					<a class="answer-button">
+						<!-- <img src="../img/3.2.jpg" alt="Choice 6"> -->
+						<input type="radio" name="q3" value="6">
+	                    Choice 6
+	                </a>
+	            </div>
+	        </div>
+        	<!-- Button to trigger CGI execution form -->
+       		<a class="cgi-button" >
+				<input type="submit" class="custom-file-input" id="button" onclick="submitValue()">
+				<label for="button">Submit</label>
+			</a>
+		</form>
+    </div>
+	<div id="result"></div>
+	<script>
+		const sum = 0;
+
+		function calculateResult() {
+			var radioButtons = document.querySelectorAll('input[type="radio"]');
+			var sum = 0;
+
+			radioButtons.forEach(function (radioButton) {
+				if (radioButton.checked) {
+					sum += parseInt(radioButton.value);
+				}
+			});
+
+			// var resultDiv = document.getElementById('result');
+			// resultDiv.innerHTML = sum;
+		}
+
+		function submitValue() {
+			// const input = document.getElementById('button').value;
+			calculateResult();
+			sendData(sum, textEndpointUrl);
+		}
+		
+		function sendData(data, endpointUrl) {
+			const xhr = new XMLHttpRequest();
+			xhr.open('POST', endpointUrl, true);
+			xhr.onload = function() {
+				if (this.status === 200) {
+					document.getElementById('output').innerHTML = this.responseText;
+				}
+			};
+		}
+
+	</script>
+</body>
+</html>

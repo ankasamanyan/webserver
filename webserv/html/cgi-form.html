@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>What Kind of Capybara Are You?</title>
-    <style>
+	
+    <title>✨42Capybaras✨</title>
+	<style>
         /* Define the background image and styling for the page */
         body {
+            background-repeat: repeat; /* Repeat the background image */
             background-size: 205px;
+            background-position: 0 50px; /* Adjusted background position to start below the top bar */
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
@@ -17,12 +20,19 @@
             align-items: center;
             min-height: 100vh;
 			animation: backgroundColorChange 5s linear infinite;
+			
         }
 		h1 {
             font-size: 48px; /* Font size remains the same */
             color: #ffffff;
         }
-        /* Style for the top navigation bar */
+
+        p {
+            font-size: 24px; /* Font size remains the same */
+            color: #6c55be;
+            margin-top: 4%; 
+        }
+		/* Style for the top navigation bar */
 		.topbar {
             /* background-color: white; White top bar background */
             /* color: #6c55be; Lily text color */
@@ -52,236 +62,209 @@
             margin: 0 50px; /* Increased margins */
             animation: fadeIn 2s ease-in-out forwards; /* Define the animation */
         }
-
+		
         /* Style for the main content area */
         .content {
-            background-color: rgba(255, 255, 255, 0.32); /* White background for the content area */
+
             padding: 80px; /* Increased padding to make the box two times bigger */
             border-radius: 15px; /* Rounded corners */
-            box-shadow: 0 0 100px rgba(0, 0, 0, 0.2); /* Box shadow for the content area */
             text-align: center;
-            margin-top: 160px; /* Adjusted margin to start below the top bar */
+            display: flex; /* Display children elements in a row */
+            flex-wrap: wrap; /* Allow children elements to wrap to the next row */
+            justify-content: center; /* Center-align children horizontally */
         }
 
-        /* Style for the test questions */
-        .test-question {
-            font-size: 28px;
-            color: #6c55be;
-            margin-bottom: 20px;
+        /* Style for folder and file items */
+        .item {
+            background-color: #f4f4f438; /* Light gray background color */
+            padding: 50px;
+            margin: 50px; /* Add spacing between items */
+            border-radius: 10px; /* Rounded corners */
+            text-align: center;
+            min-width: 500px; /* Set a fixed width for items */
+            min-height: 350px; /* Set a minimum height for items */
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Center both vertically and horizontally */
+            align-items: center;
         }
 
-        /* Style for answer choice buttons */
-        .answer-button {
+        .folder {
+            color: #ffffff; /* Lily text color for folders */
+            font-size: 24px; /* Increase folder name font size */
+			text-decoration: none;
+        }
+
+        .file {
+            color: #ffffff; /* Dark gray text color for files */
+            font-size: 24px; /* Increase file name font size */
+			text-decoration: none;
+        }
+
+        /* Style for folder and file icons */
+        .icon {
+            font-size: 72px; /* Increase icon font size */
+            margin-bottom: 20px; /* Add spacing between icon and text */
+        }
+		    /* Background color change animation */
+			@keyframes backgroundColorChange {
+	        0% {
+	            background-color: #6c55bea9;
+				/* border: #6c55be; */
+	        }
+	        25% {
+				background-color: #9f53b0a9;
+				/* border: #9f53b0; */
+	        }
+	        50% {
+				background-color: #c87b40a9;
+				/* border: #c87b40; */
+	        }
+	        75% {
+				background-color: #b05374a9;
+				/* border: #b05374; */
+	        }
+	        100% {
+				background-color: #6c55bea9;
+				/* border: #6c55be; */
+	        }
+	    }
+				  /* Style for the form */
+		form {
+            text-align: center;
+            margin-top: 20px; /* Adjust margin as needed */
+        }
+
+        /* Style for the form inputs */
+        input[type="text"] {
+			font-size: 15px;
+			color: #6c55be;
+            border: 1px solid white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-right: 10px; /* Adjust margin as needed */
+        }
+        input[type="file"] {
+			display: none;
+        }
+        /* Style for the form submit button */
+        input[type="submit"] {
+			font-size: medium;
             display: inline-block;
-            padding: 20px;
-            background-color: transparent;
-            color: #6c55be;
+            padding: 15px 50px;
+            background-color: transparent; /* Transparent background */
+            color: white;
             text-decoration: none;
             font-weight: bold;
-            border: 2px solid #6c55be;
+            border: 2px solid white; /* Lily-colored outline */
             border-radius: 10px;
-            margin: 10px;
-            width: 200px;
-            height: 200px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-			transition: background-color 0.3s ease;
+            margin-top: 20px;
         }
 
-        /* Style for images on answer buttons */
-        .answer-button img {
-            max-width: 100%;
-            max-height: 100%;
-        }
-
-        /* Style for the button to trigger CGI execution form */
-        .cgi-button {
-            padding: 20px 30px;
-            /* background-color: #6c55be; */
-            color: #6c55be;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            margin: 50px;
-            font-size: 24px;
-            text-decoration: none;
-			border: 2px solid #6c55be; 
-        }
-		
-        /* Style the CGI button on hover */
-        .cgi-button:hover {
-			background-color: #6c55be9b;
-			border: 2px solid transparent; 
+        /* Style the form submit button on hover */
+        input[type="submit"]:hover {
 			color: white;
+			border: 2px solid transparent;
+			background-color: #6c55be74;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* Style for the answer choice container */
-        .answer-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* Style for answer choice options */
-        .answer-option {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 20px;
-		}
-
-		input[type="radio"] {
-			display: none;
-		}
-
-		.answer-button:active {
-			background-color: #6c55be;
-		}
-
-		@keyframes backgroundColorChange {
-        0% {
-            background-color: #6c55bea9;
-			/* border: #6c55be; */
-        }
-        25% {
-			background-color: #9f53b0a9;
-			/* border: #9f53b0; */
-        }
-        50% {
-			background-color: #c87b40a9;
-			/* border: #c87b40; */
-        }
-        75% {
-			background-color: #b05374a9;
-			/* border: #b05374; */
-        }
-        100% {
-			background-color: #6c55bea9;
-			/* border: #6c55be; */
-        }
-	}
-	input[type="submit"] {
-		display: none;
-	}
-	.custom-file-input {
+		.custom-file-input {
 			background-color: #6c55be6e; /* Background color for the button */
 			font-size: 15px;
             border-radius: 5px;
 			width: auto;
-
+            margin-right: 15px; /* Adjust margin as needed */
+            margin-left: 5px; /* Adjust margin as needed */
 			color: white; /* Text color for the button */
 			padding: 15px 50px;
-
+			padding-left: 60px;
+			padding-right: 60px;
 			border: 1px solid transparent;
 			cursor: pointer; /* Change cursor to pointer */
 			transition: background-color 0.3s ease; /* Add transition effect */
 		}
 		.custom-file-input:hover {
 			background-color: #6c55be; /* Background color for the button */
+
 		}
-    </style>
+</style>
 </head>
 <body>
     <!-- Top Navigation Bar -->
     <div class="topbar">
         <div class="company-name"><a href="/">✨42Capybaras✨</a></div>
         <div class="links">
-            <a href="../Uploads.html">Upload</a>
+            <a href="../Uploads.html">Upload</a> <!-- Navigation link for the Uploads page -->
             <a href="../cgi-form.html">CGI</a>
             <a href="../Contact-us.html">Contact us</a>
         </div>
     </div>
 
     <!-- Main Content -->
-    <div class="content">
-		<form method="post" >
-	        <h1>What Kind of Capybara Are You?</h1>
-
-	        <!-- Test Questions -->
-	        <div class="test-question">Question 1: What's your favorite color?</div>
-	        <div class="answer-container">
-	            <!-- Answer Choice Buttons with Images -->
-	            <div class="answer-option">
-	                <label class="answer-button">
-	                    <img src="../img/1.1.jpeg" alt="Choice 1">
-						<input type="radio" name="q1" value="1">
-	                    Choice 1
-	                </label>
-	            </div>
-	            <div class="answer-option">
-					<label class="answer-button">
-						<img src="../img/1.2.jpeg" alt="Choice 2">
-						<input type="radio" name="q1" value="2">
-	                    Choice 2
-	                </label>
-	            </div>
-	        </div>
-			
-	        <div class="test-question">Question 2: What's your ideal vacation spot?</div>
-	        <div class="answer-container">
-				<!-- Answer Choice Buttons with Images -->
-	            <div class="answer-option">
-					<label class="answer-button">
-						<img src="../img/2.1.jpg" alt="Choice 3">
-						<input type="radio" name="q2" value="3">
-	                    Choice 3
-	                </label>
-	            </div>
-	            <div class="answer-option">
-					<label class="answer-button">
-						<img src="../img/2.2.jpg" alt="Choice 4">
-						<input type="radio" name="q2" value="4">
-	                    Choice 4
-	                </label>
-	            </div>
-	        </div>
-	        <div class="test-question">Question 3: What's your favorite activity?</div>
-	        <div class="answer-container">
-	            <!-- Answer Choice Buttons with Images -->
-	            <div class="answer-option">
-					<a class="answer-button" >
-						<img src="../img/3.1.jpg" alt="Choice 5">
-						<input type="radio" name="q3" value="5">
-	                    Choice 5
-	                </a>
-	            </div>
-	            <div class="answer-option">
-					<a class="answer-button">
-						<img src="../img/3.2.jpg" alt="Choice 6">
-						<input type="radio" name="q3" value="6">
-	                    Choice 6
-	                </a>
-	            </div>
-	        </div>
-        	<!-- Button to trigger CGI execution form -->
-       		<a class="cgi-button" onclick="calculateResult()">
-				<input type="submit" class="custom-file-input" id="button">
-				<label for="button">Submit</label>
-			</a>
+    <div class="item">
+        <h1>Submit your name</h1>
+        <!-- <p>Click below to submit your text</p> -->
+		<form action="../cgi-bin/Capybara.py">
+			<input type="text" id="text_input" name="input" class="input_01" placeholder="Enter your name">
+			<input type="submit" value="Submit" onclick="submitText()">
 		</form>
+		<!-- <form >
+			<input type="file" id="image" name="image" class="input_01">
+			<label for="image" class="custom-file-input">Choose Image</label>
+			<input type="submit" value="Submit" onclick="submitImage()">
+		</form> -->
     </div>
-	<div id="result"></div>
 	<script>
-		function calculateResult() {
-			// Get all radio buttons
-			var radioButtons = document.querySelectorAll('input[type="radio"]');
-	
-			// Initialize the sum
-			var sum = 0;
-	
-			// Loop through the radio buttons and add their values
-			radioButtons.forEach(function (radioButton) {
-				if (radioButton.checked) {
-					sum += parseInt(radioButton.value);
+		const textEndpointUrl = '../uploads/text.txt';
+		const fileBaseEndpointUrl = '../uploads/';
+
+		function submitText() {
+			const input = document.getElementById('text_input').value;
+			sendData(input, textEndpointUrl);
+		}
+
+		function submitImage() {
+			const fileInput = document.getElementById('image');
+			const file = fileInput.files[0];
+			sendData(file, fileBaseEndpointUrl + encodeURIComponent(file.name));
+		}
+
+		function sendData(data, endpointUrl) {
+			const xhr = new XMLHttpRequest();
+			xhr.open('POST', endpointUrl, true);
+			xhr.onload = function() {
+				if (this.status === 200) {
+					document.getElementById('output').innerHTML = this.responseText;
 				}
-			});
-	
-			// Display the result
-			var resultDiv = document.getElementById("result");
-			resultDiv.innerHTML = "Your result is: " + sum;
+			};
+
+			if (data instanceof File) {
+				xhr.setRequestHeader('Content-Type', data.type);
+				xhr.setRequestHeader('X-File-Name', data.name);
+				xhr.send(data);
+			} else {
+				xhr.setRequestHeader('Content-Type', 'text/plain');
+				xhr.setRequestHeader('X-File-Name', 'text.txt');
+				xhr.send(data);
+			}
 		}
 	</script>
 </body>
 </html>
+
+
+
+
+
+
+
+<!-- -------------------------------------- -->
+
+
+
+
+
+
+
+

@@ -180,8 +180,6 @@ void Client::directoryListing()
 			type = (ent->d_type == DT_DIR)? FOLDER_FORM_OPEN : FILE_FORM_OPEN;
   			ref = (*(_path.rbegin()) == '/')? _path + ent->d_name : _path +"/"+ ent->d_name;
 			streamy << type << "<a href=\"" << ref << "\">"<< std::string(ent->d_name).substr(0,20) << "</a>" <<  CLOSING_DIVS;
-			if (DEBUG)
-  				PRINT << ORANGE << ref << RESET_LINE;
 		}
 		closedir(dir);
 	}

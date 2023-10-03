@@ -203,7 +203,7 @@
 
     <!-- Main Content -->
     <div class="item">
-        <h1>Submit your text</h1>
+        <h1>Submit your files</h1>
         <!-- <p>Click below to submit your text</p> -->
 		<form >
 			<input type="text" id="text_input" name="input" class="input_01" placeholder="Enter your text">
@@ -211,23 +211,16 @@
 		</form>
 		<form >
 			<input type="file" id="image" name="image" class="input_01">
-			<label for="image" class="custom-file-input">Choose Image</label>
+			<label for="image" class="custom-file-input">Choose file</label>
 			<input type="submit" value="Submit" onclick="submitImage()">
 		</form>
     </div>
 	<script>
-		const textEndpointUrl = '../uploads/text.txt';
-		const fileBaseEndpointUrl = '../uploads/';
+		const textEndpointUrl = '../cgi-bin/Capybara.py';
 
 		function submitText() {
 			const input = document.getElementById('text_input').value;
 			sendData(input, textEndpointUrl);
-		}
-
-		function submitImage() {
-			const fileInput = document.getElementById('image');
-			const file = fileInput.files[0];
-			sendData(file, fileBaseEndpointUrl + encodeURIComponent(file.name));
 		}
 
 		function sendData(data, endpointUrl) {
