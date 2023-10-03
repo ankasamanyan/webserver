@@ -11,6 +11,7 @@ Client::Client(int _serverSocket, std::map<std::string, configuration> &config):
 	_exitState = EXIT_OK;
 	_errorPagePath = "errorHtml/";
 	_requestedServerName = "default";
+	_responseLength = 0;
 	_cgiChildId = PID_INITIALIZED;
 	_shouldAppend = false;
 	_bytesWritten = 0;
@@ -49,7 +50,7 @@ const Client	&Client::operator=(const Client &copy)
 	_cgiChildId = copy._cgiChildId;
 	_fileToPost = copy._fileToPost;
 	_location = copy._location;
-	// _responseLength = copy._responseLength;
+	_responseLength = copy._responseLength;
 	return (*this);
 }
 
