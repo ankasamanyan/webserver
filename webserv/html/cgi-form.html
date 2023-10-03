@@ -162,6 +162,25 @@
 			/* border: #6c55be; */
         }
 	}
+	input[type="submit"] {
+		display: none;
+	}
+	.custom-file-input {
+			background-color: #6c55be6e; /* Background color for the button */
+			font-size: 15px;
+            border-radius: 5px;
+			width: auto;
+
+			color: white; /* Text color for the button */
+			padding: 15px 50px;
+
+			border: 1px solid transparent;
+			cursor: pointer; /* Change cursor to pointer */
+			transition: background-color 0.3s ease; /* Add transition effect */
+		}
+		.custom-file-input:hover {
+			background-color: #6c55be; /* Background color for the button */
+		}
     </style>
 </head>
 <body>
@@ -238,7 +257,10 @@
 	            </div>
 	        </div>
         	<!-- Button to trigger CGI execution form -->
-       		<a class="cgi-button" onclick="calculateResult()"><input type="submit"></a>
+       		<a class="cgi-button" onclick="calculateResult()">
+				<input type="submit" class="custom-file-input" id="button">
+				<label for="button">Submit</label>
+			</a>
 		</form>
     </div>
 	<div id="result"></div>

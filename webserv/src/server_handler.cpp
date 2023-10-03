@@ -148,7 +148,7 @@ void	Server_handler::serverLoop()
 				currClient.CgiParentHandler();
 			else
 				currClient.sendResponse();
-			if (currClient._responseState == FULLY_SENT)
+			if (currClient._responseState == FULLY_SENT ||  currClient.getState() == SHOULD_DISCONNECT_)
 				disconnectClient(iter);
 			break;
 		}

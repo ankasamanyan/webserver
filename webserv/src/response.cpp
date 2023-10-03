@@ -71,8 +71,12 @@ void Client::sendResponse()
 		inputFile.read(body, sizeof(body));
 		if (_responseState == INITIALIZED)
 			sendHeaders();
-		send(_clientFd, body, inputFile.gcount(), 0);
-
+		size_t sendResultCount = send(_clientFd, body, inputFile.gcount(), 0);
+		if (sendResultCount <= 0)
+		{
+			_clientState = SHOULD_DISCONNECT_;
+			return ;
+		}
 		if (inputFile.eof())
 		{
 			PRINT << YELLOW "\t END OF FILE BTW" << RESET_LINE; 
@@ -105,18 +109,20 @@ void Client::sendResponse()
 
 void Client::sendHeaders()
 {
- std::stringstream  headers;
+	std::stringstream  headers;
 
- headers << HTTP_V;
- headers << " " << _exitState << " " << getHttpMsg((int)_exitState) << "\r\n";
- if (_exitState != ERROR_404 && !_CGICase)
-  checkHeaders(headers);
- headers << "connection: close\r\n";
- headers << "content-length: " << _responseLength << "\r\n";
- headers << "\r\n";
- PRINT << PURPLE << "Response:\n" << headers.str() << RESET_LINE;
- send(_clientFd, (headers.str()).c_str(), (headers.str()).length(), 0);
- _responseState = PARTIALLY_SENT;
+	headers << HTTP_V;
+	headers << " " << _exitState << " " << getHttpMsg((int)_exitState) << "\r\n";
+	if (_exitState != ERROR_404 && !_CGICase)
+		checkHeaders(headers);
+	headers << "connection: close\r\n";
+	headers << "content-length: " << _responseLength << "\r\n";
+	headers << "\r\n";
+	PRINT << PURPLE << "Response:\n" << headers.str() << RESET_LINE;
+	size_t	sendResultCount = send(_clientFd, (headers.str()).c_str(), (headers.str()).length(), 0);
+	if (sendResultCount <= 0)
+		_clientState = SHOULD_DISCONNECT_;
+	_responseState = PARTIALLY_SENT;
 }
 
 void Client::directoryListing()
@@ -145,7 +151,9 @@ void Client::directoryListing()
 		closedir(dir);
 	}
 	std::string str = streamy.str();
-	send(_clientFd, str.c_str(), str.size(), 0);
+	size_t sendResultCount = send(_clientFd, str.c_str(), str.size(), 0);
+	if (sendResultCount <= 0)
+		_clientState = SHOULD_DISCONNECT_;
 	_responseState = FULLY_SENT;
 }
 
