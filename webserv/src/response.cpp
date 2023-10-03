@@ -31,11 +31,13 @@ void Client::configureResponseFile(std::stringstream &fileName)
 	else if (_method.compare("POST") == 0 && _exitState == CREATED)
 	{
 		sendHeaders();
+		_responseState = FULLY_SENT;
 		return ;
 	}
 	else if (_method.compare("DELETE") == 0 && _exitState == NO_CONTENT)
 	{
 		sendHeaders();
+		_responseState = FULLY_SENT;
 		return ;
 	}
 	else
@@ -53,59 +55,69 @@ void Client::configureResponseFile(std::stringstream &fileName)
 
 void Client::sendResponse()
 {
-	char      body[CHUNK_SIZE];
 	std::stringstream   fileName;
 
 	configureResponseFile(fileName);
-	_responseLength = fileSize(fileName.str());
-
 	if (_responseState == FULLY_SENT)
 		return ;
+	_responseLength = fileSize(fileName.str());
+
 	std::ifstream inputFile((fileName.str()).c_str(), std::ios::binary);
 
 	if (inputFile.is_open())
 	{
-		inputFile.seekg(_responsePos);
-		inputFile.read(body, sizeof(body));
-		if (_responseState == INITIALIZED)
-			sendHeaders();
-		size_t sendResultCount = send(_clientFd, body, inputFile.gcount(), 0);
-		if (sendResultCount <= 0)
-		{
-			_clientState = SHOULD_DISCONNECT_;
-			return ;
-		}
-		if (inputFile.eof())
-		{
-			PRINT << YELLOW "\t END OF FILE BTW" << RESET_LINE; 
-			_responseState = FULLY_SENT;
-			inputFile.close();
-			return ;
-		}
-		_responsePos = inputFile.tellg();
-		inputFile.close();
+		readTheFile(inputFile);
 	}
 	else if (!inputFile) 
 	{
-		std::stringstream file;
-
-		_exitState = ERROR_404;
-		file << STANDARD_404;
-		std::ifstream errorPage((file.str()).c_str(), std::ios::binary);
-		errorPage.read(body, sizeof(body));
-
-		_responseLength = fileSize(file.str());
-
-		if (_responseState == INITIALIZED)
-			sendHeaders();
-		send(_clientFd, body, errorPage.gcount(), 0);
-		errorPage.close();
-		_responseState = FULLY_SENT;
+		noInputFile();
 		return ;
 	}
 }
 
-void Client::sendHeaders()
+void	Client::noInputFile()
+{
+	char      body[CHUNK_SIZE];
+	std::stringstream file;
+
+	_exitState = ERROR_404;
+	file << STANDARD_404;
+	std::ifstream errorPage((file.str()).c_str(), std::ios::binary);
+	errorPage.read(body, sizeof(body));
+	_responseLength = fileSize(file.str());
+	if (_responseState == INITIALIZED)
+		sendHeaders();
+	send(_clientFd, body, errorPage.gcount(), 0);
+	errorPage.close();
+	_responseState = FULLY_SENT;
+}
+
+void	Client::readTheFile(std::ifstream   &inputFile)
+{
+	char      body[CHUNK_SIZE];
+
+	inputFile.seekg(_responsePos);
+	inputFile.read(body, sizeof(body));
+	if (_responseState == INITIALIZED)
+		sendHeaders();
+	size_t sendResultCount = send(_clientFd, body, inputFile.gcount(), 0);
+	if (sendResultCount <= 0)
+	{
+		_clientState = SHOULD_DISCONNECT_;
+		return ;
+	}
+	if (inputFile.eof())
+	{
+		PRINT << YELLOW "\t END OF FILE BTW" << RESET_LINE; 
+		_responseState = FULLY_SENT;
+		inputFile.close();
+		return ;
+	}
+	_responsePos = inputFile.tellg();
+	inputFile.close();
+}
+
+void	Client::sendHeaders()
 {
 	std::stringstream  headers;
 
@@ -145,7 +157,7 @@ void Client::directoryListing()
   			ref = (*(_path.rbegin()) == '/')? _path + ent->d_name : _path +"/"+ ent->d_name;
 			streamy << type << "<a href=\"" << ref << "\">"<< std::string(ent->d_name).substr(0,20) << "</a>" <<  CLOSING_DIVS;
 			if (DEBUG)
-  			PRINT << ORANGE << ref << RESET_LINE;
+  				PRINT << ORANGE << ref << RESET_LINE;
 		}
 		closedir(dir);
 	}

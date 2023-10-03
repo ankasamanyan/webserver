@@ -153,6 +153,8 @@ class Client
 		void									CgiParentHandler();
 		void									checkExtention();
 		size_t									fileSize(const std::string &filePath);
+		void									readTheFile(std::ifstream   &inputFile);
+		void									noInputFile();
 
 	public:
 		Client(int _serverSocket, std::map<std::string, configuration> &config);
