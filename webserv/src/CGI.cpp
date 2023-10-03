@@ -18,7 +18,7 @@ void	Client::CgiParentHandler()
 	{
 		if (_cgiChildTimer + TIMEOUT < time(NULL))	// check if alloted time for kiddo to play has been surpased
 		{
-			std::cerr << ON_RED << "Kiddo plays for too long!"  << RESET_LINE << std::endl;
+			std::cerr << ON_PINK << "Kiddo plays for too long!"  << RESET_LINE << std::endl;
 			kill(_cgiChildId, SIGKILL);
 			waitpid(_cgiChildId, &status, 0);
 			_exitState = INTERNAL_SERVER_ERROR;
@@ -42,6 +42,7 @@ void	Client::CgiParentHandler()
 			remove(_cgiOutFile.c_str());
 	}
 }
+
 void	Client::createEnv(std::vector<std::string> &env)
 {
 	envFromFirstLine(env);
@@ -67,10 +68,9 @@ void	Client::envFromFirstLine(std::vector<std::string> &env)
 	env.push_back(std::string("SERVER_PORT=" + getConfig().port));
 	env.push_back(std::string("PATH_INFO=" + _requestTarget));
 	env.push_back(std::string("OUTPUT_FILE=" + _cgiOutFile));
-	if (_method.compare("GET") == 0)
-		env.push_back(std::string("QUERY_STRING=" + _query));
-	else
-		env.push_back(std::string("QUERY_STRING=" + _request));
+	env.push_back(std::string("QUERY_STRING=" + _query));
+	
+	PRINT << SKY << "THE QUERY: " << RESET << _query << RESET_LINE;
 }
 
 void	Client::castTheVector(std::vector<std::string> &src, std::vector<char *> &dest)
