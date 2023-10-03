@@ -155,6 +155,9 @@ class Client
 		size_t									fileSize(const std::string &filePath);
 		void									readTheFile(std::ifstream   &inputFile);
 		void									noInputFile();
+		void									sendHeadersAndQuit();
+		bool									customErrorPageExists(std::stringstream &fileName);
+		void									successfulRequest(std::stringstream &fileName);					
 
 	public:
 		Client(int _serverSocket, std::map<std::string, configuration> &config);
