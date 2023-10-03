@@ -273,7 +273,8 @@ void    Client::handlePost() {
     createFileIfAllowed();
     if (_bytesWritten >= _contentLength) {
         _clientState = DONE_;
-        _exitState = CREATED;
+        if (_exitState == EXIT_OK)
+            _exitState = CREATED;
     }
 }
 
