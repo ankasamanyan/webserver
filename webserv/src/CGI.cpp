@@ -90,17 +90,9 @@ void	Client::startCgiThingy()
 {
 	std::string		fd;
 
-	PRINT << YELLOW "\r\nREQUEST TARGET IN CGI: "<<_requestTarget << RESET <<"\n\n" << RESET_LINE;
 	Utils::ft_itoa(_clientFd,fd);
 	_cgiOutFile = "." + getConfig().root + getConfig().CGIDir.substr(1) + ("cgi"+ fd +".html");
-
-	PRINT << ON_PURPLE << " CGI OUTFILE " << _cgiOutFile.c_str() << RESET << "\r\n" << RESET_LINE;  
-
 	_cgiChildId = fork();
-	PRINT << GREEN << " CGI FORK ID " << _cgiChildId << "\r\n" << RESET_LINE;  
-	
-	PRINT << BLUE << " INFILE DATA " << _query <<"\n"<< RESET_LINE;
-
 	if (_cgiChildId == 0)
 	{
 		std::vector<std::string>	argvVector;
@@ -120,19 +112,5 @@ void	Client::startCgiThingy()
 		exit(1);
 	}
 	else
-	{
-		PRINT << BLUE << " PRINT FROM CGI PARENT\n\n" << RESET_LINE;
 		_cgiChildTimer = time(NULL);
-	}
 }
-
-// void	Client::checkExtention()
-// {
-// 	std::string		ext;
-// 	size_t 			ext_in = _path.rfind('.');
-
-// 	if (ext_in != std::string::npos)
-// 		ext = _path.substr(ext_in);
-// 	if (ext.compare(".py") != 0)
-// 		_exitState = ERROR_404;
-// }

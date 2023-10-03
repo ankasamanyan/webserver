@@ -26,7 +26,11 @@ void Client::configureResponseFile(std::stringstream &fileName)
 			return ;
 		}
 		else if (_method.compare("POST") == 0)
-			fileName << SUCCESS_HTML;
+		{
+			// _exitState = 
+			sendHeaders();
+			return ;
+		}
 		else
 			if (!_requestTarget.empty())
 				fileName << "." << _requestTarget;

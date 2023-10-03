@@ -139,19 +139,21 @@
         input[type="text"] {
 			font-size: 15px;
 			color: #6c55be;
-            padding: 15px;
             border: 1px solid white;
+            padding: 15px;
             border-radius: 5px;
             margin-right: 10px; /* Adjust margin as needed */
         }
-
+        input[type="file"] {
+			display: none;
+        }
         /* Style for the form submit button */
         input[type="submit"] {
 			font-size: medium;
             display: inline-block;
             padding: 15px 50px;
             background-color: transparent; /* Transparent background */
-            color: white; /* Lily text color */
+            color: white;
             text-decoration: none;
             font-weight: bold;
             border: 2px solid white; /* Lily-colored outline */
@@ -166,7 +168,27 @@
 			background-color: #6c55be74;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
-    </style>
+
+		.custom-file-input {
+			background-color: #6c55be6e; /* Background color for the button */
+			font-size: 15px;
+            border-radius: 5px;
+			width: auto;
+            margin-right: 15px; /* Adjust margin as needed */
+            margin-left: 5px; /* Adjust margin as needed */
+			color: white; /* Text color for the button */
+			padding: 15px 50px;
+			padding-left: 60px;
+			padding-right: 60px;
+			border: 1px solid transparent;
+			cursor: pointer; /* Change cursor to pointer */
+			transition: background-color 0.3s ease; /* Add transition effect */
+		}
+		.custom-file-input:hover {
+			background-color: #6c55be; /* Background color for the button */
+
+		}
+</style>
 </head>
 <body>
     <!-- Top Navigation Bar -->
@@ -183,11 +205,51 @@
     <div class="item">
         <h1>Submit your text</h1>
         <!-- <p>Click below to submit your text</p> -->
-		<form action="../uploads/text" method="post" enctype="text/plain" accept-charset="utf-8">
-			<input type="text" id="myFile" name="myFile">
-			<input type="submit" value="Submit">
+		<form >
+			<input type="text" id="text_input" name="input" class="input_01" placeholder="Enter your text">
+			<input type="submit" value="Submit" onclick="submitText()">
+		</form>
+		<form >
+			<input type="file" id="image" name="image" class="input_01">
+			<label for="image" class="custom-file-input">Choose Image</label>
+			<input type="submit" value="Submit" onclick="submitImage()">
 		</form>
     </div>
+	<script>
+		const textEndpointUrl = '../uploads/text.txt';
+		const fileBaseEndpointUrl = '../uploads/';
+
+		function submitText() {
+			const input = document.getElementById('text_input').value;
+			sendData(input, textEndpointUrl);
+		}
+
+		function submitImage() {
+			const fileInput = document.getElementById('image');
+			const file = fileInput.files[0];
+			sendData(file, fileBaseEndpointUrl + encodeURIComponent(file.name));
+		}
+
+		function sendData(data, endpointUrl) {
+			const xhr = new XMLHttpRequest();
+			xhr.open('POST', endpointUrl, true);
+			xhr.onload = function() {
+				if (this.status === 200) {
+					document.getElementById('output').innerHTML = this.responseText;
+				}
+			};
+
+			if (data instanceof File) {
+				xhr.setRequestHeader('Content-Type', data.type);
+				xhr.setRequestHeader('X-File-Name', data.name);
+				xhr.send(data);
+			} else {
+				xhr.setRequestHeader('Content-Type', 'text/plain');
+				xhr.setRequestHeader('X-File-Name', 'text.txt');
+				xhr.send(data);
+			}
+		}
+	</script>
 </body>
 </html>
 
