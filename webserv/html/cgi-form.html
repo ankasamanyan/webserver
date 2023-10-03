@@ -209,14 +209,8 @@
 			<input type="text" id="text_input" name="input" class="input_01" placeholder="Enter your name">
 			<input type="submit" value="Submit" onclick="submitText()">
 		</form>
-		<!-- <form >
-			<input type="file" id="image" name="image" class="input_01">
-			<label for="image" class="custom-file-input">Choose Image</label>
-			<input type="submit" value="Submit" onclick="submitImage()">
-		</form> -->
     </div>
 	<script>
-
 		function submitText() {
 			const input = document.getElementById('text_input').value;
 			sendData(input, textEndpointUrl);

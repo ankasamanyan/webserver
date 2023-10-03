@@ -224,6 +224,12 @@
 			sendData(input, textEndpointUrl);
 		}
 
+		function submitImage() {
+			const fileInput = document.getElementById('image');
+			const file = fileInput.files[0];
+			sendData(file, fileBaseEndpointUrl + encodeURIComponent(file.name));
+		}
+
 		function sendData(data, endpointUrl) {
 			const xhr = new XMLHttpRequest();
 			xhr.open('POST', endpointUrl, true);
