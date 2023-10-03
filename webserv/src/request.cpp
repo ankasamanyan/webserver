@@ -76,11 +76,19 @@ std::string Client::getQuery() {
 	std::string query;
 
 	if (questionMark != std::string::npos) {
-		query = _path.substr(questionMark + 1);
-		_path = _path.substr(0, questionMark);
+	    size_t	inputEquals = _path.find("input=");
+	    if (inputEquals != std::string::npos) {
+	        query = _path.substr(inputEquals + 6);
+	        _path = _path.substr(0, questionMark);
+	    }
+	    else {
+            query = _path.substr(questionMark + 1);
+            _path = _path.substr(0, questionMark);
+	    }
 	}
 	else
 	    query = "";
+	PRINT << "QUERY"<< query << RESET_LINE;
 	return query;
 }
 
