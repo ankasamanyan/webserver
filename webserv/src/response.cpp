@@ -13,7 +13,6 @@ void Client::configureResponseFile(std::stringstream &fileName)
 		fileName << "." + getConfig().root << it->second;
 		return ;
 	}
-
 	if (_exitState == EXIT_OK)
 	{
 		if (_CGICase == PAINFULLY_TRUE )
@@ -25,15 +24,14 @@ void Client::configureResponseFile(std::stringstream &fileName)
 			directoryListing();
 			return ;
 		}
-		else if (_method.compare("POST") == 0)
-		{
-			// _exitState = 
-			sendHeaders();
-			return ;
-		}
 		else
 			if (!_requestTarget.empty())
 				fileName << "." << _requestTarget;
+	}
+	else if (_method.compare("POST") == 0 && _exitState == CREATED)
+	{
+		sendHeaders();
+		return ;
 	}
 	else if (_method.compare("DELETE") == 0 && _exitState == NO_CONTENT)
 	{
@@ -116,7 +114,8 @@ void Client::sendHeaders()
 	if (_exitState != ERROR_404 && !_CGICase)
 		checkHeaders(headers);
 	headers << "connection: close\r\n";
-	headers << "content-length: " << _responseLength << "\r\n";
+	if (_responseLength)
+		headers << "content-length: " << _responseLength << "\r\n";
 	headers << "\r\n";
 	PRINT << PURPLE << "Response:\n" << headers.str() << RESET_LINE;
 	size_t	sendResultCount = send(_clientFd, (headers.str()).c_str(), (headers.str()).length(), 0);
