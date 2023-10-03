@@ -351,7 +351,7 @@ void Configuration::clearConfiguration(){
 
 void Configuration::clearLocation(){
 	loc.redirection = "";
-	loc.dirListing = true;
+	loc.dirListing = false;
 	loc.locationDir = "/";
 	loc.methodGet = true;
 	loc.methodPost = false;
