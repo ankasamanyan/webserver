@@ -2,43 +2,22 @@
 
 void Client::configureResponseFile(std::stringstream &fileName)
 {
-	if (DEBUG)
-		PRINT << SKY << "REQUEST TARGET: " << _requestTarget << RESET_LINE;
-
-	std::string	exitCodeString;
-	Utils::ft_itoa((int)_exitState,exitCodeString);
-	std::map<std::string, string>::const_iterator it = getConfig().errorPages.find(exitCodeString);
-	if (it != getConfig().errorPages.end())
-	{
-		fileName << "." + getConfig().root << it->second;
+	if (customErrorPageExists(fileName))
 		return ;
-	}
+
 	if (_exitState == EXIT_OK)
 	{
-		if (_CGICase == PAINFULLY_TRUE )
-			fileName << _cgiOutFile;
-		else if (_requestTarget.compare(getConfig().root) == 0)
-			fileName << STANDARD_HTML;
-		else if (isDirectory(_requestTarget) && _directoryListingCase && _method.compare("GET") == 0)
-		{
-			directoryListing();
+		successfulRequest(fileName);
+		if (_responseState == FULLY_SENT)
 			return ;
-		}
-		else
-			if (!_requestTarget.empty())
-				fileName << "." << _requestTarget;
 	}
 	else if (_method.compare("POST") == 0 && _exitState == CREATED)
 	{
-		sendHeaders();
-		_responseState = FULLY_SENT;
-		return ;
+		sendHeadersAndQuit();
 	}
 	else if (_method.compare("DELETE") == 0 && _exitState == NO_CONTENT)
 	{
-		sendHeaders();
-		_responseState = FULLY_SENT;
-		return ;
+		sendHeadersAndQuit();
 	}
 	else
 		fileName << "." << getConfig().root << _errorPagePath << _exitState << ".html";
@@ -53,7 +32,52 @@ void Client::configureResponseFile(std::stringstream &fileName)
 	}
 }
 
-void Client::sendResponse()
+void	Client::successfulRequest(std::stringstream &fileName)
+{
+	if (_CGICase == PAINFULLY_TRUE)
+	{
+		fileName << _cgiOutFile;
+	}
+	else if (_requestTarget.compare(getConfig().root) == 0)
+	{
+		fileName << STANDARD_HTML;
+	}
+	else if (isDirectory(_requestTarget) && _directoryListingCase 
+			&& _method.compare("GET") == 0)
+	{
+		directoryListing();
+		return ;
+	}
+	else
+	{
+		if (!_requestTarget.empty())
+			fileName << "." << _requestTarget;
+	}
+}
+
+bool	Client::customErrorPageExists(std::stringstream &fileName)
+{
+	std::string	exitCodeString;
+
+	Utils::ft_itoa((int)_exitState,exitCodeString);
+	std::map<std::string, string>::const_iterator it = getConfig().errorPages.find(exitCodeString);
+	if (it != getConfig().errorPages.end())
+	{
+		fileName << "." + getConfig().root << it->second;
+		return true;
+	}
+	else
+		return false;
+}
+
+void	Client::sendHeadersAndQuit()
+{
+	sendHeaders();
+	_responseState = FULLY_SENT;
+	return ;
+}
+
+void	Client::sendResponse()
 {
 	std::stringstream   fileName;
 
