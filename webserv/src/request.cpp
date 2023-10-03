@@ -190,6 +190,7 @@ void    Client::redirectIfNeeded() {
     if (amountOfTimesWeAllowToRedirect == 0)
         PRINT << SKY "Enough is enough, my friend. The redirection stops NOW" << RESET_LINE;
     handleRootDirectoryCase();
+    handleHtmlNotBeingRootCase();
 }
 
 void    Client::handleRootDirectoryCase() {
@@ -201,6 +202,14 @@ void    Client::handleRootDirectoryCase() {
         _directory = tmp.substr(0, tmp.substr(1).find_first_of("/") + 2);
         checkPathIsAllowed();
         _file = Utils::trimLeft(tmp.substr(tmp.substr(1).find_first_of(_directory) + _directory.size()), "/");
+    }
+}
+
+void    Client::handleHtmlNotBeingRootCase() {
+    if (_directory == "/html/" && !_file.empty()) {
+        _directory = _directory + _file.substr(0, _file.find_first_of("/") + 2);
+        checkPathIsAllowed();
+        _file = _file.substr(_file.find_last_of("/"));
     }
 }
 

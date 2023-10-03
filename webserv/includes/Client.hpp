@@ -121,6 +121,7 @@ class Client
         void                					defineRequestTarget();
         void                					redirectIfNeeded();
         void                                    handleRootDirectoryCase();
+        void                                    handleHtmlNotBeingRootCase();
         bool                					isDirectory(std::string path);
         void                					assignContent();
         void                					assignCGIFlag();
