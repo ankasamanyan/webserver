@@ -271,8 +271,10 @@ void    Client::handleGet() {
 void    Client::handlePost() {
     checkHasRights();
     createFileIfAllowed();
-    if (_bytesWritten >= _contentLength)
+    if (_bytesWritten >= _contentLength) {
         _clientState = DONE_;
+        _exitState == CREATED;
+    }
 }
 
 void    Client::checkHasRights() {
