@@ -5,14 +5,14 @@ void Client::configureResponseFile(std::stringstream &fileName)
 	if (DEBUG)
 		PRINT << SKY << "REQUEST TARGET: " << _requestTarget << RESET_LINE;
 
-		std::string	exitCodeString;
-		Utils::ft_itoa((int)_exitState,exitCodeString);
-		std::map<std::string, string>::const_iterator it = getConfig().errorPages.find(exitCodeString);
-		if (it != getConfig().errorPages.end())
-		{
-			fileName << "." + getConfig().root << it->second;
-			return ;
-		}
+	std::string	exitCodeString;
+	Utils::ft_itoa((int)_exitState,exitCodeString);
+	std::map<std::string, string>::const_iterator it = getConfig().errorPages.find(exitCodeString);
+	if (it != getConfig().errorPages.end())
+	{
+		fileName << "." + getConfig().root << it->second;
+		return ;
+	}
 
 	if (_exitState == EXIT_OK)
 	{
@@ -37,8 +37,8 @@ void Client::configureResponseFile(std::stringstream &fileName)
 	}
 	else if (_method.compare("DELETE") == 0 && _exitState == NO_CONTENT)
 	{
-		fileName << DELETED_HTML; /* delete directories ? TEST THIS PLZ */
-		_exitState = EXIT_OK;
+		sendHeaders();
+		return ;
 	}
 	else
 		fileName << "." << getConfig().root << _errorPagePath << _exitState << ".html";
