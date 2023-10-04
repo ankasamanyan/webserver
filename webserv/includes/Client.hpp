@@ -158,7 +158,8 @@ class Client
 		void									noInputFile();
 		void									sendHeadersAndQuit();
 		bool									customErrorPageExists(std::stringstream &fileName);
-		void									successfulRequest(std::stringstream &fileName);					
+		void									successfulRequest(std::stringstream &fileName);		
+		void									parseCGIrequestBody();
 
 	public:
 		Client(int _serverSocket, std::map<std::string, configuration> &config);

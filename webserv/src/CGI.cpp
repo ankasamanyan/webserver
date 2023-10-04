@@ -71,8 +71,20 @@ void	Client::envFromFirstLine(std::vector<std::string> &env)
 	if (_method == "GET")
 		env.push_back(std::string("QUERY_STRING=" + _query));
 	else
-		// if(!_request.empty() && _query.size() >= 6)
+	{
+		if(!_request.empty() && _request.size() >= 6)
+		{
+			parseCGIrequestBody();
 			env.push_back(std::string("QUERY_STRING=" + _request.substr(6)));
+		}
+	}
+}
+
+void	Client::parseCGIrequestBody()
+{
+	for (std::string::iterator it = _request.begin(); it != _request.end(); it++)
+		if (*it == '+')
+			*it = ' ';
 }
 
 void	Client::castTheVector(std::vector<std::string> &src, std::vector<char *> &dest)
