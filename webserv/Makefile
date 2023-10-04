@@ -37,6 +37,12 @@ push:
 	git push
 	@echo $(PURPLE) ✨All added, commited and pushed✨ $(RESET)
 
+pull:
+	git stash save
+	git pull
+	git stash pop
+	@echo $(PURPLE) ✨Synchronized✨ $(RESET)
+
 run: re
 	./$(NAME)
 

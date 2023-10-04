@@ -68,9 +68,11 @@ void	Client::envFromFirstLine(std::vector<std::string> &env)
 	env.push_back(std::string("SERVER_PORT=" + getConfig().port));
 	env.push_back(std::string("PATH_INFO=" + _requestTarget));
 	env.push_back(std::string("OUTPUT_FILE=" + _cgiOutFile));
-	env.push_back(std::string("QUERY_STRING=" + _query));
-	
-	PRINT << SKY << "THE QUERY: " << RESET << _query << RESET_LINE;
+	if (_method == "GET")
+		env.push_back(std::string("QUERY_STRING=" + _query));
+	else
+		// if(!_request.empty() && _query.size() >= 6)
+			env.push_back(std::string("QUERY_STRING=" + _request.substr(6)));
 }
 
 void	Client::castTheVector(std::vector<std::string> &src, std::vector<char *> &dest)
@@ -103,6 +105,8 @@ void	Client::startCgiThingy()
 
 		castTheVector(argvVector, _argv);
 		createEnv(envVector);
+
+		PRINT << "KIDDO will execve now" << RESET_LINE;
 
 		if (!_argv.empty())
 			execve(_argv[0], _argv.data(), _env.data());

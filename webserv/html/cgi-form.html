@@ -205,58 +205,10 @@
     <div class="item">
         <h1>Submit your name</h1>
         <!-- <p>Click below to submit your text</p> -->
-		<form action="../cgi-bin/Capybara.py">
+		<form action="../cgi-bin/Capybara.py" method="post">
 			<input type="text" id="text_input" name="input" class="input_01" placeholder="Enter your name">
 			<input type="submit" value="Submit" onclick="submitText()">
 		</form>
     </div>
-	<script>
-		function submitText() {
-			const input = document.getElementById('text_input').value;
-			sendData(input, textEndpointUrl);
-		}
-
-		function submitImage() {
-			const fileInput = document.getElementById('image');
-			const file = fileInput.files[0];
-			sendData(file, fileBaseEndpointUrl + encodeURIComponent(file.name));
-		}
-
-		function sendData(data, endpointUrl) {
-			const xhr = new XMLHttpRequest();
-			xhr.open('POST', endpointUrl, true);
-			xhr.onload = function() {
-				if (this.status === 200) {
-					document.getElementById('output').innerHTML = this.responseText;
-				}
-			};
-
-			if (data instanceof File) {
-				xhr.setRequestHeader('Content-Type', data.type);
-				xhr.setRequestHeader('X-File-Name', data.name);
-				xhr.send(data);
-			} else {
-				xhr.setRequestHeader('Content-Type', 'text/plain');
-				xhr.setRequestHeader('X-File-Name', 'text.txt');
-				xhr.send(data);
-			}
-		}
-	</script>
 </body>
 </html>
-
-
-
-
-
-
-
-<!-- -------------------------------------- -->
-
-
-
-
-
-
-
-

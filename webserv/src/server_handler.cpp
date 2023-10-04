@@ -110,7 +110,7 @@ void	Server_handler::serverLoop()
 	bool	newClientAdded = false; /* if stress test is problematic, delete zis code */
 
 	poll(_fdVector.data(), _fdVector.size() , -1);
-	PRINT << PURPLE "\t\t......poll returned......" << RESET_LINE;
+	// PRINT << PURPLE "\t\t......poll returned......" << RESET_LINE;
 	for (size_t i = 0; i < _serverAmount; i++, iter++)
 	{
 		if(iter->revents & POLLIN)
@@ -137,13 +137,13 @@ void	Server_handler::serverLoop()
 				break;
 			}
 			/* wants to send a REQUEST */
-			PRINT << YELLOW "\t\t......Client wants to send a REQUEST......   ";
-			PRINT <<  "FD: "<< iter->fd << RESET_LINE;
+			// PRINT << YELLOW "\t\t......Client wants to send a REQUEST......   ";
+			// PRINT <<  "FD: "<< iter->fd << RESET_LINE;
 		}
 		else if (iter->revents & POLLOUT)
 		{
-			PRINT << PINK "\t\t......Client wants to get a RESPONSE......   ";
-			PRINT <<  "FD: "<< iter->fd << RESET_LINE;
+			// PRINT << PINK "\t\t......Client wants to get a RESPONSE......   ";
+			// PRINT <<  "FD: "<< iter->fd << RESET_LINE;
 			if (currClient._CGICase == true)
 				currClient.CgiParentHandler();
 			else
@@ -155,13 +155,12 @@ void	Server_handler::serverLoop()
 		else if ( iter->revents & POLLHUP)
 		{
 			disconnectClient(iter);
-			PRINT << ON_PURPLE "\t\t......Client disconnected......   " << RESET_LINE;
+			// PRINT << ON_PURPLE "\t\t......Client disconnected......   " << RESET_LINE;
 			break;
 		}
 		else
 		{
-			PRINT << RED "\t\t......SAMSING WEIRD IS HAPPENING......   "; 
-			PRINT <<  "FD: "<< iter->fd << RESET_LINE;
+
 		}
 	}
 }
@@ -174,5 +173,5 @@ void Server_handler::acceptClient(fdIter iter) {
     pollFdForThisClient.fd = newClient._clientFd;
     pollFdForThisClient.events = POLLIN | POLLHUP;
     _fdVector.push_back(pollFdForThisClient);
-    PRINT << GREEN "\t\t......Someone wants to connect......   ";
+    // PRINT << GREEN "\t\t......Someone wants to connect......   ";
 }

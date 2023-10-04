@@ -253,8 +253,9 @@ void    Client::assignContent() {
 }
 
 void    Client::assignCGIFlag() {
-    std::string pathToCheck = getConfig().root + _directory + _file;
-    if (pathToCheck.find(getConfig().CGIDir) != std::string::npos)
+    int CGIDirectoryLength = getConfig().CGIDir.length();
+    std::string partOfPath = _path.substr(0, CGIDirectoryLength);
+    if (getConfig().CGIDir == partOfPath)
         _CGICase = true;
     else
         _CGICase = false;
@@ -281,10 +282,10 @@ void    Client::handleGet() {
 }
 
 void    Client::handlePost() {
-    if (_CGICase) {
+	if (_CGICase) {
         _clientState = DONE_;
-        return ;
-    }
+		return ;
+	}
     checkHasRights();
     createFileIfAllowed();
     if (_bytesWritten >= _contentLength) {
