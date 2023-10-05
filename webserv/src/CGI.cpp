@@ -69,13 +69,12 @@ void	Client::envFromFirstLine(std::vector<std::string> &env)
 	env.push_back(std::string("PATH_INFO=" + _requestTarget));
 	env.push_back(std::string("OUTPUT_FILE=" + _cgiOutFile));
 	if (_method == "GET")
-		env.push_back(std::string("QUERY_STRING=" + _query));
+		env.push_back(std::string("QUERY_STRING=" + url_decode(_query)));
 	else
 	{
 		if(!_request.empty() && _request.size() >= 6)
 		{
-			parseCGIrequestBody();
-			env.push_back(std::string("QUERY_STRING=" + _request.substr(6)));
+			env.push_back(std::string("QUERY_STRING=" + (url_decode(_request)).substr(6)));
 		}
 	}
 }
@@ -129,4 +128,32 @@ void	Client::startCgiThingy()
 	}
 	else
 		_cgiChildTimer = time(NULL);
+}
+
+char Client::from_hex(char ch)
+{
+    return isdigit(ch) ? ch - '0' : tolower(ch) - 'a' + 10;
+}
+
+std::string Client::url_decode(const std::string& input) 
+{
+    std::string output;
+    for (size_t i = 0; i < input.length(); ++i) {
+        if (input[i] == '%') 
+		{
+            if (i + 2 < input.length() && isxdigit(input[i + 1]) && isxdigit(input[i + 2])) 
+			{
+                char decoded_char = from_hex(input[i + 1]) << 4 | from_hex(input[i + 2]);
+                output += decoded_char;
+                i += 2;
+			}
+			else
+                output += input[i];
+        }
+		else if (input[i] == '+')
+			output += ' ';
+		else 
+            output += input[i];
+    }
+    return output;
 }

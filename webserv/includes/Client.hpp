@@ -160,6 +160,8 @@ class Client
 		bool									customErrorPageExists(std::stringstream &fileName);
 		void									successfulRequest(std::stringstream &fileName);		
 		void									parseCGIrequestBody();
+		std::string								url_decode(const std::string& input); 
+		char 									from_hex(char ch);
 
 	public:
 		Client(int _serverSocket, std::map<std::string, configuration> &config);
