@@ -132,7 +132,6 @@ void	Client::readTheFile(std::ifstream   &inputFile)
 	}
 	if (inputFile.eof())
 	{
-		PRINT << YELLOW "\t END OF FILE BTW" << RESET_LINE; 
 		_responseState = FULLY_SENT;
 		inputFile.close();
 		return ;

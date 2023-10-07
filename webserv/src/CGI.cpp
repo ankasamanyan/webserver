@@ -117,8 +117,6 @@ void	Client::startCgiThingy()
 		castTheVector(argvVector, _argv);
 		createEnv(envVector);
 
-		PRINT << "KIDDO will execve now" << RESET_LINE;
-
 		if (!_argv.empty())
 			execve(_argv[0], _argv.data(), _env.data());
 

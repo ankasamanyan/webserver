@@ -88,16 +88,10 @@ void	Server_handler::configureSocket(int newSocket)
 
 void	Server_handler::disconnectClient(fdIter iter)
 {
-	PRINT << RED "Disconnecting client fd: " << iter->fd << RESET_LINE;
 	close(iter->fd);
     _clients.erase(iter->fd);
     _fdVector.erase(iter);
 }
-
-// int		Server_handler::getSocket()
-// {
-// 	return(_serverSocket);
-// }
 
 int		Server_handler::highestFd(std::set<int> activeClients)
 {
@@ -107,7 +101,7 @@ int		Server_handler::highestFd(std::set<int> activeClients)
 void	Server_handler::serverLoop()
 {
 	fdIter	iter = _fdVector.begin();
-	bool	newClientAdded = false; /* if stress test is problematic, delete zis code */
+	bool	newClientAdded = false;
 
 	poll(_fdVector.data(), _fdVector.size() , -1);
 	for (size_t i = 0; i < _serverAmount; i++, iter++)
@@ -166,5 +160,4 @@ void Server_handler::acceptClient(fdIter iter) {
     pollFdForThisClient.fd = newClient._clientFd;
     pollFdForThisClient.events = POLLIN | POLLHUP;
     _fdVector.push_back(pollFdForThisClient);
-    // PRINT << GREEN "\t\t......Someone wants to connect......   ";
 }
