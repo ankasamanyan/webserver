@@ -215,8 +215,15 @@ void Configuration::parseHost(std::string line){
 }
 
 void Configuration::parsePort(std::string line){
-	if(getToken(line, 1) == "port:")
+	if(getToken(line, 1) == "port:"){
+		if(config.port != ""){
+			std::cout << "Error: Server configuration should not have more then one port";
+			exit(1);
+		}
+			
 		config.port = getToken(line, 2);
+	}
+		
 }
 
 void Configuration::parseMaxBody(std::string line){
@@ -324,7 +331,7 @@ void Configuration::clearConfiguration(){
 	config.root = "/html/";
 	config.serverName = "";
 	config.host = "0.0.0.0";
-	config.port = "2000";
+	config.port = "";
 	config.maxBody = "80000";
 	config.CGIDir = "/cgi-bin/";
     if(config.locations.find("/") != config.locations.end())
