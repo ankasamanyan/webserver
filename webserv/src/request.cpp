@@ -299,6 +299,8 @@ void    Client::checkHasRights() {
         _exitState = FORBIDDEN;
     else if (_method == "POST" && !_location.methodPost)
         _exitState = FORBIDDEN;
+    else if (_file.empty())
+        _exitState = BAD_REQUEST;
 }
 
 void    Client::createFileIfAllowed() {
