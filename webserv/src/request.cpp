@@ -2,7 +2,6 @@
 
 void	Client::receiveRequest() 
 {
-	PRINT << "receiveRequest called" << RESET_LINE;
     char currentChunk[CHUNK_SIZE];
 
     memset(currentChunk, 0, CHUNK_SIZE);
@@ -11,7 +10,6 @@ void	Client::receiveRequest()
 		_clientState = SHOULD_DISCONNECT_;
 		return ; 
 	}
-    PRINT << SKY "The REQUEST" << RESET_LINE;
   	_request.append(currentChunk, numberOfBytesReceived);
     if (_method.empty())
         processRequest();
