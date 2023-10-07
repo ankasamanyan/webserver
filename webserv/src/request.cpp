@@ -253,9 +253,8 @@ void    Client::assignContent() {
 }
 
 void    Client::assignCGIFlag() {
-    int CGIDirectoryLength = getConfig().CGIDir.length();
-    std::string partOfPath = _path.substr(0, CGIDirectoryLength);
-    if (getConfig().CGIDir == partOfPath)
+    std::string pathToCheck = getConfig().root + _directory.substr(1) + _file;
+    if (pathToCheck.find(getConfig().CGIDir) != std::string::npos && (!_file.empty() || !_query.empty()))
         _CGICase = true;
     else
         _CGICase = false;
