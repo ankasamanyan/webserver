@@ -16,6 +16,7 @@ Client::Client(int _serverSocket, std::map<std::string, configuration> &config):
 	_shouldAppend = false;
 	_bytesWritten = 0;
 	_CGICase = false;
+	_contentLength = 0;
 }
 
 const Client	&Client::operator=(const Client &copy)
