@@ -110,7 +110,6 @@ void	Server_handler::serverLoop()
 	bool	newClientAdded = false; /* if stress test is problematic, delete zis code */
 
 	poll(_fdVector.data(), _fdVector.size() , -1);
-	// PRINT << PURPLE "\t\t......poll returned......" << RESET_LINE;
 	for (size_t i = 0; i < _serverAmount; i++, iter++)
 	{
 		if(iter->revents & POLLIN)
@@ -136,14 +135,9 @@ void	Server_handler::serverLoop()
 				disconnectClient(iter);
 				break;
 			}
-			/* wants to send a REQUEST */
-			// PRINT << YELLOW "\t\t......Client wants to send a REQUEST......   ";
-			// PRINT <<  "FD: "<< iter->fd << RESET_LINE;
 		}
 		else if (iter->revents & POLLOUT)
 		{
-			// PRINT << PINK "\t\t......Client wants to get a RESPONSE......   ";
-			// PRINT <<  "FD: "<< iter->fd << RESET_LINE;
 			if (currClient._CGICase == true)
 				currClient.CgiParentHandler();
 			else
@@ -155,7 +149,6 @@ void	Server_handler::serverLoop()
 		else if ( iter->revents & POLLHUP)
 		{
 			disconnectClient(iter);
-			// PRINT << ON_PURPLE "\t\t......Client disconnected......   " << RESET_LINE;
 			break;
 		}
 		else

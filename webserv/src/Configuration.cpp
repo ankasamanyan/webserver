@@ -217,7 +217,7 @@ void Configuration::parseHost(std::string line){
 void Configuration::parsePort(std::string line){
 	if(getToken(line, 1) == "port:"){
 		if(config.port != ""){
-			std::cout << "Error: Server configuration should not have more then one port";
+			std::cerr << "Error: Server configuration should not have more then one port\n";
 			exit(1);
 		}
 			
