@@ -6,6 +6,10 @@ int main(int argc, char **argv)
 
     PRINT << RESET_LINE << PURPLE "\t\t... STARTING THE SERVER ..." << RESET_LINE;
 
+    if (!conf->config.port.empty()) {
+        PRINT << RESET_LINE << SKY << "\t\t... PORT: " << "127.0.0.1:"<< conf->config.port << "  ..." << RESET_LINE;
+    }
+
     Server_handler	server(conf->serverRepo);
     while (CPP_IS_PAIN)
 	{
