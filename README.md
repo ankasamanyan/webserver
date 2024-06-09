@@ -12,13 +12,13 @@ Webserv is a project in the 42 core curriculum that focuses on building a basic 
 
 ## Getting Started
 
-### Prerequisites
+## Prerequisites
 
 - C++ Compiler (GCC recommended)
 - Docker
 - Make Utility
 
-### Installation
+## Installation
 
  • Clone the repository:
 
@@ -26,8 +26,11 @@ Webserv is a project in the 42 core curriculum that focuses on building a basic 
 git clone https://github.com/ankasamanyan/webserver.git
 cd webserver
 ```
-### Usage
- • Compile and run the project:
+## Usage
+
+• Compile and run the project: <br>
+(Make sure the Docker is running before executing)
+
 
 ```bash
 make run
